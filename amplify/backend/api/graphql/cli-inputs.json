@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "graphql",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "D:\\School\\Ba\\SeniorProject\\frankensketch\\frankensketch\\amplify\\backend\\api\\graphql\\schema.graphql",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authfrankensketch2fd3a5ad"
+    },
+    "conflictResolution": {
+      "defaultResolutionStrategy": {
+        "type": "AUTOMERGE"
+      }
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 365,
+        "apiKeyExpirationDate": "2023-02-09T00:14:55.568Z",
+        "keyDescription": "masterapikey"
+      }
+    ]
+  }
+}

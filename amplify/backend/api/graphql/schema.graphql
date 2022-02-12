@@ -1,0 +1,79 @@
+type UserLike @model @auth(rules: [{ allow: private }]) {
+    id: ID!
+    user: String
+    gameID: ID! @index(name: "byGame")
+}
+
+type UserReport
+    @model
+    @auth(
+        rules: [
+            {
+                allow: groups
+                groups: ["Admin"]
+                operations: [read, create, update, delete]
+            }
+            { allow: groups, groups: ["Moderator"], operations: [create] }
+            { allow: private }
+        ]
+    ) {
+    id: ID!
+    isReviewed: Boolean
+    reportedBy: String
+    gameID: ID! @index(name: "byGame")
+}
+
+type DrawingTally @model @auth(rules: [{ allow: public }]) {
+    id: ID!
+    count: Int
+}
+
+type Game
+    @model
+    @auth(
+        rules: [
+            { allow: public }
+            { allow: private, operations: [read] }
+            {
+                allow: groups
+                groups: ["Admin"]
+                operations: [update, read, create, delete]
+            }
+            {
+                allow: groups
+                groups: ["Moderator"]
+                operations: [read, create, update]
+            }
+        ]
+    ) {
+    id: ID!
+    password: String
+    nsfw: Boolean
+    head: Drawing @hasOne
+    torso: Drawing @hasOne
+    legs: Drawing @hasOne
+    UserReports: [UserReport] @hasMany(indexName: "byGame", fields: ["id"])
+    UserLikes: [UserLike] @hasMany(indexName: "byGame", fields: ["id"])
+}
+
+type User
+    @model
+    @auth(
+        rules: [
+            { allow: public }
+            { allow: private, operations: [read, update, create] }
+        ]
+    ) {
+    id: ID!
+    userName: String!
+    friends: [ID!]
+}
+
+type Drawing @model @auth(rules: [{ allow: public }, { allow: private }]) {
+    id: ID!
+    lines: [String!]
+    isRemoved: Boolean!
+    isComplete: Boolean!
+    type: String
+    artist: String!
+}

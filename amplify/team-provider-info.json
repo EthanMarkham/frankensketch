@@ -1,0 +1,41 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-frankensketch-dev-185353-authRole",
+      "UnauthRoleArn": "arn:aws:iam::447409347104:role/amplify-frankensketch-dev-185353-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::447409347104:role/amplify-frankensketch-dev-185353-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
+      "UnauthRoleName": "amplify-frankensketch-dev-185353-unauthRole",
+      "StackName": "amplify-frankensketch-dev-185353",
+      "StackId": "arn:aws:cloudformation:us-east-2:447409347104:stack/amplify-frankensketch-dev-185353/60263d30-893a-11ec-84f7-0234feb05ba4",
+      "AmplifyAppId": "d35j63ug8gmlye",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-frankensketch-dev-185353-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-frankensketch-dev-185353-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "frankensketch2fd3a5ad": {},
+        "true": {}
+      },
+      "function": {
+        "restRoutes": {
+          "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
+          "s3Key": "amplify-builds/restRoutes-67446965675931734a59-build.zip"
+        },
+        "usersignupevent": {
+          "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
+          "s3Key": "amplify-builds/usersignupevent-35696e4d506877317675-build.zip"
+        },
+        "frankensketch2fd3a5adPreSignup": {
+          "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
+          "s3Key": "amplify-builds/frankensketch2fd3a5adPreSignup-53785235484b6a547633-build.zip"
+        },
+        "AdminQueries7b3bb9b3": {
+          "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
+          "s3Key": "amplify-builds/AdminQueries7b3bb9b3-74696a55496b454f7773-build.zip"
+        }
+      }
+    }
+  }
+}

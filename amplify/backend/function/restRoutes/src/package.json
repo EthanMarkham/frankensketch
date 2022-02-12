@@ -1,0 +1,20 @@
+{
+    "name": "restRoutes",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "dependencies": {
+        "aws-serverless-express": "^3.3.5",
+        "body-parser": "^1.17.1",
+        "express": "^4.15.2",
+        "axios": "0.21.4",
+        "graphql": "^16.2.0",
+        "graphql-tag": "^2.12.6"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC"
+}

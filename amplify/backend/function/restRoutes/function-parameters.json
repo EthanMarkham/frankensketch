@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "auth": {
+      "frankensketch2fd3a5ad": [
+        "create",
+        "read",
+        "update"
+      ]
+    },
+    "api": {
+      "graphql": [
+        "Query",
+        "Mutation",
+        "Subscription"
+      ]
+    },
+    "storage": {
+      "UserLike:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "UserReport:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "DrawingTally:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "Game:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "User:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ],
+      "Drawing:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

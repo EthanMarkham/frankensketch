@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "paths": {
+    "/rest": {
+      "name": "/rest",
+      "lambdaFunction": "restRoutes",
+      "permissions": {
+        "setting": "protected",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ],
+        "guest": [
+          "read"
+        ]
+      }
+    },
+    "/drawing": {
+      "name": "/drawing",
+      "lambdaFunction": "restRoutes",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ]
+      }
+    },
+    "/start": {
+      "name": "/start",
+      "lambdaFunction": "restRoutes",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ]
+      }
+    }
+  }
+}

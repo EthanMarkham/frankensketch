@@ -1,0 +1,25 @@
+{
+  "trigger": true,
+  "modules": [
+    "custom"
+  ],
+  "parentResource": "frankensketch2fd3a5ad",
+  "functionName": "frankensketch2fd3a5adPreSignup",
+  "resourceName": "frankensketch2fd3a5adPreSignup",
+  "parentStack": "auth",
+  "triggerEnvs": [],
+  "triggerDir": "C:\\Users\\markh\\AppData\\Roaming\\nvm\\v16.5.0\\node_modules\\@aws-amplify\\cli\\node_modules\\@aws-amplify\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\PreSignup",
+  "triggerTemplate": "PreSignup.json.ejs",
+  "triggerEventPath": "PreSignup.event.json",
+  "roleName": "frankensketch2fd3a5adPreSignup",
+  "skipEdit": true,
+  "enableCors": false,
+  "permissions": {
+    "api": {
+      "graphql": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  }
+}
