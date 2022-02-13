@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FlexBox } from "styles";
 
 
-const Accordion = () => {
+const UserAccordion = () => {
     const [isActive, setIsActive] = useState(false)
     return (
         <>
@@ -12,4 +12,4 @@ const Accordion = () => {
     );
 };
 
-export default Accordion;      
+export default UserAccordion;      
