@@ -1,6 +1,7 @@
 const AdminReports = () => {
     return (
         <>
+        Reports page
         </>
     );
 };

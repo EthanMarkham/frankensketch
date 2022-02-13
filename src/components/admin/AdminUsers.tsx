@@ -1,6 +1,7 @@
 const AdminUsers = () => {
     return (
         <>
+        Users page
         </>
     );
 };
