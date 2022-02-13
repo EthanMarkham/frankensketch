@@ -15,6 +15,7 @@ import AddUser from "./AddUser.svg"
 import GreenCheckmark from "./GreenCheckmark.svg"
 import PendingReport from "./PendingReport.svg"
 import RedX from "./RedX.svg"
+import Search from "./Search.svg"
 
 export const Icons = {
     Eraser,
@@ -33,5 +34,6 @@ export const Icons = {
     AddUser,
     GreenCheckmark,
     PendingReport,
-    RedX
+    RedX,
+    Search
 }
