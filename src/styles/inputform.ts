@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { COLORS } from "utils/DEFS";
 import { GenericStyleProps } from "types/style";
+import { getGenericProps } from "styles";
 
 export const InputGroup = styled('div')<GenericStyleProps>`
     ${(props) => {
@@ -107,4 +108,29 @@ export const InputTextHelper = styled('span')<GenericStyleProps>`
 	margin: 0.125rem 0.875rem;
     font-weight: 100;
 
+`
+
+export const DropdownField = styled.select<GenericStyleProps>`
+    width: 100%;
+    height: 3rem;
+    font-size: 1.0625rem;
+    background-color: ${COLORS.white};
+    border: none;
+    border-bottom: 0.25rem solid ${COLORS.white};
+    padding: 0.5rem 0.875rem;
+    line-height: 147.6%;
+    padding-top: 0.825rem;
+    padding-bottom: 0.5rem;
+    border-radius: 10px;
+    font-family:inherit;
+    font-weight: 300;
+    &:focus{
+        outline: none;
+        border-color: ${COLORS.success};
+    }
+    &:hover{
+        outline: none;
+        border-color: ${COLORS.secondaryGreen};
+    }
+    ${(props) => getGenericProps(props)}
 `

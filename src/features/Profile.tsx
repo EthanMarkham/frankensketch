@@ -1,7 +1,6 @@
 import { Auth } from "aws-amplify";
 import SectionText from "components/general/SectionText";
 import Header from "components/header/header";
-import NavBar from "components/navbar/NavBar";
 import { useStore } from "store";
 import { Button, FlexBox, PlaceHolderDiv, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
@@ -39,7 +38,6 @@ function Profile() {
                 })}
 
             </FlexBox>
-            <NavBar/>
         </FlexBox>
     );
 }

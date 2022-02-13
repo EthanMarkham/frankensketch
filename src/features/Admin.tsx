@@ -2,7 +2,7 @@ import Header from "components/header/header";
 import AdminNavBar from "components/admin/AdminNavBar";
 import { useState } from "react";
 import { useStore } from "store";
-import { Button, FlexBox, Stiches } from "styles";
+import { Button, FlexBox, Stiches, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import AdminReports from "../components/admin/AdminReports";
 import AdminUsers from "../components/admin/AdminUsers";
@@ -21,7 +21,8 @@ const Admin = () => {
         <FlexBox direction="column">
             <Header />
 
-            <FlexBox justifyContent="flex-end" margin="0 1.5rem">
+            <FlexBox justifyContent="space-between" margin="0 1.5rem">
+                {page === 0 ? <Text fontSize="1.5em">Reports</Text> : <Text fontSize="1.5em">Users</Text>}
                 <Button
                     background="none"
                     borderRadius="0"
@@ -35,7 +36,7 @@ const Admin = () => {
             {page === 0 && <AdminReports/>}
             {page === 1 && <AdminUsers/>}
             </FlexBox>
-            <AdminNavBar setPage={setPage} />
+            <AdminNavBar setPage={setPage} page={page} />
         </FlexBox>
     );
 };
