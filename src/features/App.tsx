@@ -73,7 +73,7 @@ function App() {
                                     <Authentication />
                                 </AnimatedDiv>
                             );
-                        case 7:
+                        case 1:
                             return (
                                 <AnimatedDiv
                                     style={styles}
@@ -128,7 +128,7 @@ function App() {
                                     <Community />
                                 </AnimatedDiv>
                             );
-                        case 1:
+                        case 7:
                             return (
                                 <AnimatedDiv
                                     style={styles}
