@@ -1,4 +1,4 @@
-import { Auth } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 //TODO: GROUP THESE IMPORTS SO WE CAN DO ALL FROM components/homescreen
 import ActionButton from "components/general/ActionButton";
 import GameCarousel from "components/homescreen/GameCarousel";
@@ -12,7 +12,7 @@ import { Icons } from "styles/svg/ui-icons/icons";
 import NavBar from "components/navbar/NavBar";
 import Header from "components/header/header";
 import { useStore } from "store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
 
 function HomeScreen(props: HomeScreenProps) {
@@ -30,20 +30,20 @@ function HomeScreen(props: HomeScreenProps) {
     };
 
     //Control modal functionality
-    const [isShown, setIsShown] = useState(false)
-    const [modalType, setModalType] = useState("")
-    const [isNewGame, setIsNewGame] = useState(true)
+    const [isShown, setIsShown] = useState(false);
+    const [modalType, setModalType] = useState("");
+    const [isNewGame, setIsNewGame] = useState(true);
 
-    const displayModal = (modalType:string, gameType?:boolean) => {
+    const displayModal = (modalType: string, gameType?: boolean) => {
         //check if a game type was provided and update if so
-        if(!(gameType === undefined)){
-            setIsNewGame(gameType)
+        if (!(gameType === undefined)) {
+            setIsNewGame(gameType);
         }
         //update modal type state
-        setModalType(modalType)
+        setModalType(modalType);
         //display modal
-        setIsShown(true)
-    }
+        setIsShown(true);
+    };
 
     return (
         <FlexBox direction="column">
@@ -85,7 +85,13 @@ function HomeScreen(props: HomeScreenProps) {
                 <GameCarousel />
             </FlexBox>
             <NavBar />
-            {isShown && <Modal setIsShown={setIsShown} type={modalType} isNewGame={isNewGame}/>}
+            {isShown && (
+                <Modal
+                    setIsShown={setIsShown}
+                    type={modalType}
+                    isNewGame={isNewGame}
+                />
+            )}
         </FlexBox>
     );
 }

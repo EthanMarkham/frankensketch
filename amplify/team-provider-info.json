@@ -16,12 +16,13 @@
     "categories": {
       "auth": {
         "frankensketch2fd3a5ad": {},
-        "true": {}
+        "true": {},
+        "userPoolGroups": {}
       },
       "function": {
         "restRoutes": {
           "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
-          "s3Key": "amplify-builds/restRoutes-67446965675931734a59-build.zip"
+          "s3Key": "amplify-builds/restRoutes-337550726e7836477651-build.zip"
         },
         "usersignupevent": {
           "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
@@ -29,7 +30,7 @@
         },
         "frankensketch2fd3a5adPreSignup": {
           "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
-          "s3Key": "amplify-builds/frankensketch2fd3a5adPreSignup-53785235484b6a547633-build.zip"
+          "s3Key": "amplify-builds/frankensketch2fd3a5adPreSignup-366e504c773977464b55-build.zip"
         },
         "AdminQueries7b3bb9b3": {
           "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",

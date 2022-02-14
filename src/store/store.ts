@@ -1,6 +1,7 @@
 import { Store } from "types";
 import create from "zustand";
 import { joinGame } from "./actions/joinGame";
+import { postGame } from "./actions/postGame";
 /*
 PAGE INDEXS
             case -1:
@@ -15,6 +16,7 @@ PAGE INDEXS
 
 const useStore = create<Store>((set, _get) => ({
     serverSideProps: null,
+    subscriptions: new Map<string, () => void>(),
     userData: null, //maybe we dont need?
     pageIndex: -1,
     error: null, //GET RID OF
@@ -29,7 +31,29 @@ const useStore = create<Store>((set, _get) => ({
                 pageIndex: data === null ? 0 : 1,
             }));
         },
+        subscribe: (key, callback) => {
+            set((store) => {
+                let copy = { ...store }; //deconstructed for deep clone
+                copy.subscriptions.set(key, callback);
+                return copy;
+            });
+        },
+        unsubscribe: (key) => {
+            set((store) => {
+                let copy = { ...store }; //deconstructed for deep clone
+                copy.subscriptions.delete(key);
+                return copy;
+            });
+        },
         joinGame: joinGame(set),
+        viewGame: (game) => {
+            set((store) => ({
+                ...store,
+                serverSideProps: { game },
+                pageIndex: 9,
+            }));
+        },
+        postGame: postGame(set),
         setError(data) {
             set((store) => {
                 const uuid = store.error?.uuid ? store.error.uuid + 1 : 0;
