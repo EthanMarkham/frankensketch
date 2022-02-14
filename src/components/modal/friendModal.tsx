@@ -29,7 +29,7 @@ const FriendModal = () => {
             {/* Replace with real data */}
             {usersList.map((value, i) => {
                 return (
-                    <InputGroup width="100%">
+                    <InputGroup width="100%" key={i}>
                         <FlexBox direction="row" justifyContent="flex-start" margin="0.5rem 0">
                             <InputField
                                 backgroundColor={COLORS.gray}

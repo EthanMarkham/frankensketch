@@ -3,15 +3,50 @@ import Header from "components/header/header";
 import NavBar from "components/navbar/NavBar";
 import {Button, FlexBox, PlaceHolderDiv, Text} from "styles"
 import { Icons } from "styles/svg/ui-icons/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
+import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify'
+import { getUser } from '../graphql/queries'
+import awsExports from "../aws-exports"
+import { getRandomItem } from "utils/functions";
+import { COLORS } from "utils/DEFS";
+Amplify.configure(awsExports)
 
 function Friends() {
+    //Friend error message
+    const noFriendResponses: string[] = ["Couln't find any friends, click on the plus icon to add new friends!", "You are so lonely, I don't want to be you!", "Looks like you dont have any friends", "No friends found!", "You have no friends, HaHa!", "This looks so empty, go find new friends!"]
+    const [errorMessage, setErrorMessage] = useState("0 friends available")
+    const [hasFriends, setHasFriends] = useState(false)
+
     //Control is modal should be shown
     const [isShown, setIsShown] = useState(false); 
 
-    //TODO - Chage with actual friend list
-    const friendsList = [1,2,3,4,5,6,7,8,9,10,11]
+    //Friends List
+    const [friendsList, setFriendList] = useState([])
+    useEffect(() => {
+        getFriends()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const getFriends = () => {
+        try {
+            Auth.currentAuthenticatedUser()
+            .then(async (data) => {
+                const userData = await (API.graphql(graphqlOperation(getUser, {id: data.username} ))) as unknown as any
+                const friends: [] = userData.data.getUser.friends
+                if(friends.length === 0){
+                    setErrorMessage(getRandomItem(noFriendResponses))
+                    setHasFriends(false) 
+                }else{
+                    setHasFriends(true)
+                    setFriendList(friends)
+                }   
+            })
+        } catch (error) {
+            setErrorMessage(getRandomItem(noFriendResponses))
+            setHasFriends(false)
+        }
+    }
 
     return (
         <FlexBox direction="column">
@@ -22,11 +57,15 @@ function Friends() {
                     <img src={Icons.Plus} alt="Plus icon" />
                 </Button>
             </FlexBox>
-            <FlexBox direction="column" margin="0 1.5rem">
-                {friendsList.map((value, i) => {
-                    return <PlaceHolderDiv/>
-                })}
-
+            <FlexBox direction="column" margin="0 1.5rem" >
+                {!hasFriends && (
+                    <Text fontSize="1.5em" color={COLORS.danger}>{errorMessage}</Text> 
+                )}
+                {hasFriends && (
+                    friendsList.map((value, i) => {
+                        return <PlaceHolderDiv/>
+                    })
+                )}
 
             </FlexBox>
             
