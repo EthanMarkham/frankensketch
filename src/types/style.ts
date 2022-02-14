@@ -16,6 +16,7 @@ export interface GenericStyleProps {
     borderColor?: string;
     borderRadius?: string;
     css?: CSSProperties;
+    fontWeight?: string;
 }
 
 //FLEX BOX

@@ -2,10 +2,8 @@ import { API, Auth } from "aws-amplify";
 //TODO: GROUP THESE IMPORTS SO WE CAN DO ALL FROM components/homescreen
 import ActionButton from "components/general/ActionButton";
 import GameCarousel from "components/homescreen/GameCarousel";
-import JoinOptions from "components/homescreen/JoinOptions";
 import SectionText from "components/general/SectionText";
-import useDialog from "hooks/useDialog";
-import { Button, FlexBox, FrankenSketchHeader, Stiches, Text } from "styles";
+import { Button, FlexBox, Stiches, Text } from "styles";
 import { HomeScreenProps } from "types";
 import { COLORS } from "utils/DEFS";
 import { Icons } from "styles/svg/ui-icons/icons";
@@ -16,14 +14,6 @@ import { useEffect, useState } from "react";
 import Modal from "./Modal";
 
 function HomeScreen(props: HomeScreenProps) {
-    // const [joinDialog, joinActions] = useDialog({
-    //     headerProps: { backgroundColor: COLORS.blue },
-    // });
-
-    // const joinGame = () => {
-    //     joinActions.open("But how?", <JoinOptions />);
-    // };
-
     const changePage = useStore((state) => state.actions.setPage);
     const OnClickProfile = () => {
         changePage(5);
@@ -47,7 +37,6 @@ function HomeScreen(props: HomeScreenProps) {
 
     return (
         <FlexBox direction="column">
-            {/* {joinDialog && joinDialog} */}
             <Header />
 
             <FlexBox justifyContent="flex-end" margin="0 1.5rem">
@@ -57,7 +46,7 @@ function HomeScreen(props: HomeScreenProps) {
                     onClick={OnClickProfile}
                 >
                     <img src={Icons.User} alt="User profile icon" />
-                    <Text color={COLORS.white}>username</Text>
+                    <Text color={COLORS.white}>Profile</Text>
                 </Button>
             </FlexBox>
 

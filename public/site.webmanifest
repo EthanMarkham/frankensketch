@@ -1,0 +1,23 @@
+{
+    "name":"FrankenSketch",
+    "short_name":"FrankenSketch",
+    "icons":[
+        {
+            "src":"favicon/android-chrome-192x192.png",
+            "sizes":"192x192",
+            "type":"image/png",
+            "purpose":"maskable any"
+        },
+        {
+            "src":"favicon/android-chrome-512x512.png",
+            "sizes":"512x512",
+            "type":"image/png",
+            "purpose":"maskable any"
+        }
+    ],
+    "theme_color":"#101820",
+    "background_color":"#101820",
+    "display":"fullscreen",
+    "description":"FrankenSketch, more than just a drawing game!",
+    "start_url": "./index.html"
+}

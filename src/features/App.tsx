@@ -13,6 +13,7 @@ import Friends from "./Friends";
 import Profile from "./Profile";
 import Settings from "./Settings";
 import GameViewer from "./GameViewer";
+import Admin from "./Admin";
 
 /*
 const Authentication = React.lazy(() => import("features/Authentication"));
@@ -126,6 +127,15 @@ function App() {
                                     {...containerStyles}
                                 >
                                     <Community />
+                                </AnimatedDiv>
+                            );
+                        case 7:
+                            return (
+                                <AnimatedDiv
+                                    style={styles}
+                                    {...containerStyles}
+                                >
+                                    <Admin />
                                 </AnimatedDiv>
                             );
                         case 9:

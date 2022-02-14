@@ -10,6 +10,7 @@ import {
     InputField,
     InputLabel,
     InputTextHelper,
+    DropdownField
 } from "./inputform";
 import {
     Button,
@@ -72,8 +73,9 @@ export const getGenericProps = (props: GenericStyleProps) => {
             background-size: cover;
         `;
     }
-    if(props.fontSize) output += `font-size: ${props.fontSize}`
-    if(props.borderRadius) output += `border-radius: ${props.borderRadius}`
+    if(props.fontSize) output += `font-size: ${props.fontSize};`
+    if(props.borderRadius) output += `border-radius: ${props.borderRadius};`
+    if(props.fontWeight) output += `font-weight: ${props.fontWeight};`
 
     if (props.css) output += cssToString(props.css);
 
@@ -163,5 +165,6 @@ export {
     SketchCanvas,
     NavDiv,
     HeaderDiv,
-    PlaceHolderDiv
+    PlaceHolderDiv,
+    DropdownField
 };
