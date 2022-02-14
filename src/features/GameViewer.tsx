@@ -25,8 +25,17 @@ const GameViewer = () => {
         }
     }, [containerRef]);
 
+    useEffect(() => {
+        console.log(scale);
+    }, [scale]);
+
     return (
-        <FlexBox direction="column" ref={containerRef} height="100vh">
+        <FlexBox
+            direction="column"
+            ref={containerRef}
+            height="100vh"
+            css={{ overflowY: "scroll" }}
+        >
             <FlexBox padding="4em" height="20%" justifyContent="center">
                 <Text>WHAT A MASTERPIECE</Text>
             </FlexBox>

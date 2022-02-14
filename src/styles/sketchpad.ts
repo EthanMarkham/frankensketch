@@ -11,7 +11,7 @@ const SketchCanvas = styled.canvas<Props>`
     width: 360px;
     background: #f7fff3;
     border-radius: 20px;
-    ${(props) => props.scale && `transform: scale(${props.scale})`}
+    ${(props) => props.scale && `transform: scale(${props.scale});`}
     justify-self: center;
     align-self: center;
     margin: auto;

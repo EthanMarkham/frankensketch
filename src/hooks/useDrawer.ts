@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Paper from "paper";
 import { Drawing, Game } from "models";
-import { Point } from "paper/dist/paper-core";
 
 function drawSection({ type, lines }: Drawing): Promise<void> {
     const drawLine = function (lineData: any, verticleShift: number) {
@@ -13,11 +12,10 @@ function drawSection({ type, lines }: Drawing): Promise<void> {
         let increment = 0;
         const verticleShift =
             type === "head" ? 0 : type === "torso" ? 620 : 1280;
-        lines?.forEach((line) => {
+        lines?.forEach((line, i) => {
             let lineData = JSON.parse(line)[1];
-            console.log(lineData);
             setTimeout(() => drawLine(lineData, verticleShift), increment);
-            increment += 500;
+            increment += i < lines.length - 1 ? 500 : 0;
         });
         setTimeout(() => resolve(), increment);
     });
