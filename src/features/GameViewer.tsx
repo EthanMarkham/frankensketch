@@ -32,7 +32,6 @@ const GameViewer = () => {
     return (
         <FlexBox
             direction="column"
-            ref={containerRef}
             height="100vh"
             css={{ overflowY: "scroll" }}
         >
@@ -40,8 +39,20 @@ const GameViewer = () => {
                 <Text>WHAT A MASTERPIECE</Text>
             </FlexBox>
 
-            {/*Info: waiting til we have scale calculated to render the canvas*/}
-            <SketchCanvas ref={canvasRef} height="1860px" scale={scale} />
+            <FlexBox
+                height="60%"
+                position="relative"
+                justifyContent="center"
+                margin="auto 0"
+                ref={containerRef}
+            >
+                <SketchCanvas
+                    ref={canvasRef}
+                    height="1860px"
+                    scale={scale}
+                    position="absolute"
+                />
+            </FlexBox>
             <FlexBox
                 padding="4em"
                 height="20%"

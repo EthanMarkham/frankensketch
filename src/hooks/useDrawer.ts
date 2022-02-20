@@ -15,7 +15,7 @@ function drawSection({ type, lines }: Drawing): Promise<void> {
         lines?.forEach((line, i) => {
             let lineData = JSON.parse(line)[1];
             setTimeout(() => drawLine(lineData, verticleShift), increment);
-            increment += i < lines.length - 1 ? 500 : 0;
+            increment += i < lines.length - 1 ? 10 : 0;
         });
         setTimeout(() => resolve(), increment);
     });

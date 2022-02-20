@@ -10,7 +10,7 @@ import {
     InputField,
     InputLabel,
     InputTextHelper,
-    DropdownField
+    DropdownField,
 } from "./inputform";
 import {
     Button,
@@ -21,7 +21,7 @@ import {
     Card,
     NavDiv,
     HeaderDiv,
-    PlaceHolderDiv
+    PlaceHolderDiv,
 } from "./generic";
 import { SketchCanvas } from "./sketchpad";
 import { animated } from "react-spring";
@@ -73,9 +73,9 @@ export const getGenericProps = (props: GenericStyleProps) => {
             background-size: cover;
         `;
     }
-    if(props.fontSize) output += `font-size: ${props.fontSize};`
-    if(props.borderRadius) output += `border-radius: ${props.borderRadius};`
-    if(props.fontWeight) output += `font-weight: ${props.fontWeight};`
+    if (props.fontSize) output += `font-size: ${props.fontSize};`;
+    if (props.borderRadius) output += `border-radius: ${props.borderRadius};`;
+    if (props.fontWeight) output += `font-weight: ${props.fontWeight};`;
 
     if (props.css) output += cssToString(props.css);
 
@@ -84,6 +84,10 @@ export const getGenericProps = (props: GenericStyleProps) => {
 
 export const AnimatedDiv = styled(animated("div"))<AnimatedDivProps>`
     ${(props) => getGenericProps(props)};
+`;
+
+export const Div = styled("div")<GenericStyleProps>`
+    ${(props) => getGenericProps(props)}
 `;
 
 export const FlexBox = styled("div")<FlexBoxProps>`
@@ -166,5 +170,5 @@ export {
     NavDiv,
     HeaderDiv,
     PlaceHolderDiv,
-    DropdownField
+    DropdownField,
 };

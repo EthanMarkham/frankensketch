@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { useStore } from "store";
 import { AnimatedDiv } from "styles";
 import { useTransition, config } from "react-spring";
+import { Leva } from "leva";
 
 import Authentication from "features/Authentication";
 import HomeScreen from "./HomeScreen";
@@ -14,6 +15,7 @@ import Profile from "./Profile";
 import Settings from "./Settings";
 import GameViewer from "./GameViewer";
 import Admin from "./Admin";
+import Pallet from "components/svg/Pallet";
 
 /*
 const Authentication = React.lazy(() => import("features/Authentication"));
@@ -53,6 +55,19 @@ function App() {
                 overflow: "hidden",
             }}
         >
+            <Leva
+                //theme={myTheme} // you can pass a custom theme (see the styling section)
+                //fill // default = false,  true makes the pane fill the parent dom node it's rendered in
+                //flat // default = false,  true removes border radius and shadow
+                //oneLineLabels={true} // default = false, alternative layout for labels, with labels and fields on separate rows
+                //hieTitleBar={true} // default = false, hides the GUI header
+                titleBar={{
+                    title: <Pallet />,
+                    filter: false,
+                }}
+                collapsed={true} // default = false, when true the GUI is collpased
+            />
+
             <Suspense fallback={null}>
                 {transitions((styles, item) => {
                     switch (item) {

@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Paper from "paper";
-import { Callback } from "../types";
-import { Color, Path, Point, Rectangle } from "paper/dist/paper-core";
+import { useControls } from "leva";
 
-const getGuideLines = (drawingType: any) => {
+function getGuideLines(drawingType: any) {
     const maxHeight = 640;
     const maxWidth = 360;
     switch (drawingType.toLowerCase()) {
@@ -50,9 +49,9 @@ const getGuideLines = (drawingType: any) => {
                 ],
             ];
     }
-};
+}
 
-const draw = (drawingType: string, savePath: Callback) => {
+function drawGuidelines(drawingType: string) {
     let lines = getGuideLines(drawingType);
     lines?.forEach((line) => {
         let guideLine: any = new Paper.Path();
@@ -63,28 +62,8 @@ const draw = (drawingType: string, savePath: Callback) => {
             guideLine.add(p);
         });
         guideLine.selected = false;
-        savePath(guideLine);
     });
-
-    let myPath: any = null;
-
-    Paper.view.onMouseDown = () => {
-        if (myPath) myPath.selected = false;
-        myPath = new Paper.Path();
-        myPath.strokeColor = "black";
-        myPath.strokeWidth = 3;
-    };
-
-    Paper.view.onMouseDrag = (event: { point: any }) => {
-        myPath.add(event.point);
-    };
-
-    Paper.view.onMouseUp = () => {
-        myPath.simplify(10);
-        myPath.selected = false;
-        savePath(myPath);
-    };
-};
+}
 
 function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
     const [isInit, setInit] = useState(false);
@@ -92,12 +71,46 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
     const [lineData, setLineData] = useState<any[]>([]);
     const [drawingType, setType] = useState<string | null>();
 
-    const addGuideLines = (type: string) => {
-        let path = new Path.Line(new Point(100, 70), new Point(0, 70));
-        path.strokeColor = new Color("black");
-        path.strokeWidth = 3;
-        setLineData((data) => [...data, path]);
-    };
+    const { stroke, color, isErase } = useControls({
+        stroke: {
+            label: "Stroke",
+            value: 3,
+            min: 1,
+            max: 60,
+            step: 1,
+        },
+        color: {
+            label: "Color",
+            value: "#000",
+        },
+        isErase: {
+            label: "Eraser",
+            value: false,
+        },
+    });
+
+    const draw = useCallback(() => {
+        let myPath: any = null;
+        Paper.view.onMouseDown = () => {
+            if (myPath) myPath.selected = false;
+            myPath = new Paper.Path();
+            myPath.strokeColor = isErase ? "#f7fff3" : color;
+            myPath.strokeWidth = stroke;
+            myPath.strokeWidth = stroke;
+            myPath.strokeCap = "round";
+            myPath.strokeJoin = "round";
+        };
+
+        Paper.view.onMouseDrag = (event: { point: any }) => {
+            myPath.add(event.point);
+        };
+
+        Paper.view.onMouseUp = () => {
+            myPath.simplify(isErase ? 1 : 10);
+            myPath.selected = false;
+            setLineData((data) => [...data, myPath]);
+        };
+    }, [stroke, color, isErase]);
 
     useEffect(() => {
         const element = canvas.current;
@@ -105,12 +118,14 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
             console.log("initializing paper");
             Paper.setup(element);
 
-            draw(drawingType, (path) => {
-                setLineData((data) => [...data, path]);
-            });
+            drawGuidelines(drawingType);
             setInit(true);
         }
     }, [canvas, isInit, shouldInit, drawingType]);
+
+    useEffect(() => {
+        if (isInit) draw();
+    }, [draw, isInit]);
 
     const setUp = (drawingType: string) => {
         init(true);

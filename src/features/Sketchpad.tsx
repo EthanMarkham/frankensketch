@@ -4,6 +4,7 @@ import usePaper from "hooks/usePaper";
 import { useStore } from "store";
 import { API, Auth } from "aws-amplify";
 import { calculateScale } from "utils";
+import { useControls } from "leva";
 
 /*--------------------------------------------------------------------//
                       J S X      E X P O R T
@@ -18,18 +19,10 @@ const Sketchpad = () => {
     const drawingType = serverProps.drawing;
 
     useEffect(() => {
-        if (scale) {
+        if (containerRef.current) {
             init(drawingType);
         }
-    }, [drawingType, init, scale]);
-
-    useEffect(() => {
-        if (containerRef.current) {
-            setScale(
-                calculateScale(containerRef.current.getBoundingClientRect())
-            );
-        }
-    }, [containerRef]);
+    }, [containerRef, init, drawingType]);
 
     return (
         <FlexBox direction="column" ref={containerRef} height="100vh">
@@ -41,7 +34,7 @@ const Sketchpad = () => {
             </FlexBox>
 
             {/*Info: waiting til we have scale calculated to render the canvas*/}
-            <SketchCanvas ref={canvasRef} scale={scale} />
+            <SketchCanvas ref={canvasRef} />
             <FlexBox padding="4em" height="20%" justifyContent="center">
                 <Button
                     padding="0.2em 2em"
