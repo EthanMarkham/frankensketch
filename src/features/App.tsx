@@ -153,7 +153,7 @@ function App() {
                     }
                 })}
             </Suspense>
-            <NavBar />
+            {pageIndex !== 1 && <NavBar />}
             <Leva
                 //theme={myTheme} // you can pass a custom theme (see the styling section)
                 //fill // default = false,  true makes the pane fill the parent dom node it's rendered in
