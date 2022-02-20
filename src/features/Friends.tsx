@@ -1,76 +1,82 @@
 import SectionText from "components/general/SectionText";
-import Header from "components/header/header";
-import NavBar from "components/navbar/NavBar";
-import {Button, FlexBox, PlaceHolderDiv, Text} from "styles"
+import { Button, FlexBox, PlaceHolderDiv, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import { useEffect, useState } from "react";
 import Modal from "./Modal";
-import Amplify, { API, Auth, graphqlOperation } from 'aws-amplify'
-import { getUser } from '../graphql/queries'
-import awsExports from "../aws-exports"
+import { API, Auth, graphqlOperation } from "aws-amplify";
+import { getUser } from "../graphql/queries";
 import { getRandomItem } from "utils/functions";
 import { COLORS } from "utils/DEFS";
-Amplify.configure(awsExports)
 
 function Friends() {
     //Friend error message
-    const noFriendResponses: string[] = ["Couln't find any friends, click on the plus icon to add new friends!", "You are so lonely, I don't want to be you!", "Looks like you dont have any friends", "No friends found!", "You have no friends, HaHa!", "This looks so empty, go find new friends!"]
-    const [errorMessage, setErrorMessage] = useState("0 friends available")
-    const [hasFriends, setHasFriends] = useState(false)
+    const noFriendResponses: string[] = [
+        "Couln't find any friends, click on the plus icon to add new friends!",
+        "You are so lonely, I don't want to be you!",
+        "Looks like you dont have any friends",
+        "No friends found!",
+        "You have no friends, HaHa!",
+        "This looks so empty, go find new friends!",
+    ];
+    const [errorMessage, setErrorMessage] = useState("0 friends available");
+    const [hasFriends, setHasFriends] = useState(false);
 
     //Control is modal should be shown
-    const [isShown, setIsShown] = useState(false); 
+    const [isShown, setIsShown] = useState(false);
 
     //Friends List
-    const [friendsList, setFriendList] = useState([])
+    const [friendsList, setFriendList] = useState([]);
     useEffect(() => {
-        getFriends()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
+        getFriends();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    //WE HAVE AUTH INFO IN STATE ALREADY. CALL HOOK USE AUTH
     const getFriends = () => {
         try {
-            Auth.currentAuthenticatedUser()
-            .then(async (data) => {
-                const userData = await (API.graphql(graphqlOperation(getUser, {id: data.username} ))) as unknown as any
-                const friends: [] = userData.data.getUser.friends
-                if(friends.length === 0){
-                    setErrorMessage(getRandomItem(noFriendResponses))
-                    setHasFriends(false) 
-                }else{
-                    setHasFriends(true)
-                    setFriendList(friends)
-                }   
-            })
+            Auth.currentAuthenticatedUser().then(async (data) => {
+                const userData = (await API.graphql(
+                    graphqlOperation(getUser, { id: data.username })
+                )) as unknown as any;
+                const friends: [] = userData.data.getUser.friends;
+                if (friends.length === 0) {
+                    setErrorMessage(getRandomItem(noFriendResponses));
+                    setHasFriends(false);
+                } else {
+                    setHasFriends(true);
+                    setFriendList(friends);
+                }
+            });
         } catch (error) {
-            setErrorMessage(getRandomItem(noFriendResponses))
-            setHasFriends(false)
+            setErrorMessage(getRandomItem(noFriendResponses));
+            setHasFriends(false);
         }
-    }
+    };
 
     return (
         <FlexBox direction="column">
-            <Header/>
-            <FlexBox direction="row" justifyContent="space-between" margin="0 1.5rem">
-                <SectionText text="Friends"/>
+            <FlexBox
+                direction="row"
+                justifyContent="space-between"
+                margin="0 1.5rem"
+            >
+                <SectionText text="Friends" />
                 <Button background="none" onClick={() => setIsShown(true)}>
                     <img src={Icons.Plus} alt="Plus icon" />
                 </Button>
             </FlexBox>
-            <FlexBox direction="column" margin="0 1.5rem" >
+            <FlexBox direction="column" margin="0 1.5rem">
                 {!hasFriends && (
-                    <Text fontSize="1.5em" color={COLORS.danger}>{errorMessage}</Text> 
+                    <Text fontSize="1.5em" color={COLORS.danger}>
+                        {errorMessage}
+                    </Text>
                 )}
-                {hasFriends && (
+                {hasFriends &&
                     friendsList.map((value, i) => {
-                        return <PlaceHolderDiv/>
-                    })
-                )}
-
+                        return <PlaceHolderDiv />;
+                    })}
             </FlexBox>
-            
-            <NavBar/>
-            {isShown && <Modal setIsShown={setIsShown} type="addFriend"/>}
+
+            {isShown && <Modal setIsShown={setIsShown} type="addFriend" />}
         </FlexBox>
     );
 }
