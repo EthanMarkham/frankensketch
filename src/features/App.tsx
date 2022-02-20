@@ -47,6 +47,8 @@ function App() {
         [pageIndex]
     );
 
+    const showHeader = useMemo(() => pageIndex > 0, [pageIndex]);
+
     const containerStyles = {
         position: "absolute",
         width: "100%",
@@ -63,7 +65,7 @@ function App() {
                 overflow: "hidden",
             }}
         >
-            <Header />
+            {showHeader && <Header />}
 
             <Div
                 ref={contentRef}
