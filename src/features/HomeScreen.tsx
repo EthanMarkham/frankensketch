@@ -27,15 +27,7 @@ function HomeScreen({ games, container }: HomeScreenProps) {
     };
 
     return (
-        <FlexBox
-            direction="column"
-            padding="0 1.5rem"
-            height={
-                container?.current
-                    ? container!!.current!!.offsetHeight + "px"
-                    : "10px"
-            }
-        >
+        <FlexBox direction="column" padding="0 1.5rem">
             <SectionText text="New Game" />
             <FlexBox
                 padding="0 0.3rem"

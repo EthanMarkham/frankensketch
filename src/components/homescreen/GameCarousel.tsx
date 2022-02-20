@@ -46,7 +46,7 @@ function GameCarousel({ container }: GenericPageProps) {
                 flex: "0 1",
                 justifySelf: "flex-end",
                 flexBasis: container?.current
-                    ? container.current.offsetHeight * 0.9 + "px"
+                    ? container.current.offsetHeight * 0.7 + "px"
                     : "10px",
                 overflowY: "auto",
             }}
