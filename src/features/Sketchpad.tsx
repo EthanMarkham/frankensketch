@@ -58,7 +58,7 @@ const Sketchpad = ({ container }: GenericPageProps) => {
             <SketchCanvas
                 ref={canvasRef}
                 style={{
-                    position: "absolute",
+                    position: "fixed",
                     right: 0,
                     left: 0,
                     top: 0,
