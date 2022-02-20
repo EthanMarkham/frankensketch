@@ -16,6 +16,7 @@ import Settings from "./Settings";
 import GameViewer from "./GameViewer";
 import Admin from "./Admin";
 import Pallet from "components/svg/Pallet";
+import NavBar from "components/navbar/NavBar";
 
 /*
 const Authentication = React.lazy(() => import("features/Authentication"));
@@ -36,7 +37,7 @@ function App() {
         from: { opacity: 0 },
         enter: { opacity: 1 },
         leave: { opacity: 0 },
-        config: config.molasses,
+        config: config.gentle,
     });
 
     const containerStyles = {
@@ -50,24 +51,11 @@ function App() {
         <div
             style={{
                 width: "100vw",
-                height: "100vh",
+                height: "90vh",
                 position: "fixed",
                 overflow: "hidden",
             }}
         >
-            <Leva
-                //theme={myTheme} // you can pass a custom theme (see the styling section)
-                //fill // default = false,  true makes the pane fill the parent dom node it's rendered in
-                //flat // default = false,  true removes border radius and shadow
-                //oneLineLabels={true} // default = false, alternative layout for labels, with labels and fields on separate rows
-                //hieTitleBar={true} // default = false, hides the GUI header
-                titleBar={{
-                    title: <Pallet />,
-                    filter: false,
-                }}
-                collapsed={true} // default = false, when true the GUI is collpased
-            />
-
             <Suspense fallback={null}>
                 {transitions((styles, item) => {
                     switch (item) {
@@ -165,6 +153,19 @@ function App() {
                     }
                 })}
             </Suspense>
+            <NavBar />
+            <Leva
+                //theme={myTheme} // you can pass a custom theme (see the styling section)
+                //fill // default = false,  true makes the pane fill the parent dom node it's rendered in
+                //flat // default = false,  true removes border radius and shadow
+                //oneLineLabels={true} // default = false, alternative layout for labels, with labels and fields on separate rows
+                //hieTitleBar={true} // default = false, hides the GUI header
+                titleBar={{
+                    title: <Pallet />,
+                    filter: false,
+                }}
+                collapsed={true} // default = false, when true the GUI is collpased
+            />
         </div>
     );
 }

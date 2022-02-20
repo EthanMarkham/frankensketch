@@ -4,15 +4,19 @@ import { COLORS } from "utils/DEFS";
 
 function ActionButton({
     text,
+    disabled,
     onClick,
     color,
 }: {
     text: string;
+    disabled?: boolean;
     onClick: () => void;
     color: string;
 }) {
+    console.log(disabled);
     return (
         <Button
+            disabled={disabled !== undefined ? disabled : false}
             width="210px"
             height="50px"
             fontSize="1.25em"

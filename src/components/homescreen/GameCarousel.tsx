@@ -1,7 +1,7 @@
 import { HomeScreenProps } from "types";
 import { Carousel } from "@trendyol-js/react-carousel";
 import GameCard from "./GameCard";
-import { Button, FlexBox } from "styles";
+import { Button, FlexBox, Grid } from "styles";
 import { COLORS } from "utils/DEFS";
 import { API } from "aws-amplify";
 import { listGames } from "graphql/queries";
@@ -12,7 +12,6 @@ import React, { useState, useEffect } from "react";
 //TODO - Set PROPS and make dynamic
 function GameCarousel(props: HomeScreenProps) {
     const [gameList, setGameList] = useState<Array<Game>>(new Array<Game>());
-    const [games, setGames] = useState(new Array<JSX.Element>());
 
     useEffect(() => {
         new Promise<void>(async (resolve, reject) => {
@@ -39,13 +38,29 @@ function GameCarousel(props: HomeScreenProps) {
     useEffect(() => {
         let games = new Array<JSX.Element>();
         gameList.forEach((g) => {
-            games.push(<GameCard game={g} key={g.id} />);
+            games.push();
         });
-        setGames(games);
     }, [gameList]);
 
     return (
-        <Carousel
+        <Grid
+            style={{
+                gridTemplateColumns: "repeat(auto-fit, 400px)",
+                gap: "0.2em",
+                overflowY: "auto",
+            }}
+        >
+            {gameList.map((g) => (
+                <GameCard game={g} key={g.id} />
+            ))}
+        </Grid>
+    );
+}
+
+/*
+
+
+ <Carousel
             show={2.5}
             slide={2}
             swiping={true}
@@ -81,7 +96,5 @@ function GameCarousel(props: HomeScreenProps) {
                 </FlexBox>
             }
         />
-    );
-}
-
+*/
 export default GameCarousel;

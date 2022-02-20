@@ -154,6 +154,11 @@ export const AnimatedFlex = styled(animated("div"))<AnimatedFlexBoxProps>`
     display: flex;
 `;
 
+export const Grid = styled.div<FlexBoxProps>`
+    display: grid;
+    ${(props) => getGenericProps(props)}
+`;
+
 // IMPORT AND EXPORT OTHER CLASSES HERE SO WE CAN JUST IMPORT styles.whatever
 export {
     InputGroup,

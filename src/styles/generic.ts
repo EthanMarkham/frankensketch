@@ -7,6 +7,13 @@ export const Button = styled("button")<GenericStyleProps>`
     font-weight: bold;
     border-radius: 10px;
     border: none;
+    &:hover {
+        cursor: grab;
+    }
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.2;
+    }
     ${(props) => getGenericProps(props)}
 `;
 
@@ -45,24 +52,23 @@ export const Card = styled("div")<GenericStyleProps>`
 `;
 
 export const NavDiv = styled.div<GenericStyleProps>`
-    position: -webkit-sticky;
-    position: sticky;
+    position: fixed;
     bottom: 0;
     ${(props) => getGenericProps(props)}
-`
+`;
 
 export const HeaderDiv = styled.div<GenericStyleProps>`
     position: -webkit-sticky;
     position: sticky;
     top: 0;
     ${(props) => getGenericProps(props)}
-`
+`;
 export const PlaceHolderDiv = styled.div<GenericStyleProps>`
-    background-color:${COLORS.darkGray};
-    background-filter:blur(5px);
+    background-color: ${COLORS.darkGray};
+    background-filter: blur(5px);
     border-radius: 10px;
     width: 100%;
     height: 2.5rem;
     margin: 1rem 0;
     ${(props) => getGenericProps(props)}
-`
+`;

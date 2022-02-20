@@ -7,7 +7,6 @@ import { Button, FlexBox, Stiches, Text } from "styles";
 import { HomeScreenProps } from "types";
 import { COLORS } from "utils/DEFS";
 import { Icons } from "styles/svg/ui-icons/icons";
-import NavBar from "components/navbar/NavBar";
 import Header from "components/header/header";
 import { useStore } from "store";
 import { useEffect, useState } from "react";
@@ -23,6 +22,7 @@ function HomeScreen(props: HomeScreenProps) {
     const [isShown, setIsShown] = useState(false);
     const [modalType, setModalType] = useState("");
     const [isNewGame, setIsNewGame] = useState(true);
+    const joinGame = useStore((state) => state.actions.joinGame);
 
     const displayModal = (modalType: string, gameType?: boolean) => {
         //check if a game type was provided and update if so
@@ -53,27 +53,35 @@ function HomeScreen(props: HomeScreenProps) {
             <Stiches margin=" 0.5rem 0 0 0" width="100%" />
             <FlexBox margin="0 1.5rem" direction="column">
                 <SectionText text="New Game" />
+                <FlexBox
+                    margin="0 1.5rem"
+                    direction="row"
+                    justifyContent="space-around"
+                >
+                    <ActionButton
+                        text="Create Game"
+                        disabled
+                        onClick={() => alert("feature coming soon.")} //displayModal("startGame", true)
+                        color={COLORS.secondaryGreen}
+                    />
+                    <ActionButton
+                        text="Join Private"
+                        disabled
+                        onClick={() => alert("feature coming soon.")} //displayModal("startGame", true)
+                        color={COLORS.primaryBTN}
+                    />
+                    <ActionButton
+                        text="Join Public"
+                        //onClick={joinGame}
+                        onClick={() => joinGame()}
+                        color={COLORS.success}
+                    />
+                </FlexBox>
 
-                <ActionButton
-                    text="Create new game"
-                    onClick={() => displayModal("startGame", true)}
-                    color={COLORS.primaryBTN}
-                />
-                <ActionButton
-                    text="Join Game"
-                    //onClick={joinGame}
-                    onClick={() => displayModal("startGame", false)}
-                    color={COLORS.success}
-                />
-
-                <SectionText text="Active Games" />
-
-                <GameCarousel />
                 <SectionText text="Past Games" />
 
                 <GameCarousel />
             </FlexBox>
-            <NavBar />
             {isShown && (
                 <Modal
                     setIsShown={setIsShown}
