@@ -1,16 +1,14 @@
-import { HomeScreenProps } from "types";
-import { Carousel } from "@trendyol-js/react-carousel";
+import { GenericPageProps } from "types";
 import GameCard from "./GameCard";
-import { Button, FlexBox, Grid } from "styles";
-import { COLORS } from "utils/DEFS";
 import { API } from "aws-amplify";
 import { listGames } from "graphql/queries";
 import { Game, ListGamesQueryVariables } from "types/API";
 import { GraphQLResult } from "@aws-amplify/api-graphql";
 import React, { useState, useEffect } from "react";
+import { Div, Grid } from "styles";
 
 //TODO - Set PROPS and make dynamic
-function GameCarousel(props: HomeScreenProps) {
+function GameCarousel({ container }: GenericPageProps) {
     const [gameList, setGameList] = useState<Array<Game>>(new Array<Game>());
 
     useEffect(() => {
@@ -43,17 +41,28 @@ function GameCarousel(props: HomeScreenProps) {
     }, [gameList]);
 
     return (
-        <Grid
+        <Div
             style={{
-                gridTemplateColumns: "repeat(auto-fit, 400px)",
-                gap: "0.2em",
+                flex: "0 1",
+                justifySelf: "flex-end",
+                flexBasis: container?.current
+                    ? container.current.offsetHeight * 0.9 + "px"
+                    : "10px",
                 overflowY: "auto",
             }}
         >
-            {gameList.map((g) => (
-                <GameCard game={g} key={g.id} />
-            ))}
-        </Grid>
+            <Grid
+                style={{
+                    justifyContent: "space-around",
+                    gridTemplateColumns: "repeat(auto-fit, 400px)",
+                    gap: "0.2em",
+                }}
+            >
+                {gameList.map((g) => (
+                    <GameCard game={g} key={g.id} />
+                ))}
+            </Grid>
+        </Div>
     );
 }
 

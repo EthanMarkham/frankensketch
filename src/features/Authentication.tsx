@@ -15,6 +15,7 @@ import { COLORS } from "utils/DEFS";
 import { LoginDetails, SignUpDetails } from "types";
 import { getDateTimeFormat } from "utils";
 import useError from "hooks/useError";
+import { useStore } from "store";
 
 enum MODE {
     SIGN_IN,
@@ -28,6 +29,7 @@ function Authentication() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [dob, setDob] = useState("");
+    const setUser = useStore((store) => store.actions.setUser);
 
     const currentDate = getDateTimeFormat();
 
@@ -56,20 +58,16 @@ function Authentication() {
 
         switch (mode) {
             case MODE.SIGN_IN:
-                console.log(loginDetails as LoginDetails);
                 Auth.signIn(loginDetails as LoginDetails)
                     .then((data) => {
-                        console.log(data);
-                        if (!data.errors) {
-                            Auth.signIn(loginDetails);
-                        }
+                        //console.log(data);
                     })
                     .catch((err) => handleError(err));
                 break;
             case MODE.SIGN_UP:
                 console.log(loginDetails);
                 Auth.signUp(loginDetails as SignUpDetails)
-                    .then((data) => console.log(data))
+                    .then((data) => {})
                     .catch((err) => handleError(err));
                 break;
         }

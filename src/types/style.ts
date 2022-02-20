@@ -6,6 +6,7 @@ export interface GenericStyleProps {
     fontSize?: string;
     backgroundColor?: string;
     width?: string;
+    basis?: string;
     height?: string;
     zIndex?: number;
     margin?: string;
@@ -14,6 +15,7 @@ export interface GenericStyleProps {
     position?: string;
     padding?: string;
     borderColor?: string;
+    flex?: string;
     borderRadius?: string;
     css?: CSSProperties;
     fontWeight?: string;

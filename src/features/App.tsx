@@ -1,7 +1,7 @@
 import useAuth from "hooks/useAuth";
-import React, { Suspense } from "react";
+import React, { Suspense, useMemo, useRef } from "react";
 import { useStore } from "store";
-import { AnimatedDiv } from "styles";
+import { AnimatedDiv, FlexBox, Div } from "styles";
 import { useTransition, config } from "react-spring";
 import { Leva } from "leva";
 
@@ -17,6 +17,7 @@ import GameViewer from "./GameViewer";
 import Admin from "./Admin";
 import Pallet from "components/svg/Pallet";
 import NavBar from "components/navbar/NavBar";
+import Header from "components/header/header";
 
 /*
 const Authentication = React.lazy(() => import("features/Authentication"));
@@ -32,6 +33,7 @@ const Community = React.lazy(() => import("features/Community"))
 function App() {
     useAuth();
     const pageIndex = useStore((state) => state.pageIndex);
+    const contentRef = useRef<HTMLDivElement>(null);
 
     const transitions = useTransition(pageIndex, {
         from: { opacity: 0 },
@@ -40,120 +42,138 @@ function App() {
         config: config.gentle,
     });
 
+    const showNav = useMemo(
+        () => pageIndex > 0 && pageIndex !== 2,
+        [pageIndex]
+    );
+
     const containerStyles = {
-        width: "100vw",
-        height: "100vh",
-        position: "fixed",
-        overflow: "hidden",
+        position: "absolute",
+        width: "100%",
     };
 
     return (
-        <div
+        <FlexBox
+            width="100vw"
+            height="100vh"
+            direction="column"
+            justifyContent="center"
             style={{
-                width: "100vw",
-                height: "90vh",
                 position: "fixed",
                 overflow: "hidden",
             }}
         >
-            <Suspense fallback={null}>
-                {transitions((styles, item) => {
-                    switch (item) {
-                        case -1:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <LoadingScreen />
-                                </AnimatedDiv>
-                            );
-                        case 0:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <Authentication />
-                                </AnimatedDiv>
-                            );
-                        case 1:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <HomeScreen />
-                                </AnimatedDiv>
-                            );
-                        case 2:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <Sketchpad />
-                                </AnimatedDiv>
-                            );
+            <Header />
 
-                        case 3:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <Friends />
-                                </AnimatedDiv>
-                            );
-                        case 4:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <Settings />
-                                </AnimatedDiv>
-                            );
-                        case 5:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <Profile />
-                                </AnimatedDiv>
-                            );
-                        case 6:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <Community />
-                                </AnimatedDiv>
-                            );
-                        case 7:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <Admin />
-                                </AnimatedDiv>
-                            );
-                        case 9:
-                            return (
-                                <AnimatedDiv
-                                    style={styles}
-                                    {...containerStyles}
-                                >
-                                    <GameViewer />
-                                </AnimatedDiv>
-                            );
-                    }
-                })}
-            </Suspense>
-            {pageIndex !== 1 && <NavBar />}
+            <Div
+                ref={contentRef}
+                style={{
+                    width: "100vw",
+                    flex: "1 1",
+                    overflow: "auto",
+                    position: "relative",
+                }}
+            >
+                <Suspense fallback={null}>
+                    {transitions((styles, item) => {
+                        switch (item) {
+                            case -1:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <LoadingScreen />
+                                    </AnimatedDiv>
+                                );
+                            case 0:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <Authentication />
+                                    </AnimatedDiv>
+                                );
+                            case 1:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <HomeScreen container={contentRef} />
+                                    </AnimatedDiv>
+                                );
+                            case 2:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <Sketchpad container={contentRef} />
+                                    </AnimatedDiv>
+                                );
+
+                            case 3:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <Friends />
+                                    </AnimatedDiv>
+                                );
+                            case 4:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <Settings />
+                                    </AnimatedDiv>
+                                );
+                            case 5:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <Profile />
+                                    </AnimatedDiv>
+                                );
+                            case 6:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <Community />
+                                    </AnimatedDiv>
+                                );
+                            case 7:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <Admin />
+                                    </AnimatedDiv>
+                                );
+                            case 9:
+                                return (
+                                    <AnimatedDiv
+                                        style={styles}
+                                        {...containerStyles}
+                                    >
+                                        <GameViewer />
+                                    </AnimatedDiv>
+                                );
+                        }
+                    })}
+                </Suspense>
+            </Div>
+
+            {showNav && <NavBar />}
             <Leva
                 //theme={myTheme} // you can pass a custom theme (see the styling section)
                 //fill // default = false,  true makes the pane fill the parent dom node it's rendered in
@@ -166,7 +186,7 @@ function App() {
                 }}
                 collapsed={true} // default = false, when true the GUI is collpased
             />
-        </div>
+        </FlexBox>
     );
 }
 

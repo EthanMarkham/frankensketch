@@ -1,18 +1,20 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Button, FlexBox, SketchCanvas, Text } from "styles";
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, FlexBox, SketchCanvas, Text, Div } from "styles";
 import usePaper from "hooks/usePaper";
 import { useStore } from "store";
-import { API, Auth } from "aws-amplify";
-import { calculateScale } from "utils";
-import { useControls } from "leva";
+import { GenericPageProps } from "types";
+import ActionButton from "components/general/ActionButton";
+import { COLORS } from "utils/DEFS";
+import BackButton from "components/general/BackButton";
 
 /*--------------------------------------------------------------------//
                       J S X      E X P O R T
 //--------------------------------------------------------------------*/
-const Sketchpad = () => {
+const Sketchpad = ({ container }: GenericPageProps) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const serverProps = useStore((state) => state.serverSideProps);
+    const changePage = useStore((state) => state.actions.setPage);
     const [scale, setScale] = useState<number | null>(null);
     const [lineData, init] = usePaper(canvasRef);
     const postGame = useStore((state) => state.actions.postGame);
@@ -25,8 +27,27 @@ const Sketchpad = () => {
     }, [containerRef, init, drawingType]);
 
     return (
-        <FlexBox direction="column" ref={containerRef} height="100vh">
-            <FlexBox padding="4em" height="20%" justifyContent="center">
+        <Div
+            ref={containerRef}
+            height={
+                container?.current
+                    ? container.current.offsetHeight + "px"
+                    : "0px"
+            }
+            style={{
+                position: "relative",
+            }}
+        >
+            <BackButton onClick={() => changePage(1)} />
+            <FlexBox
+                justifyContent="center"
+                style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                }}
+            >
                 <Text>
                     Draw&nbsp;{drawingType === "legs" ? "some" : "a"}&nbsp;
                     {drawingType}
@@ -34,16 +55,30 @@ const Sketchpad = () => {
             </FlexBox>
 
             {/*Info: waiting til we have scale calculated to render the canvas*/}
-            <SketchCanvas ref={canvasRef} />
-            <FlexBox padding="4em" height="20%" justifyContent="center">
-                <Button
-                    padding="0.2em 2em"
-                    onClick={() => postGame(lineData, serverProps.drawing)}
-                >
-                    Submit
-                </Button>
-            </FlexBox>
-        </FlexBox>
+            <SketchCanvas
+                ref={canvasRef}
+                style={{
+                    position: "absolute",
+                    right: 0,
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                }}
+            />
+
+            <ActionButton
+                onClick={() => postGame(lineData, serverProps.drawing)}
+                style={{
+                    position: "absolute",
+                    right: 0,
+                    left: 0,
+                    margin: "auto",
+                    bottom: "1em",
+                }}
+                text="Submit"
+                color={COLORS.success}
+            />
+        </Div>
     );
 };
 

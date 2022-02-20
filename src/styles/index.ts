@@ -76,6 +76,8 @@ export const getGenericProps = (props: GenericStyleProps) => {
     if (props.fontSize) output += `font-size: ${props.fontSize};`;
     if (props.borderRadius) output += `border-radius: ${props.borderRadius};`;
     if (props.fontWeight) output += `font-weight: ${props.fontWeight};`;
+    if (props.basis) output += `flex-basis: ${props.basis};`;
+    if (props.flex) output += `flex: ${props.flex};`;
 
     if (props.css) output += cssToString(props.css);
 

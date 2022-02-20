@@ -1,13 +1,20 @@
 import { LoginDetails, SignUpDetails } from "./auth";
 import { ErrorData, Store } from "./store";
-import {GenericStyleProps, FlexBoxProps } from "./style";
-import {HomeScreenProps} from './home'
+import { GenericStyleProps, FlexBoxProps } from "./style";
+import { HomeScreenProps } from "./home";
+import { RefObject } from "react";
 
 export type Callback = (data: any) => void;
 
 export interface Size {
     height: number;
     width: number;
+}
+
+export interface GenericPageProps {
+    height?: number;
+    width?: number;
+    container?: RefObject<HTMLDivElement>;
 }
 
 export class Action {
@@ -28,7 +35,10 @@ export class Action {
 export type {
     //store
     ErrorData,
-    Store, GenericStyleProps, FlexBoxProps,
-    LoginDetails, SignUpDetails,
-    HomeScreenProps
+    Store,
+    GenericStyleProps,
+    FlexBoxProps,
+    LoginDetails,
+    SignUpDetails,
+    HomeScreenProps,
 };

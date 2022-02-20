@@ -1,5 +1,5 @@
 import { useStore } from "store";
-import { Button, Card, FlexBox, NavDiv, Stiches, Text } from "styles";
+import { Button, Div, FlexBox, NavDiv, Stiches, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import { COLORS } from "utils/DEFS";
 
@@ -12,9 +12,12 @@ function NavBar() {
 
     //Maybe Put this in an array and map it
     return (
-        <NavDiv
+        <Div
+            height="20%"
+            style={{
+                maxHeight: "122px",
+            }}
             width="100%"
-            margin="0 0 .5rem 0"
             backgroundColor={COLORS.bgPrimary}
         >
             <Stiches margin=".75rem 0" width="100%" />
@@ -26,6 +29,15 @@ function NavBar() {
                 >
                     <img src={Icons.People} alt="Friends icon" />
                     <Text color={COLORS.white}>Friends</Text>
+                </Button>
+
+                <Button
+                    background="none"
+                    borderRadius="0"
+                    onClick={() => OnClickNavButton(5)}
+                >
+                    <img src={Icons.User} alt="User profile icon" />
+                    <Text color={COLORS.white}>Profile</Text>
                 </Button>
 
                 <Button
@@ -56,7 +68,7 @@ function NavBar() {
                 </Button>
             </FlexBox>
             <Stiches margin=".75rem 0 0 0" width="100%" />
-        </NavDiv>
+        </Div>
     );
 }
 

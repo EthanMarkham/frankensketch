@@ -1,4 +1,5 @@
 import React from "react";
+import { CSSProperties } from "styled-components";
 import { Button } from "styles";
 import { COLORS } from "utils/DEFS";
 
@@ -7,11 +8,13 @@ function ActionButton({
     disabled,
     onClick,
     color,
+    style,
 }: {
     text: string;
     disabled?: boolean;
     onClick: () => void;
     color: string;
+    style?: CSSProperties;
 }) {
     console.log(disabled);
     return (
@@ -24,6 +27,7 @@ function ActionButton({
             backgroundColor={color}
             color={COLORS.black}
             onClick={onClick}
+            style={style}
         >
             {text}
         </Button>

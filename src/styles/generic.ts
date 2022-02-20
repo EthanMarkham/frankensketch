@@ -52,8 +52,6 @@ export const Card = styled("div")<GenericStyleProps>`
 `;
 
 export const NavDiv = styled.div<GenericStyleProps>`
-    position: fixed;
-    bottom: 0;
     ${(props) => getGenericProps(props)}
 `;
 
@@ -61,6 +59,7 @@ export const HeaderDiv = styled.div<GenericStyleProps>`
     position: -webkit-sticky;
     position: sticky;
     top: 0;
+    width: 100vw;
     ${(props) => getGenericProps(props)}
 `;
 export const PlaceHolderDiv = styled.div<GenericStyleProps>`
