@@ -12,6 +12,7 @@ export default function useAuth() {
                 setUser({
                     username: data.attributes.preffered_username,
                     email: data.attributes.email,
+                    groups: data.signInUserSession.accessToken.payload['cognito:groups']
                 });
             })
             .catch(() => {

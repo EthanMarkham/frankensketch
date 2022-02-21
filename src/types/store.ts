@@ -7,7 +7,7 @@ export interface ErrorData {
 }
 
 export interface Store {
-    userData: { email: string; username: string } | null;
+    userData: { email: string; username: string; groups?:string[] } | null;
     serverSideProps: any | null; //Generic JSON props to grab before loading a feature.
     pageIndex: number;
     subscriptions: Map<string, () => void>;
@@ -15,7 +15,7 @@ export interface Store {
     error: ErrorData | null;
     actions: {
         setPage: (index: number) => void;
-        setUser: (data: { username: string; email: string } | null) => void;
+        setUser: (data: { username: string; email: string; groups?:string[]} | null) => void;
         subscribe: (key: string, callback: any) => void;
         unsubscribe: (key: string) => void;
         viewGame: (game: Game) => void;

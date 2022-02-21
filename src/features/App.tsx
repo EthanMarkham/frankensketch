@@ -30,6 +30,9 @@ const Community = React.lazy(() => import("features/Community"))
 */
 
 function App() {
+    //pages without navbar, 
+    const pagesWithoutNav = [1, 7]
+
     useAuth();
     const pageIndex = useStore((state) => state.pageIndex);
 
@@ -153,7 +156,7 @@ function App() {
                     }
                 })}
             </Suspense>
-            {pageIndex !== 1 && <NavBar />}
+            {!pagesWithoutNav.includes(pageIndex) && <NavBar />}
             <Leva
                 //theme={myTheme} // you can pass a custom theme (see the styling section)
                 //fill // default = false,  true makes the pane fill the parent dom node it's rendered in
