@@ -15,8 +15,8 @@ const Sketchpad = ({ container }: GenericPageProps) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
     const serverProps = useStore((state) => state.serverSideProps);
     const changePage = useStore((state) => state.actions.setPage);
-    const [scale, setScale] = useState<number | null>(null);
-    const [lineData, init] = usePaper(canvasRef);
+    //const [scale, setScale] = useState<number | null>(null);
+    const [lineData, init, { position, scale }] = usePaper(canvasRef);
     const postGame = useStore((state) => state.actions.postGame);
     const drawingType = serverProps.drawing;
 
@@ -57,11 +57,12 @@ const Sketchpad = ({ container }: GenericPageProps) => {
             {/*Info: waiting til we have scale calculated to render the canvas*/}
             <SketchCanvas
                 ref={canvasRef}
+                scale={scale}
                 style={{
                     position: "fixed",
                     right: 0,
-                    left: 0,
-                    top: 0,
+                    left: position.x,
+                    top: position.y,
                     bottom: 0,
                 }}
             />

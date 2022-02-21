@@ -71,7 +71,7 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
     const [lineData, setLineData] = useState<any[]>([]);
     const [drawingType, setType] = useState<string | null>();
 
-    const { stroke, color, isErase } = useControls({
+    const controls = useControls({
         stroke: {
             label: "Stroke",
             value: 3,
@@ -87,7 +87,30 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
             label: "Eraser",
             value: false,
         },
+        scale: {
+            label: "Scale",
+            value: 1,
+            min: 0.1,
+            max: 3,
+            step: 0.1,
+        },
+        position: {
+            label: "Postion",
+            value: {
+                x: 0,
+                y: 0,
+            },
+            x: {
+                min: -100,
+                max: 100,
+            },
+            y: {
+                min: -100,
+                max: 100,
+            },
+        },
     });
+    const { stroke, color, isErase, position, scale } = controls;
 
     const draw = useCallback(() => {
         let myPath: any = null;
@@ -101,7 +124,19 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
             myPath.strokeJoin = "round";
         };
 
-        Paper.view.onMouseDrag = (event: { point: any }) => {
+        Paper.view.onMouseDrag = (event: paper.MouseEvent) => {
+            console.log(event);
+            /*
+            var rect = e.target.getBoundingClientRect();
+            var x = e.clientX - rect.left; //x position within the element.
+            var y = e.clientY - rect.top; //y position within the element.
+            console.log("Left? : " + x + " ; Top? : " + y + ".");
+*/
+            const newPoint = {
+                x: event.point.x + position.x,
+                y: event.point.y + position.y,
+            };
+            console.log(newPoint);
             myPath.add(event.point);
         };
 
@@ -110,7 +145,7 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
             myPath.selected = false;
             setLineData((data) => [...data, myPath]);
         };
-    }, [stroke, color, isErase]);
+    }, [stroke, color, isErase, position, scale]);
 
     useEffect(() => {
         const element = canvas.current;
@@ -131,7 +166,7 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
         init(true);
         setType(drawingType);
     };
-    return [lineData, setUp] as const;
+    return [lineData, setUp, controls] as const;
 }
 
 export default usePaper;
