@@ -11,7 +11,6 @@ import LoadingScreen from "./LoadingScreen";
 import Sketchpad from "./Sketchpad";
 import Community from "./Community";
 import Friends from "./Friends";
-import Profile from "./Profile";
 import Settings from "./Settings";
 import GameViewer from "./GameViewer";
 import Admin from "./Admin";
@@ -132,15 +131,6 @@ function App() {
                                         {...containerStyles}
                                     >
                                         <Settings />
-                                    </AnimatedDiv>
-                                );
-                            case 5:
-                                return (
-                                    <AnimatedDiv
-                                        style={styles}
-                                        {...containerStyles}
-                                    >
-                                        <Profile />
                                     </AnimatedDiv>
                                 );
                             case 6:

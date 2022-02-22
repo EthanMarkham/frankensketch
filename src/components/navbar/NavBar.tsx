@@ -1,80 +1,80 @@
-import { useStore } from "store";
-import { Button, Div, FlexBox, NavDiv, Stiches, Text } from "styles";
-import { Icons } from "styles/svg/ui-icons/icons";
-import { COLORS } from "utils/DEFS";
+import { useStore } from "store"
+import { Button, Div, FlexBox, Stiches, Text } from "styles"
+import { Icons } from "styles/svg/ui-icons/icons"
+import { COLORS } from "utils/DEFS"
 
 function NavBar() {
-    //Navigation Flow
-    const changePage = useStore((state) => state.actions.setPage);
-    const OnClickNavButton = (pageNumber: number) => {
-        changePage(pageNumber);
-    };
+	//Navigation Flow
+	const changePage = useStore((state) => state.actions.setPage)
+	const OnClickNavButton = (pageNumber: number) => {
+		changePage(pageNumber)
+	}
 
-    const userData = useStore((store) => store.userData);
+	const userData = useStore((store) => store.userData)
 
-    //Maybe Put this in an array and map it
-    return (
-        <Div
-            height="20%"
-            style={{
-                maxHeight: "122px",
-            }}
-            width="100%"
-            backgroundColor={COLORS.bgPrimary}
-        >
-            <Stiches margin=".75rem 0" width="100%" />
-            <FlexBox justifyContent="space-between" margin="0 1.5rem">
-                {userData?.groups?.includes('Admin') && (
-                    <Button
-                        background="none"
-                        borderRadius="0"
-                        onClick={() => OnClickNavButton(7)}
-                    >
-                        {/* TODO - change with admin account */}
-                        <img src={Icons.User} alt="Admin icon" />
-                        <Text color={COLORS.white}>Admin</Text>
-                    </Button>
-                )}
+	//Maybe Put this in an array and map it
+	return (
+		<Div
+			height="20%"
+			style={{
+				maxHeight: "122px",
+			}}
+			width="100%"
+			backgroundColor={COLORS.bgPrimary}
+		>
+			<Stiches margin=".75rem 0" width="100%" />
+			<FlexBox justifyContent="space-between" margin="0 1.5rem">
+				{userData?.groups?.includes("Admin") && (
+					<Button
+						background="none"
+						borderRadius="0"
+						onClick={() => OnClickNavButton(7)}
+					>
+						{/* TODO - change with admin account icon */}
+						<img src={Icons.User} alt="Admin icon" />
+						<Text color={COLORS.white}>Admin</Text>
+					</Button>
+				)}
 
-                <Button
-                    background="none"
-                    borderRadius="0"
-                    onClick={() => OnClickNavButton(3)}
-                >
-                    <img src={Icons.People} alt="Friends icon" />
-                    <Text color={COLORS.white}>Friends</Text>
-                </Button>
-                
-                <Button
-                    background="none"
-                    borderRadius="0"
-                    onClick={() => OnClickNavButton(1)}
-                >
-                    <img src={Icons.Home} alt="Home icon" />
-                    <Text color={COLORS.white}>Home</Text>
-                </Button>
+				<Button
+					background="none"
+					borderRadius="0"
+					onClick={() => OnClickNavButton(3)}
+				>
+					<img src={Icons.People} alt="Friends icon" />
+					<Text color={COLORS.white}>Friends</Text>
+				</Button>
 
-                <Button
-                    background="none"
-                    borderRadius="0"
-                    onClick={() => OnClickNavButton(6)}
-                >
-                    <img src={Icons.Flipboard} alt="Community icon" />
-                    <Text color={COLORS.white}>Community</Text>
-                </Button>
+				<Button
+					background="none"
+					borderRadius="0"
+					onClick={() => OnClickNavButton(1)}
+				>
+					<img src={Icons.Home} alt="Home icon" />
+					<Text color={COLORS.white}>Home</Text>
+				</Button>
 
-                <Button
-                    background="none"
-                    borderRadius="0"
-                    onClick={() => OnClickNavButton(4)}
-                >
-                    <img src={Icons.Settings} alt="Settings icon" />
-                    <Text color={COLORS.white}>Settings</Text>
-                </Button>
-            </FlexBox>
-            <Stiches margin=".75rem 0 0 0" width="100%" />
-        </Div>
-    );
+				<Button
+					background="none"
+					borderRadius="0"
+					onClick={() => OnClickNavButton(6)}
+				>
+					<img src={Icons.Flipboard} alt="Community icon" />
+					<Text color={COLORS.white}>Community</Text>
+				</Button>
+
+				<Button
+					background="none"
+					borderRadius="0"
+					onClick={() => OnClickNavButton(4)}
+				>
+					<img src={Icons.Settings} alt="Settings icon" />
+					<Text color={COLORS.white}>Settings</Text>
+				</Button>
+			</FlexBox>
+			<Stiches margin=".75rem 0 0 0" width="100%" />
+		</Div>
+	)
 }
 
-export default NavBar;
+export default NavBar

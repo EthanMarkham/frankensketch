@@ -1,8 +1,5 @@
 import SectionText from "components/general/SectionText";
-import React, { useState } from "react";
-import { Button, FlexBox, InputField, InputGroup, InputLabel, InputTextHelper, NavDiv, PlaceHolderDiv, Text } from "styles";
-import { Icons } from "styles/svg/ui-icons/icons";
-import { COLORS } from "utils/DEFS";
+import { FlexBox,  PlaceHolderDiv} from "styles";
 
 //TODO - Set game props
 const GameInfoModal = () => {

@@ -28,7 +28,7 @@ const useStore = create<Store>((set, _get) => ({
             set((store) => ({
                 ...store,
                 userData: data,
-                pageIndex: data === null ? 0 : data?.groups?.includes('Admin') ? 7 : 1
+                pageIndex: data === null ? 0 : 1
             }));
         },
         subscribe: (key, callback) => {
