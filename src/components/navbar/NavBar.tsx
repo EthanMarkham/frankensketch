@@ -23,15 +23,14 @@ function NavBar() {
 			backgroundColor={COLORS.bgPrimary}
 		>
 			<Stiches margin=".75rem 0" width="100%" />
-			<FlexBox justifyContent="space-between" margin="0 1.5rem">
+			<FlexBox justifyContent="space-between" alignContent="center" margin="0 1.5rem">
 				{userData?.groups?.includes("Admin") && (
 					<Button
 						background="none"
 						borderRadius="0"
 						onClick={() => OnClickNavButton(7)}
 					>
-						{/* TODO - change with admin account icon */}
-						<img src={Icons.User} alt="Admin icon" />
+						<img src={Icons.Admin} alt="Admin icon" />
 						<Text color={COLORS.white}>Admin</Text>
 					</Button>
 				)}

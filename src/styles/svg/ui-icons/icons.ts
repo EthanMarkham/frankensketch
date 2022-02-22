@@ -17,6 +17,7 @@ import PendingReport from "./PendingReport.svg"
 import RedX from "./RedX.svg"
 import Search from "./Search.svg"
 import Logout from "./Logout.svg"
+import Admin from "./Admin.svg";
 
 export const Icons = {
     Eraser,
@@ -37,5 +38,6 @@ export const Icons = {
     PendingReport,
     RedX,
     Search,
-    Logout
+    Logout,
+    Admin
 }
