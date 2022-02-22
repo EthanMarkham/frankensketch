@@ -31,9 +31,6 @@ const Community = React.lazy(() => import("features/Community"))
 */
 
 function App() {
-    //pages without navbar,
-    const pagesWithoutNav = [1, 7];
-
     useAuth();
     const pageIndex = useStore((state) => state.pageIndex);
     const contentRef = useRef<HTMLDivElement>(null);

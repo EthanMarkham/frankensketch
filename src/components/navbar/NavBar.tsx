@@ -10,6 +10,8 @@ function NavBar() {
         changePage(pageNumber);
     };
 
+    const userData = useStore((store) => store.userData);
+
     //Maybe Put this in an array and map it
     return (
         <Div
@@ -22,6 +24,18 @@ function NavBar() {
         >
             <Stiches margin=".75rem 0" width="100%" />
             <FlexBox justifyContent="space-between" margin="0 1.5rem">
+                {userData?.groups?.includes('Admin') && (
+                    <Button
+                        background="none"
+                        borderRadius="0"
+                        onClick={() => OnClickNavButton(7)}
+                    >
+                        {/* TODO - change with admin account */}
+                        <img src={Icons.User} alt="Admin icon" />
+                        <Text color={COLORS.white}>Admin</Text>
+                    </Button>
+                )}
+
                 <Button
                     background="none"
                     borderRadius="0"
@@ -30,16 +44,7 @@ function NavBar() {
                     <img src={Icons.People} alt="Friends icon" />
                     <Text color={COLORS.white}>Friends</Text>
                 </Button>
-
-                <Button
-                    background="none"
-                    borderRadius="0"
-                    onClick={() => OnClickNavButton(5)}
-                >
-                    <img src={Icons.User} alt="User profile icon" />
-                    <Text color={COLORS.white}>Profile</Text>
-                </Button>
-
+                
                 <Button
                     background="none"
                     borderRadius="0"

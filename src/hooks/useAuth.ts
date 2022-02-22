@@ -29,6 +29,7 @@ export default function useAuth() {
                         username: data.payload.data.preffered_username,
                         email: data.payload.data.email,
                     });
+                    window.location.reload() //temp
                     break;
                 default:
                 case "signOut":
