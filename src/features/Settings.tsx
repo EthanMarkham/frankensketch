@@ -31,7 +31,7 @@ function Settings() {
 				const userData = response.data.getUser as User
 				setUserInfo(userData)
 			})
-		} catch (error) {}
+		} catch (error) { }
 	}
 
 	return (
@@ -53,11 +53,11 @@ function Settings() {
 						Joined: {userInfo?.createdAt?.substring(0, 10)}
 					</Text>
 				</FlexBox>
-				<FlexBox direction="column" margin="1rem 0 0 0" height="115px" justifyContent="space-between">
+				<FlexBox direction="column" margin="1rem 0 0 0" height="140px" justifyContent="space-between">
 					<SectionText text="Settings" />
-					<FlexBox alignContent="center">
-						<Text fontWeight="300" fontSize="1.15em">NSFW</Text>
-						<InputField height="1.15rem" width="3rem" 
+					<FlexBox alignContent="center" justifyContent="space-between">
+						<Text fontSize="1.15em">NSFW</Text>
+						<InputField height="1.15rem" width="3rem"
 							type="checkbox"
 							required={true}
 							borderColor={COLORS.blue}
@@ -66,15 +66,19 @@ function Settings() {
 							disabled
 						></InputField>
 					</FlexBox>
-					<Button
-						padding="0.5rem"
-						color={COLORS.white}
-						backgroundColor={COLORS.warning}
-						width="10rem"
-						onClick={() => setIsShown(true)}
-					>
-						Change Password
-					</Button>
+					<FlexBox alignContent="center" justifyContent="space-between">
+						<Text fontSize="1.15em">Security</Text>
+						<Button
+							padding="0.5rem"
+							color={COLORS.white}
+							backgroundColor={COLORS.warning}
+							width="10rem"
+							onClick={() => setIsShown(true)}
+							fontSize='1em'
+						>
+							Change Password
+						</Button>
+					</FlexBox>
 				</FlexBox>
 				<FlexBox direction="column" margin="1rem 0 0 0">
 					<SectionText text="Other" />

@@ -20,7 +20,7 @@ const FriendModal = () => {
     const [usersList, setUserList] = useState([""])
     useEffect(() => {
         getUsers()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const getUsers = async () => {
@@ -37,7 +37,7 @@ const FriendModal = () => {
 
     return (
         <FlexBox direction="column" padding="0 1rem">
-            <SectionText text="Add Friend"/>
+            <SectionText text="Add Friend" />
             <InputGroup width="100%">
                 <InputLabel>Enter friend username</InputLabel>
                 <FlexBox direction="row" justifyContent="flex-start" margin="0.5rem 0">
@@ -46,25 +46,27 @@ const FriendModal = () => {
                         type="search"
                         required={true}
                     ></InputField>
-                    <Button margin="0 0 0 1rem" onClick={() => {alert("Look for friends ()")}} background="none"><img src={Icons.FindUser} alt=""/></Button>
+                    <Button margin="0 0 0 1rem" onClick={() => { alert("Look for friends ()") }} background="none"><img src={Icons.FindUser} alt="" /></Button>
                 </FlexBox>
-                
+
             </InputGroup>
             <Text fontSize="1.25em">Results</Text>
-            {usersList.map((value, i) => {
-                return (
-                    <InputGroup width="100%" key={i}>
-                        <FlexBox direction="row" justifyContent="flex-start" margin="0.5rem 0">
-                            <InputField
-                                backgroundColor={COLORS.gray}
-                                value={value}
-                                disabled={true}
-                            ></InputField>
-                            <Button margin="0 0 0 1rem" onClick={() => {alert("Add friend ()")}} background="none"><img src={Icons.AddUser} alt=""/></Button>
-                        </FlexBox>
-                    </InputGroup>
-                )
-            })}
+            <FlexBox direction="column" css={{ overflow: 'scroll' }} height='30rem'>
+                {usersList.map((value, i) => {
+                    return (
+                        <InputGroup width="100%" key={i}>
+                            <FlexBox direction="row" justifyContent="flex-start" margin="0.5rem 0">
+                                <InputField
+                                    backgroundColor={COLORS.gray}
+                                    value={value}
+                                    disabled={true}
+                                ></InputField>
+                                <Button margin="0 0 0 1rem" onClick={() => { alert("Add friend ()") }} background="none"><img src={Icons.AddUser} alt="" /></Button>
+                            </FlexBox>
+                        </InputGroup>
+                    )
+                })}
+            </FlexBox>
 
         </FlexBox>
     );
