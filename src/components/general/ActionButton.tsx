@@ -16,7 +16,6 @@ function ActionButton({
     color: string;
     style?: CSSProperties;
 }) {
-    console.log(disabled);
     return (
         <Button
             disabled={disabled !== undefined ? disabled : false}

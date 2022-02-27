@@ -1,16 +1,21 @@
+import { useEffect } from "react";
 import { useStore } from "store";
 import { Button, Div, FlexBox, NavDiv, Stiches, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import { COLORS } from "utils/DEFS";
 
+//PROBS MOVE TO FEATURE
 function NavBar() {
     //Navigation Flow
     const changePage = useStore((state) => state.actions.setPage);
+    const user = useStore((state) => state.userData);
     const OnClickNavButton = (pageNumber: number) => {
         changePage(pageNumber);
     };
 
-    //Maybe Put this in an array and map it
+    useEffect(() => {
+        console.log(user);
+    }, [user]);
     return (
         <Div
             height="20%"

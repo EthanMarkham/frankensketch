@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Button } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 
@@ -9,7 +9,6 @@ function BackButton({
     disabled?: boolean;
     onClick: () => void;
 }) {
-    console.log(disabled);
     return (
         <Button
             disabled={disabled}

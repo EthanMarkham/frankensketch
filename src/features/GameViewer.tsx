@@ -17,10 +17,10 @@ const GameViewer = () => {
     useEffect(() => {
         if (containerRef.current) {
             setScale(
-                calculateScale(
-                    containerRef.current.getBoundingClientRect(),
-                    1860
-                )
+                calculateScale(containerRef.current.getBoundingClientRect(), {
+                    width: 1860,
+                    height: 1860,
+                })
             );
         }
     }, [containerRef]);

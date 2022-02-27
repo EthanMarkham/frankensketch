@@ -16,14 +16,10 @@ export function getDateTimeFormat(date?: Date): string {
 }
 
 export function calculateScale(
-    { height, width }: DOMRect,
-    oldHeight = 640,
-    oldWidth = 360
+    imageSize: { height: number; width: number },
+    containerSize: { height: number; width: number }
 ): number {
-    const targetWidth = width;
-    const targetHeight = height;
-
-    const ratioW = targetWidth / oldWidth;
-    const ratioH = targetHeight / oldHeight;
+    const ratioW = containerSize.width / imageSize.width;
+    const ratioH = containerSize.height / imageSize.height;
     return ratioW < ratioH ? ratioW : ratioH;
 }

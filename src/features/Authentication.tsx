@@ -27,9 +27,9 @@ function Authentication() {
     const [mode, setMode] = useState<MODE>(MODE.SIGN_IN);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordVerify, setPasswordVerify] = useState("");
     const [email, setEmail] = useState("");
     const [dob, setDob] = useState("");
-    const setUser = useStore((store) => store.actions.setUser);
 
     const currentDate = getDateTimeFormat();
 
@@ -58,20 +58,20 @@ function Authentication() {
 
         switch (mode) {
             case MODE.SIGN_IN:
-                Auth.signIn(loginDetails as LoginDetails)
-                    .then((data) => {
-                        //console.log(data);
-                    })
-                    .catch((err) => handleError(err));
+                Auth.signIn(loginDetails as LoginDetails).catch((err) =>
+                    handleError(err)
+                );
                 break;
             case MODE.SIGN_UP:
-                console.log(loginDetails);
-                Auth.signUp(loginDetails as SignUpDetails)
-                    .then((data) => {})
-                    .catch((err) => handleError(err));
+                if (passwordVerify !== loginDetails.password) {
+                    handleError("Passwords don't match!");
+                }
+                Auth.signUp(loginDetails as SignUpDetails).catch((err) =>
+                    handleError(err)
+                );
                 break;
         }
-    }, [mode, loginDetails]);
+    }, [mode, loginDetails, errorActions, passwordVerify]);
 
     const switchMode = () =>
         setMode((mode) =>
@@ -107,6 +107,21 @@ function Authentication() {
                 ></InputField>
                 <InputTextHelper></InputTextHelper>
             </InputGroup>
+
+            {mode === MODE.SIGN_UP && (
+                <InputGroup>
+                    <InputLabel>Verify Password</InputLabel>
+                    <InputField
+                        onChange={(event) =>
+                            setPasswordVerify(event.target.value)
+                        }
+                        type="password"
+                        required={true}
+                        borderColor={COLORS.blue}
+                    ></InputField>
+                    <InputTextHelper></InputTextHelper>
+                </InputGroup>
+            )}
 
             {mode === MODE.SIGN_UP && (
                 <InputGroup>

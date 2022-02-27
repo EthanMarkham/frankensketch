@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, FlexBox, SketchCanvas, Text, Div } from "styles";
 import usePaper from "hooks/usePaper";
 import { useStore } from "store";
@@ -6,6 +6,8 @@ import { GenericPageProps } from "types";
 import ActionButton from "components/general/ActionButton";
 import { COLORS } from "utils/DEFS";
 import BackButton from "components/general/BackButton";
+import { Leva } from "leva";
+import Pallet from "components/svg/Pallet";
 
 /*--------------------------------------------------------------------//
                       J S X      E X P O R T
@@ -16,8 +18,26 @@ const Sketchpad = ({ container }: GenericPageProps) => {
     const serverProps = useStore((state) => state.serverSideProps);
     const changePage = useStore((state) => state.actions.setPage);
     //const [scale, setScale] = useState<number | null>(null);
-    const [lineData, init, { position, scale }] = usePaper(canvasRef);
+    const [project, init, { scale }] = usePaper(
+        canvasRef,
+        container?.current?.getBoundingClientRect()
+    );
     const postGame = useStore((state) => state.actions.postGame);
+
+    const saveGame = useCallback(() => {
+        if (!project) return;
+        try {
+            const lineData = JSON.parse(project.exportJSON())[1][1].children;
+            console.log(lineData);
+            //postGame(lineData, serverProps.drawing);
+        } catch (e) {
+            console.log(e);
+            return;
+        } finally {
+            project.clear();
+        }
+    }, [project]);
+
     const drawingType = serverProps.drawing;
 
     useEffect(() => {
@@ -38,7 +58,21 @@ const Sketchpad = ({ container }: GenericPageProps) => {
                 position: "relative",
             }}
         >
+            <Leva
+                //theme={myTheme} // you can pass a custom theme (see the styling section)
+                //fill // default = false,  true makes the pane fill the parent dom node it's rendered in
+                //flat // default = false,  true removes border radius and shadow
+                //oneLineLabels={true} // default = false, alternative layout for labels, with labels and fields on separate rows
+                //hieTitleBar={true} // default = false, hides the GUI header
+                titleBar={{
+                    title: <Pallet />,
+                    filter: false,
+                }}
+                collapsed={true} // default = false, when true the GUI is collpased
+            />
+
             <BackButton onClick={() => changePage(1)} />
+
             <FlexBox
                 justifyContent="center"
                 style={{
@@ -55,22 +89,26 @@ const Sketchpad = ({ container }: GenericPageProps) => {
             </FlexBox>
 
             {/*Info: waiting til we have scale calculated to render the canvas*/}
-            <SketchCanvas
-                ref={canvasRef}
-                scale={scale}
-                style={{
-                    position: "fixed",
-                    right: 0,
-                    left: position.x,
-                    top: position.y,
-                    bottom: 0,
-                }}
-            />
-
-            <ActionButton
-                onClick={() => postGame(lineData, serverProps.drawing)}
+            <FlexBox
                 style={{
                     position: "absolute",
+                    height: "80%",
+                    width: "100%",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                }}
+            >
+                <SketchCanvas
+                    ref={canvasRef}
+                    //scale={scale}
+                    style={{}}
+                />
+            </FlexBox>
+
+            <ActionButton
+                onClick={saveGame}
+                style={{
+                    position: "fixed",
                     right: 0,
                     left: 0,
                     margin: "auto",

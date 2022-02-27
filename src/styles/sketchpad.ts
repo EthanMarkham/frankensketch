@@ -6,11 +6,9 @@ interface Props extends GenericStyleProps {
     scale?: number | null;
 }
 const SketchCanvas = styled.canvas<Props>`
-    border: 1px solid grey;
     height: 640px;
-    width: ${640 / 2}px;
-    background: #f7fff3;
-    border-radius: 20px;
+    width: ${640 / 1.1}px;
+    background: #00000000;
     ${(props) => props.scale && `transform: scale(${props.scale});`}
     justify-self: center;
     align-self: center;
@@ -21,3 +19,5 @@ const SketchCanvas = styled.canvas<Props>`
 
 export { SketchCanvas };
 //    height: ${(props) => props.height}px;
+//    //border-radius: 20px;
+//     border: 1px solid grey;

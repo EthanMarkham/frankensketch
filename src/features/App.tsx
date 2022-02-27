@@ -3,7 +3,6 @@ import React, { Suspense, useMemo, useRef } from "react";
 import { useStore } from "store";
 import { AnimatedDiv, FlexBox, Div } from "styles";
 import { useTransition, config } from "react-spring";
-import { Leva } from "leva";
 
 import Authentication from "features/Authentication";
 import HomeScreen from "./HomeScreen";
@@ -75,7 +74,7 @@ function App() {
                 style={{
                     width: "100vw",
                     flex: "1 1",
-                    overflow: "auto",
+                    overflow: "hidden",
                     position: "relative",
                 }}
             >
@@ -179,18 +178,6 @@ function App() {
             </Div>
 
             {showNav && <NavBar />}
-            <Leva
-                //theme={myTheme} // you can pass a custom theme (see the styling section)
-                //fill // default = false,  true makes the pane fill the parent dom node it's rendered in
-                //flat // default = false,  true removes border radius and shadow
-                //oneLineLabels={true} // default = false, alternative layout for labels, with labels and fields on separate rows
-                //hieTitleBar={true} // default = false, hides the GUI header
-                titleBar={{
-                    title: <Pallet />,
-                    filter: false,
-                }}
-                collapsed={true} // default = false, when true the GUI is collpased
-            />
         </FlexBox>
     );
 }
