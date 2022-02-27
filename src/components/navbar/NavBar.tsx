@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useStore } from "store";
-import { Button, Div, FlexBox, NavDiv, Stiches, Text } from "styles";
+import { Button, Div, FlexBox, Stiches, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import { COLORS } from "utils/DEFS";
 
@@ -12,10 +12,6 @@ function NavBar() {
     const OnClickNavButton = (pageNumber: number) => {
         changePage(pageNumber);
     };
-
-    useEffect(() => {
-        console.log(user);
-    }, [user]);
     return (
         <Div
             height="20%"
@@ -26,7 +22,22 @@ function NavBar() {
             backgroundColor={COLORS.bgPrimary}
         >
             <Stiches margin=".75rem 0" width="100%" />
-            <FlexBox justifyContent="space-between" margin="0 1.5rem">
+            <FlexBox
+                justifyContent="space-between"
+                alignContent="center"
+                margin="0 1.5rem"
+            >
+                {user?.groups?.includes("Admin") && (
+                    <Button
+                        background="none"
+                        borderRadius="0"
+                        onClick={() => OnClickNavButton(7)}
+                    >
+                        <img src={Icons.Admin} alt="Admin icon" />
+                        <Text color={COLORS.white}>Admin</Text>
+                    </Button>
+                )}
+
                 <Button
                     background="none"
                     borderRadius="0"
@@ -34,15 +45,6 @@ function NavBar() {
                 >
                     <img src={Icons.People} alt="Friends icon" />
                     <Text color={COLORS.white}>Friends</Text>
-                </Button>
-
-                <Button
-                    background="none"
-                    borderRadius="0"
-                    onClick={() => OnClickNavButton(5)}
-                >
-                    <img src={Icons.User} alt="User profile icon" />
-                    <Text color={COLORS.white}>Profile</Text>
                 </Button>
 
                 <Button

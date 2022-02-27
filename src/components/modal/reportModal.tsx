@@ -1,7 +1,6 @@
 import SectionText from "components/general/SectionText";
 import React, { useState } from "react";
-import { Button, FlexBox, InputField, InputGroup, InputLabel, InputTextHelper, NavDiv, Text } from "styles";
-import { Icons } from "styles/svg/ui-icons/icons";
+import { Button, FlexBox, InputField, InputGroup, InputLabel } from "styles";
 import { COLORS } from "utils/DEFS";
 
 const ReportModal = () => {

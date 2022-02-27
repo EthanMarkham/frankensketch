@@ -14,6 +14,9 @@ export const Button = styled("button")<GenericStyleProps>`
         cursor: not-allowed;
         opacity: 0.2;
     }
+    &:active {
+        transform: translateY(2px);
+    }
     ${(props) => getGenericProps(props)}
 `;
 

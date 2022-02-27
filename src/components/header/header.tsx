@@ -1,4 +1,4 @@
-import { FlexBox, FrankenSketchHeader, HeaderDiv, Stiches } from "styles";
+import { FlexBox, FrankenSketchHeader, Stiches } from "styles";
 import { COLORS } from "utils/DEFS";
 
 function Header() {

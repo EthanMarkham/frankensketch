@@ -2,7 +2,7 @@ import SectionText from "components/general/SectionText";
 import JoinOptions from "components/homescreen/JoinOptions";
 import useDialog from "hooks/useDialog";
 import React, { useState } from "react";
-import { Button, FlexBox, InputField, InputGroup, InputLabel, InputTextHelper, NavDiv, Text } from "styles";
+import { Button, FlexBox, InputField, InputGroup, InputLabel, InputTextHelper } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import { COLORS } from "utils/DEFS";
 
@@ -43,7 +43,7 @@ const StartGameModal = ({isNewGame}:{isNewGame?:boolean}) => {
                         <InputField
                             backgroundColor={COLORS.gray}
                         ></InputField>
-                        <Button margin="0 0 0 1rem" onClick={() => {alert("Invite Friend ()")}} background="none"><img src={Icons.AddUser}/></Button>
+                        <Button margin="0 0 0 1rem" onClick={() => {alert("Invite Friend ()")}} background="none"><img src={Icons.AddUser} alt="add user icon"/></Button>
                     </FlexBox>
                 </InputGroup>
             )}

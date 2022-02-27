@@ -4,7 +4,6 @@ import { Card, Text } from "styles";
 import { Game } from "types/API";
 import { COLORS } from "utils/DEFS";
 
-//TODO - Set PROPS and make dynamic
 function GameCard({ game }: { game: Game }) {
     const viewGame = useStore((store) => store.actions.viewGame);
     const completedDate = new Date(game.updatedAt);
@@ -17,7 +16,7 @@ function GameCard({ game }: { game: Game }) {
             onClick={() => viewGame(game)}
         >
             <Text color={COLORS.black}>
-                Frakenstitched at: {completedDate.toLocaleString()}
+                Frankenstitched at: {completedDate.toLocaleString()}
             </Text>
             <br />
             <Text color={COLORS.black}>Head: {game.head?.artist}</Text>

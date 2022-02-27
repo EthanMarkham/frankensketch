@@ -6,7 +6,7 @@ import { FlexBox } from "styles";
 import { HomeScreenProps } from "types";
 import { COLORS } from "utils/DEFS";
 import { useStore } from "store";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Modal from "./Modal";
 
 function HomeScreen({ games, container }: HomeScreenProps) {
