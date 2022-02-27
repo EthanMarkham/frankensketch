@@ -1,25 +1,12 @@
-import useDrawer from 'hooks/useDrawer';
-import React, { useEffect, useState } from 'react'
-import { FlexBox, SketchCanvas } from 'styles';
-import { Game } from 'models';
-import { calculateScale } from 'utils';
+import useDrawer from "hooks/useDrawer";
+import React from "react";
+import { FlexBox, SketchCanvas } from "styles";
+import { Game } from "models";
 
 const CommunityCard = ({ game }: { game: Game }) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
-    const [scale, setScale] = useState<number | null>(null);
-    useDrawer(canvasRef, game);
-
-    useEffect(() => {
-        if (containerRef.current) {
-            setScale(
-                calculateScale(
-                    containerRef.current.getBoundingClientRect(),
-                    1860
-                )
-            );
-        }
-    }, [containerRef]);
+    useDrawer(game, canvasRef, containerRef);
 
     return (
         <FlexBox
@@ -36,9 +23,8 @@ const CommunityCard = ({ game }: { game: Game }) => {
             >
                 <SketchCanvas
                     ref={canvasRef}
-                    height="1860px"
-                    scale={scale}
                     position="absolute"
+                    height="100%"
                 />
             </FlexBox>
             <FlexBox
@@ -48,6 +34,6 @@ const CommunityCard = ({ game }: { game: Game }) => {
             ></FlexBox>
         </FlexBox>
     );
-}
+};
 
-export default CommunityCard
+export default CommunityCard;

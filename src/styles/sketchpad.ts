@@ -14,7 +14,12 @@ const SketchCanvas = styled.canvas<Props>`
     align-self: center;
     margin: auto;
     ${(props) => getGenericProps(props)}
-    ${(props) => props.height && `width: ${parseInt(props.height) / 2}px`}
+    ${(props) =>
+        props.width
+            ? `width: ${props.width};`
+            : props.height?.indexOf("px")
+            ? `width: ${parseInt(props.height) / 2}px`
+            : ""}
 `;
 
 export { SketchCanvas };

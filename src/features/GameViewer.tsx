@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { FlexBox, SketchCanvas, Text } from "styles";
 import { useStore } from "store";
-import { calculateScale } from "utils";
 import useDrawer from "hooks/useDrawer";
 
 /*--------------------------------------------------------------------//
@@ -11,23 +10,7 @@ const GameViewer = () => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const { game } = useStore((state) => state.serverSideProps);
-    const [scale, setScale] = useState<number | null>(null);
-    useDrawer(canvasRef, game);
-
-    useEffect(() => {
-        if (containerRef.current) {
-            setScale(
-                calculateScale(containerRef.current.getBoundingClientRect(), {
-                    width: 1860,
-                    height: 1860,
-                })
-            );
-        }
-    }, [containerRef]);
-
-    useEffect(() => {
-        console.log(scale);
-    }, [scale]);
+    useDrawer(game, canvasRef, containerRef);
 
     return (
         <FlexBox
@@ -46,12 +29,7 @@ const GameViewer = () => {
                 margin="auto 0"
                 ref={containerRef}
             >
-                <SketchCanvas
-                    ref={canvasRef}
-                    height="1860px"
-                    scale={scale}
-                    position="absolute"
-                />
+                <SketchCanvas ref={canvasRef} height="100%" width="100%" />
             </FlexBox>
             <FlexBox
                 padding="4em"
