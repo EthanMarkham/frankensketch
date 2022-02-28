@@ -18,7 +18,7 @@ const Sketchpad = ({ container }: GenericPageProps) => {
     const serverProps = useStore((state) => state.serverSideProps);
     const changePage = useStore((state) => state.actions.setPage);
     //const [scale, setScale] = useState<number | null>(null);
-    const [project, init, { scale }] = usePaper(
+    const [project, init] = usePaper(
         canvasRef,
         container?.current?.getBoundingClientRect()
     );
@@ -29,14 +29,14 @@ const Sketchpad = ({ container }: GenericPageProps) => {
         try {
             const lineData = JSON.parse(project.exportJSON())[1][1].children;
             console.log(lineData);
-            //postGame(lineData, serverProps.drawing);
+            postGame(lineData, serverProps.drawing);
         } catch (e) {
             console.log(e);
             return;
         } finally {
             project.clear();
         }
-    }, [project]);
+    }, [postGame, project, serverProps.drawing]);
 
     const drawingType = serverProps.drawing;
 

@@ -25,7 +25,6 @@ async function postGame(req, res) {
     incrementTally(type);
 
     const gameList = await getOpenGames(type);
-    console.log(gameList);
     const game =
         gameList !== null && gameList.length > 0
             ? await addDrawingToGame(drawing, gameList[0])
