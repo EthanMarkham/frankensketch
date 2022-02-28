@@ -1,5 +1,5 @@
 import { ListGamesQueryVariables } from 'API';
-import { Game } from "types/API";
+import { Game } from "models";
 import { API } from 'aws-amplify';
 import { listGames } from 'graphql/queries';
 import { useEffect, useState } from 'react'

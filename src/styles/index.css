@@ -126,3 +126,15 @@ body {
     font-size: 18px;
     text-align: center;
 }
+
+/*-------------------------------- Community --------------------------------*/
+.community-card-container{
+    width: 100%;
+    scroll-snap-type: y proximity;
+}
+
+.community-card{
+    width: 100%;
+    scroll-snap-align: start;
+
+}

@@ -1,45 +1,65 @@
+import { UpdateUserReportInput } from "API";
+import { API, graphqlOperation } from "aws-amplify";
+import { updateUserReport } from "graphql/mutations";
 import { UserReport } from "models";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, FlexBox, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import { COLORS } from "utils/DEFS";
 
 const ReportAccordion = (reportData: UserReport) => {
     const [isActive, setIsActive] = useState(false)
+    const [status, setStatus] = useState(reportData.isReviewed)
 
-    const [reportStatus, setReportStatus] = useState("pending")
+    const updateReportStatus = async (reportStatus: string) => {
+        let reviewed: boolean = false
 
-    useEffect(() => {
-        //TODO update isReviewed in db to the report status clicked
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[reportStatus])
+        switch (reportStatus) {
+            case 'pending':
+                reviewed = false
+                break;
+            case 'reviewed':
+                reviewed = true
+                break;
+        }
+
+        let reportInput: UpdateUserReportInput = {
+            id: reportData.id,
+            isReviewed: reviewed
+        }
+
+        try {
+            await API.graphql(graphqlOperation(updateUserReport, { input: reportInput }))
+            setStatus(reviewed)
+        } catch (error) {
+
+        }
+    }
 
     return (
         <>
-            <FlexBox direction="column" backgroundColor={COLORS.black} padding="0.75rem" borderRadius="10px" >
-                <FlexBox direction="row" justifyContent="space-between" onClick={() => setIsActive(!isActive)}>
-                    <FlexBox direction="row" justifyContent="flex-start">
-                        {reportStatus === "pending" && <img src={Icons.PendingReport} alt="" />}
-                        {reportStatus === "reviewed" && <img src={Icons.GreenCheckmark} alt="" />}
-                        <Text fontWeight="300" margin="0 0 0 0.25rem">ID: </Text>
+            <FlexBox direction="column" backgroundColor={COLORS.black} padding="0.75rem" margin="0.5rem 0" borderRadius="10px" >
+                <FlexBox direction="row" justifyContent="space-between" padding="0.5rem" onClick={() => setIsActive(!isActive)}>
+                    <FlexBox direction="row" justifyContent="flex-start" width="100%">
+                        {status ? <img src={Icons.GreenCheckmark} alt="" /> : <img src={Icons.PendingReport} alt="" />}
+                        <Text fontWeight="300" margin="0 0 0 0.25rem" >ID: {reportData.id}</Text>
                     </FlexBox>
                     {isActive ? <Text fontWeight="bold">&#9651;</Text> : <Text>&#9661;</Text>}
                 </FlexBox>
                 {isActive && (
                     <FlexBox direction="column" margin="0.5rem 0 0 1.65rem" >
-                         <Text fontWeight="300">Reported by: </Text>
-                         <Text fontWeight="300" margin="0.5rem 0">GameID: </Text>
-                         <Text fontWeight="300">Reviewed: </Text>
-                         <Text fontWeight="300" margin="0.5rem 0">Created At: </Text>
-                         <Text fontWeight="300">Update At: </Text>
-                         <FlexBox direction="row" justifyContent="flex-end">
-                            <Button margin="0 1rem" background="none" onClick={() => setReportStatus("pending")}>
+                        <Text fontWeight="300">Reported by: {reportData.reportedBy}</Text>
+                        <Text fontWeight="300" margin="0.5rem 0">GameID: {reportData.gameID}</Text>
+                        <Text fontWeight="300" margin="0.5rem 0">Created At: {reportData.createdAt}</Text>
+                        <Text fontWeight="300">Update At: {reportData.updatedAt}</Text>
+                        <FlexBox direction="row" justifyContent="flex-end" margin="1rem 0 0 0">
+                            <Button margin="0 1rem" background="none" onClick={() => updateReportStatus("pending")}>
                                 <img src={Icons.PendingReport} alt="" />
                             </Button>
-                            <Button margin="0 1rem" background="none" onClick={() => setReportStatus("reviewed")}>
+                            <Button margin="0 1rem" background="none" onClick={() => updateReportStatus("reviewed")}>
                                 <img src={Icons.GreenCheckmark} alt="" />
                             </Button>
-                         </FlexBox>
+                        </FlexBox>
                     </FlexBox>
                 )}
             </FlexBox>

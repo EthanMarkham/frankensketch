@@ -18,6 +18,7 @@ import RedX from "./RedX.svg"
 import Search from "./Search.svg"
 import Logout from "./Logout.svg"
 import Admin from "./Admin.svg";
+import Info from "./Info.svg"
 
 export const Icons = {
     Eraser,
@@ -39,5 +40,6 @@ export const Icons = {
     RedX,
     Search,
     Logout,
-    Admin
+    Admin,
+    Info
 }
