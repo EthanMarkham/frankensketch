@@ -4,13 +4,12 @@ import { button, useControls } from "leva";
 import { calculateScale } from "utils";
 import paper from "paper";
 import { CANVAS_BACKGROUND_COLOR, TOOL } from "types/sketchpad";
-import { OffsetUtils } from "utils/offsetUtils";
 
 function getGuideLines(drawingType: any, bounds: any) {
     const GUIDLINE_HEIGHT = 20;
-    const HEAD_WIDTH = bounds.width / 8;
-    const LEG_WIDTH = bounds.width / 5;
-    console.log("using bounds", bounds);
+    const HEAD_WIDTH = bounds.width / 12;
+    const LEG_WIDTH = bounds.width / 6;
+
     switch (drawingType.toLowerCase()) {
         case "legs":
             return [
@@ -50,28 +49,28 @@ function getGuideLines(drawingType: any, bounds: any) {
         case "torso":
             return [
                 {
-                    from: [bounds.centerX - HEAD_WIDTH, bounds.bottom],
+                    from: [bounds.centerX - HEAD_WIDTH, bounds.top],
                     to: [
                         bounds.centerX - HEAD_WIDTH,
                         bounds.top + GUIDLINE_HEIGHT,
                     ],
                 },
                 {
-                    from: [bounds.centerX + HEAD_WIDTH, bounds.bottom],
+                    from: [bounds.centerX + HEAD_WIDTH, bounds.top],
                     to: [
                         bounds.centerX + HEAD_WIDTH,
                         bounds.top + GUIDLINE_HEIGHT,
                     ],
                 },
                 {
-                    from: [bounds.centerX - LEG_WIDTH, bounds.top],
+                    from: [bounds.centerX - LEG_WIDTH, bounds.bottom],
                     to: [
                         bounds.centerX - LEG_WIDTH,
                         bounds.bottom - GUIDLINE_HEIGHT,
                     ],
                 },
                 {
-                    from: [bounds.centerX + LEG_WIDTH, bounds.top],
+                    from: [bounds.centerX + LEG_WIDTH, bounds.bottom],
                     to: [
                         bounds.centerX + LEG_WIDTH,
                         bounds.bottom - GUIDLINE_HEIGHT,

@@ -2,6 +2,7 @@ import React from "react";
 import { FlexBox, SketchCanvas, Text } from "styles";
 import { useStore } from "store";
 import useDrawer from "hooks/useDrawer";
+import { CANVAS_BACKGROUND_COLOR } from "types/sketchpad";
 
 /*--------------------------------------------------------------------//
                       J S X      E X P O R T
@@ -17,6 +18,12 @@ const GameViewer = () => {
             direction="column"
             height="100vh"
             css={{ overflowY: "scroll" }}
+            background='url("images/stage.jpg")'
+            style={{
+                backgroundPosition: "50% -550px",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+            }}
         >
             <FlexBox padding="4em" height="20%" justifyContent="center">
                 <Text>WHAT A MASTERPIECE</Text>

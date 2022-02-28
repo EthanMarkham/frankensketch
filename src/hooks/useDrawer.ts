@@ -3,29 +3,39 @@ import Paper from "paper";
 import { Drawing, Game } from "models";
 import { calculateScale } from "utils";
 
-function drawSection({ type, lines }: Drawing): Promise<void> {
+const LINE_DELAY = 5;
+
+function drawSection(
+    { type, lines }: Drawing,
+    verticleShift: number
+): Promise<paper.Rectangle> {
+    if (!lines) throw new Error("missing line data");
+
     const group = new Paper.Group();
 
-    const drawLine = function (lineData: any, verticleShift: number) {
-        let path = new Paper.Path(lineData);
+    console.log(lines);
+    const drawLine = function (lineData: any) {
+        let lines;
+        try {
+            lines = JSON.parse(lineData)[1];
+        } catch (e) {
+            console.log("Not a line", lineData);
+        }
+        if (!lines) return;
+        let path = new Paper.Path(lines);
         path.position.y += verticleShift;
         path.selected = false;
         group.addChild(path);
     };
-    return new Promise((resolve, reject) => {
-        let increment = 0;
-        const verticleShift =
-            type === "head" ? 0 : type === "torso" ? 620 : 1280;
-        lines?.forEach((line, i) => {
-            let lineData = JSON.parse(line)[1];
-            setTimeout(() => drawLine(lineData, verticleShift), increment);
-            increment += i < lines.length - 1 ? 10 : 0;
-        });
-        setTimeout(() => {
-            console.log("group bounds", group.bounds);
-            group.selected = false;
-            resolve();
-        }, increment);
+
+    return new Promise<paper.Rectangle>((resolve) => {
+        for (let i = 0; i < lines.length; i++) {
+            setTimeout(() => {
+                drawLine(lines[i]);
+                if (i + 1 === lines.length) resolve(group.bounds);
+            }, LINE_DELAY * i);
+        }
+        group.selected = false;
     });
 }
 
@@ -51,9 +61,15 @@ function useDrawer(
             if (Paper.view) {
                 Paper.view.zoom = newScale;
             }
-            drawSection(game.head!!)
-                .then((_) => drawSection(game.torso!!))
-                .then((_) => drawSection(game.legs!!));
+            drawSection(game.head!!, Paper.view.bounds.top)
+                .then(({ bottom }) => {
+                    console.log("drawing torso at ", bottom);
+                    return drawSection(game.torso!!, bottom);
+                })
+                .then(({ bottom }) => {
+                    console.log("drawing legs at ", bottom);
+                    return drawSection(game.legs!!, bottom);
+                });
             setInit(true);
         }
     }, [canvas, isInit, game, container]);

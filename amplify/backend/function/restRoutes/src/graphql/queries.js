@@ -25,7 +25,7 @@ module.exports.getUserName = async function (username) {
         console.log(userData.data);
         throw new Error("Oops! Something went wrong!");
     }
-    return userData.data.data.getUser;
+    return userData.data.data.getUser.userName;
 };
 
 module.exports.listDrawingTallies = async function () {
@@ -55,17 +55,15 @@ module.exports.listDrawingTallies = async function () {
 };
 
 module.exports.getOpenGames = async function (type) {
-    var query;
+    let queryString;
+
     switch (type) {
         default:
             throw new Error("Cannot create game with no type");
         case "head":
-            query = gql`
+            queryString = `
                 query MyQuery {
-                    listGames(
-                        filter: { gameHeadId: { attributeExists: false } }
-                        limit: 10
-                    ) {
+                    listGames(filter: { gameHeadId: { attributeExists: false } }, limit: 10){
                         items {
                             id
                             gameTorsoId
@@ -78,10 +76,10 @@ module.exports.getOpenGames = async function (type) {
             `;
             break;
         case "torso":
-            query = gql`
+            queryString = `
                 query MyQuery {
                     listGames(
-                        filter: { gameTorsoId: { attributeExists: false } }
+                        filter: { gameTorsoId: { attributeExists: false } },
                         limit: 10
                     ) {
                         items {
@@ -96,10 +94,10 @@ module.exports.getOpenGames = async function (type) {
             `;
             break;
         case "legs":
-            query = gql`
+            queryString = `
                 query MyQuery {
                     listGames(
-                        filter: { gameLegsId: { attributeExists: false } }
+                        filter: { gameLegsId: { attributeExists: false } },
                         limit: 10
                     ) {
                         items {
@@ -114,6 +112,11 @@ module.exports.getOpenGames = async function (type) {
             `;
             break;
     }
+
+    console.log("Game Query", queryString);
+    const query = gql`
+        ${queryString}
+    `;
 
     const gameList = await axios({
         url: process.env.API_GRAPHQL_GRAPHQLAPIENDPOINTOUTPUT,
@@ -130,6 +133,7 @@ module.exports.getOpenGames = async function (type) {
         console.log("Error listing games", gameList.data.errors);
         throw new Error("Oops! Something went wrong!");
     }
+    console.log("Open Game Result", gameList.data.data.listGames.items);
     return gameList.data.data.listGames.items;
 };
 
