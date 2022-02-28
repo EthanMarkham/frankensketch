@@ -3,7 +3,7 @@ import { FlexBox } from "styles";
 
 function Community() {
     return (
-        <FlexBox direction="column" padding="0 1.5rem">
+        <FlexBox direction="column" padding="0 1.5rem" css={{ overflowY: "auto" }} height='100vh'>
             <FlexBox
                 direction="column"
                 justifyContent="center"

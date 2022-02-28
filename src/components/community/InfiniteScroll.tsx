@@ -1,6 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react'
 import useCommunityContent from 'hooks/useCommunityContent'
-import GameCard from 'components/homescreen/GameCard'
 import { FlexBox, Text } from 'styles'
 import { COLORS } from 'utils/DEFS'
 import CommunityCard from './CommunityCard'
@@ -36,14 +35,15 @@ const InfiniteScroll = () => {
 
   return (
     <div className='community-card-container'>
-      <FlexBox css={{ overflow: 'scroll' }} direction='column' width='100%'>
+      <FlexBox direction='column' width='100%'>
         <Text color={COLORS.secondaryGreen} css={{ textAlign: 'center' }} margin='0 0 1rem 0'>Let's see what others have created!</Text>
         {gameList.map((g, i) => {
           if (gameList.length === i + 1) {
-            return <FlexBox width='100%' ref={lastGameRef} key={i}><CommunityCard game={g} key={g.id} /></FlexBox>
+            return <FlexBox direction='column' width='100%' margin='0 0 0.5rem 0' ref={lastGameRef} key={i}><CommunityCard game={g} key={g.id} /> <hr className='community-card-separator' /> </FlexBox>
           } else {
-            return <FlexBox width='100%' key={i}><CommunityCard game={g} key={g.id} /></FlexBox>
+            return <FlexBox direction='column' width='100%' margin='0 0 0.5rem 0' key={i}><CommunityCard game={g} key={g.id} /> <hr className='community-card-separator' /> </FlexBox>
           }
+
 
         })}
         {loading && <div>LOADING GAMES</div>}

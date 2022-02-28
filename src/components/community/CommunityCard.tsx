@@ -1,6 +1,6 @@
 import useDrawer from "hooks/useDrawer";
 import React, { useState } from "react";
-import { Button, FlexBox, Text } from "styles";
+import { Button, FlexBox, SketchCanvas, Text } from "styles";
 import { Game } from "models";
 import { COLORS } from "utils/DEFS";
 import { Icons } from "styles/svg/ui-icons/icons";
@@ -38,8 +38,6 @@ const CommunityCard = ({ game }: { game: Game }) => {
         likesCount = "0"
     }
 
-
-
     return (
         <div className="community-card">
             <FlexBox direction="column" width="100%">
@@ -49,8 +47,8 @@ const CommunityCard = ({ game }: { game: Game }) => {
                             <img src={Icons.Info} width='25' height='25' alt="report icon" />
                         </Button>
                     </FlexBox>
-                    <FlexBox vhCenter={true} width='100%' height="100%" margin="0 0 1.5rem 0" padding="0.5rem">
-                        Canvas goes here
+                    <FlexBox vhCenter={true} width='100%' height="100%" margin="0 0 1.5rem 0" padding="0.5rem" ref={containerRef}>
+                        <SketchCanvas ref={canvasRef} height="100%" width="100%" />
                     </FlexBox>
                 </FlexBox>
 
