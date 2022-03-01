@@ -12,11 +12,8 @@ function Friends() {
     //Friend error message
     const noFriendResponses: string[] = [
         "Couln't find any friends, click on the plus icon to add new friends!",
-        "You are so lonely, I don't want to be you!",
-        "Looks like you dont have any friends",
-        "No friends found!",
-        "You have no friends, HaHa!",
-        "This looks so empty, go find new friends!",
+        "No friends found! Click on the plus icon to add a friend.",
+        "This looks so empty, go find new friends by clicking on the plus icon!",
     ];
     const [errorMessage, setErrorMessage] = useState("0 friends available");
     const [hasFriends, setHasFriends] = useState(false);
