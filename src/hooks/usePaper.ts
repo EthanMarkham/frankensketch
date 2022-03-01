@@ -94,7 +94,7 @@ function usePaper(
     const [project, setProject] = useState<paper.Project>();
     const [init, setInit] = useState<InitialPaper | null>();
     const [history, setHistory] = useState<Array<any>>(new Array<any>());
-    const [lastChild, setLastChild] = useState<paper.Item | null>(null);
+    const [lastChild, setLastChild] = useState<paper.Item[] | null>(null);
 
     const [{ stroke, color, position, scale, tool }, set] = useControls(
         () => ({
@@ -141,8 +141,21 @@ function usePaper(
                     try {
                         const deleting = paper.project?.activeLayer?.lastChild;
                         setHistory([{ ...deleting }, ...history]);
-                        deleting.remove();
-                        setLastChild(paper.project?.activeLayer?.lastChild);
+
+                        const typeOfLast = JSON.parse(deleting.exportJSON())[0];
+                        console.log(typeOfLast);
+                        console.log(project?.layers);
+                        switch (typeOfLast) {
+                            case "Group":
+                                console.log("doing this", lastChild);
+                                paper.project?.activeLayer.removeChildren();
+                                paper.project?.activeLayer.addChildren(
+                                    lastChild!!
+                                );
+                                break;
+                            default:
+                                deleting.remove();
+                        }
                     } catch (e) {
                         console.log(e);
                     }
@@ -223,6 +236,8 @@ function usePaper(
         let mask: paper.Group | null = null;
 
         paper.project.view.onMouseDown = () => {
+            setHistory([]);
+
             path = new paper.Path();
             path.strokeColor = new paper.Color(color);
             path.strokeWidth = stroke * paper.project.view.pixelRatio;
@@ -319,14 +334,14 @@ function usePaper(
                     */
                     path.selected = false;
                     path.simplify(30);
-                    setLastChild(path);
+                    setLastChild([path]);
 
                     break;
                 case TOOL.ERASER:
                     path.simplify(10);
 
                     path.selected = false;
-
+                    //path.remove();
                     /*
                     try {
                         path.simplify(10);
@@ -404,7 +419,7 @@ function usePaper(
                 case TOOL.PENCIL:
                     path.simplify(10);
                     path.selected = false;
-                    setLastChild(path);
+                    setLastChild([path]);
 
                     break;
             }
