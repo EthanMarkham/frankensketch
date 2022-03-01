@@ -63,7 +63,7 @@ module.exports.getOpenGames = async function (type) {
         case "head":
             queryString = `
                 query MyQuery {
-                    listGames(filter: { gameHeadId: { attributeExists: false } }, limit: 10){
+                    listGames(filter: { gameHeadId: { attributeExists: false } }){
                         items {
                             id
                             gameTorsoId
@@ -79,8 +79,7 @@ module.exports.getOpenGames = async function (type) {
             queryString = `
                 query MyQuery {
                     listGames(
-                        filter: { gameTorsoId: { attributeExists: false } },
-                        limit: 10
+                        filter: { gameTorsoId: { attributeExists: false } }
                     ) {
                         items {
                             id
@@ -97,8 +96,7 @@ module.exports.getOpenGames = async function (type) {
             queryString = `
                 query MyQuery {
                     listGames(
-                        filter: { gameLegsId: { attributeExists: false } },
-                        limit: 10
+                        filter: { gameLegsId: { attributeExists: false } }
                     ) {
                         items {
                             id

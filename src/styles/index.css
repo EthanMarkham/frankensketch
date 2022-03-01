@@ -53,6 +53,7 @@ body {
     background-color: var(--bgPrimary);
     color: var(--white);
     user-select: none;
+    overscroll-behavior: none;
 }
 
 *,

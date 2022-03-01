@@ -156,7 +156,7 @@ function App() {
                                         style={styles}
                                         {...containerStyles}
                                     >
-                                        <GameViewer />
+                                        <GameViewer container={contentRef} />
                                     </AnimatedDiv>
                                 );
                         }
