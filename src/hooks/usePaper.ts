@@ -140,7 +140,6 @@ function usePaper(
                     if (!paper.project) return;
                     try {
                         const deleting = paper.project?.activeLayer?.lastChild;
-                        setHistory([{ ...deleting }, ...history]);
 
                         const typeOfLast = JSON.parse(deleting.exportJSON())[0];
                         console.log(typeOfLast);
@@ -152,8 +151,11 @@ function usePaper(
                                 paper.project?.activeLayer.addChildren(
                                     lastChild!!
                                 );
+                                setHistory([]);
+
                                 break;
                             default:
+                                setHistory([{ ...deleting }, ...history]);
                                 deleting.remove();
                         }
                     } catch (e) {

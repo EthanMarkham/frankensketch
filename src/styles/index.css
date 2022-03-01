@@ -53,7 +53,6 @@ body {
     background-color: var(--bgPrimary);
     color: var(--white);
     user-select: none;
-    overscroll-behavior: none;
 }
 
 *,
@@ -129,17 +128,17 @@ body {
 }
 
 /*-------------------------------- Community --------------------------------*/
-.community-card-container{
+.community-card-container {
     width: 100%;
     scroll-snap-type: y proximity;
 }
 
-.community-card{
+.community-card {
     width: 100%;
     scroll-snap-align: start;
 }
 
-.community-card-separator{
+.community-card-separator {
     border: 2px solid var(--gray);
     border-radius: 5px;
 }
