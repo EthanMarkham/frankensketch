@@ -142,3 +142,8 @@ body {
     border: 2px solid var(--gray);
     border-radius: 5px;
 }
+
+/*-------------------------------- TOAST --------------------------------*/
+.Toastify__toast-container {
+    width: 20rem;
+}

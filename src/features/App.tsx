@@ -16,6 +16,8 @@ import Admin from "./Admin";
 import Pallet from "components/svg/Pallet";
 import NavBar from "components/navbar/NavBar";
 import Header from "components/header/header";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 /*
 const Authentication = React.lazy(() => import("features/Authentication"));
@@ -165,6 +167,17 @@ function App() {
             </Div>
 
             {showNav && <NavBar />}
+            <ToastContainer
+                position='top-center'
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </FlexBox>
     );
 }

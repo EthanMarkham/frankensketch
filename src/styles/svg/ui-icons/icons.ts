@@ -19,6 +19,7 @@ import Search from "./Search.svg"
 import Logout from "./Logout.svg"
 import Admin from "./Admin.svg";
 import Info from "./Info.svg"
+import Delete from './Delete.svg'
 
 export const Icons = {
     Eraser,
@@ -41,5 +42,6 @@ export const Icons = {
     Search,
     Logout,
     Admin,
-    Info
+    Info,
+    Delete
 }
