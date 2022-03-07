@@ -14,12 +14,14 @@ const Modal = ({
 	setIsShown,
 	type,
 	isNewGame,
-	game
+	game,
+	friends
 }: {
 	setIsShown: any
 	type: string
 	isNewGame?: boolean
 	game?: Game
+	friends?: string[]
 }) => {
 
 	let showCancel = false
@@ -47,7 +49,7 @@ const Modal = ({
 						<Stiches margin="-0.25rem 0 .5rem 0" width="100%" />
 					</div>
 					<FlexBox direction="column" padding="0 1rem">
-						{type === "addFriend" && <FriendModal />}
+						{type === "addFriend" && <FriendModal friends={friends} />}
 						{type === "createReport" && <ReportModal game={game} />}
 						{type === "gameInfo" && <GameInfoModal />}
 						{type === "startGame" && <StartGameModal isNewGame={isNewGame} />}

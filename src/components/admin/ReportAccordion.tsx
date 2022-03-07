@@ -2,14 +2,14 @@ import { UpdateUserReportInput } from "API";
 import { API, graphqlOperation } from "aws-amplify";
 import { updateUserReport } from "graphql/mutations";
 import { UserReport } from "models";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, FlexBox, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import { COLORS } from "utils/DEFS";
 
 const ReportAccordion = (reportData: UserReport) => {
     const [isActive, setIsActive] = useState(false)
-    const [status, setStatus] = useState(reportData.isReviewed)
+    const [status, setStatus] = useState(false)
 
     const updateReportStatus = async (reportStatus: string) => {
         let reviewed: boolean = false
@@ -36,12 +36,20 @@ const ReportAccordion = (reportData: UserReport) => {
         }
     }
 
+    //Set status icon for the report
+    useEffect(() => {
+        if (reportData.isReviewed) {
+            setStatus(reportData.isReviewed)
+        }
+    }, [reportData.isReviewed])
+
+
     return (
         <>
             <FlexBox direction="column" backgroundColor={COLORS.black} padding="0.75rem" margin="0.5rem 0" borderRadius="10px" >
                 <FlexBox direction="row" justifyContent="space-between" padding="0.5rem" onClick={() => setIsActive(!isActive)}>
                     <FlexBox direction="row" justifyContent="flex-start" width="100%">
-                        {status ? <img src={Icons.GreenCheckmark} alt="" /> : <img src={Icons.PendingReport} alt="" />}
+                        <img src={status ? Icons.GreenCheckmark : Icons.PendingReport} alt="Report status icon" />
                         <Text fontWeight="300" margin="0 0 0 0.25rem" >ID: {reportData.id}</Text>
                     </FlexBox>
                     {isActive ? <Text fontWeight="bold">&#9651;</Text> : <Text>&#9661;</Text>}
