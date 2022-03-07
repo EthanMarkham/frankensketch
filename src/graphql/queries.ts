@@ -544,17 +544,18 @@ export const listGameInfo = /* GraphQL */ `
     query MyQuery($filter: ModelGameFilterInput!) {
         listGames(filter: $filter) {
             items {
+                id
                 torso {
                     artist
-                    updatedAt
+                    createdAt
                 }
                 legs {
                     artist
-                    updatedAt
+                    createdAt
                 }
                 head {
                     artist
-                    updatedAt
+                    createdAt
                 }
             }
         }

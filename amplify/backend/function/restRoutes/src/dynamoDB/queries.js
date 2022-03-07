@@ -64,9 +64,5 @@ module.exports.queryGamesByUser = async function (drawings) {
         .promise();
     const results = Items.map(AWS.DynamoDB.Converter.unmarshall);
 
-    results.sort((a, b) => {
-        return b.createdAt < a.createdAt ? -1 : 1;
-    });
-
     return results;
 };
