@@ -1,43 +1,82 @@
+import React, { useState, useEffect } from "react";
 import { GenericPageProps } from "types";
 import GameCard from "./GameCard";
-import { API } from "aws-amplify";
-import { listGames } from "graphql/queries";
-import { Game, ListGamesQueryVariables } from "types/API";
-import { GraphQLResult } from "@aws-amplify/api-graphql";
-import React, { useState, useEffect } from "react";
+import { Game, ModelGameFilterInput } from "types/API";
 import { Div, Grid } from "styles";
+import { useStore } from "store";
+import { queryGamesByUsername } from "queries/queries";
+import { listGameInfo } from "graphql/queries";
+import { API } from "aws-amplify";
+
+function getGameInfo(gameList: any) {
+    return new Promise<Game>(async (resolve, reject) => {
+        const filter: ModelGameFilterInput = { or: [] };
+
+        gameList.forEach((g: any) => {
+            filter!!.or!!.push({ id: { eq: g.id } });
+        });
+
+        console.log(filter);
+
+        const { data } = (await API.graphql({
+            query: listGameInfo,
+            variables: {
+                filter: filter,
+            },
+        })) as any;
+
+        if (data.listGames) resolve(data.listGames);
+        else reject(data.error);
+    });
+}
 
 function GameCarousel({ container }: GenericPageProps) {
-    const [gameList, setGameList] = useState<Array<Game>>(new Array<Game>());
+    const [gameList, setGameList] = useState<[Game]>();
+    const user = useStore((state) => state.userData);
 
     useEffect(() => {
-        new Promise<void>(async (resolve, reject) => {
-            let variables: ListGamesQueryVariables = {
-                filter: {
-                    gameHeadId: { attributeExists: true },
-                    gameLegsId: { attributeExists: true },
-                    gameTorsoId: { attributeExists: true },
-                },
-            };
+        if (!user?.username) return;
 
-            const { data } = (await API.graphql({
-                query: listGames,
-                variables,
-            })) as GraphQLResult;
-            const result = data as any;
-            setGameList(result.listGames.items as Array<Game>);
-            resolve();
-        }).then(() => {
-            return;
+        queryGamesByUsername(user?.username).then((data) => {
+            console.log("games", data);
+            getGameInfo(data).then((g) => {
+                console.log(g);
+            });
         });
-    }, []);
 
-    useEffect(() => {
-        let games = new Array<JSX.Element>();
-        gameList.forEach((g) => {
-            games.push();
+        /*
+        getUserDrawings(user?.username).then((data) => {
+            console.log(data[0]);
+
+            if (data.length === 0) return;
+            const first = data.shift();
+            const filter = data.reduce((acc, cur, i) => {
+                let ptx: any = acc;
+                let n = 0;
+                while (n < i) {
+                    if (!ptx.or) ptx.or = {};
+                    ptx = ptx.or;
+                    n++;
+                }
+                ptx.or = getFilterVar(cur.type!!, cur.id);
+                return acc;
+            }, getFilterVar(first!!.type!!, first!!.id));
+            console.log(filter);
+            getGames(filter).then((games) => {
+                let finishedGames: Game[] = [];
+                let unfinished = 0;
+
+                games.forEach((g) => {
+                    if (g.gameHeadId && g.gameLegsId && g.gameTorsoId)
+                        finishedGames.push(g);
+                    else unfinished++;
+                });
+                setGameList(finishedGames);
+                alert("You have " + unfinished + " unfinished games!");
+            });
         });
-    }, [gameList]);
+        */
+    }, [user]);
 
     return (
         <Div
@@ -57,9 +96,8 @@ function GameCarousel({ container }: GenericPageProps) {
                     gap: "0.2em",
                 }}
             >
-                {gameList.map((g) => (
-                    <GameCard game={g} key={g.id} />
-                ))}
+                {gameList &&
+                    gameList.map((g) => <GameCard game={g} key={g.id} />)}
             </Grid>
         </Div>
     );
