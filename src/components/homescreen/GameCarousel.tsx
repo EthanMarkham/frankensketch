@@ -4,13 +4,12 @@ import GameCard from "./GameCard";
 import { ModelGameFilterInput } from "types/API";
 import { Div, FlexBox, Grid, Loader } from "styles";
 import { useStore } from "store";
-import { queryGamesByUsername } from "queries/queries";
-import { listGameInfo } from "graphql/queries";
+import { listGameInfo, queryGamesByUsername } from "queries/queries";
 import { API } from "aws-amplify";
 import { GameRecord } from "types/home";
 
 function getGameInfo(gameList: any) {
-    return new Promise<[any]>(async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const filter: ModelGameFilterInput = { or: [] };
 
         gameList.forEach((g: any) => {

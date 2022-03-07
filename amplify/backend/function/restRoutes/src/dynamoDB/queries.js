@@ -1,68 +1,70 @@
-/* Amplify Params - DO NOT EDIT
-	API_GRAPHQL_DRAWINGTABLE_ARN
-	API_GRAPHQL_DRAWINGTABLE_NAME
-	API_GRAPHQL_DRAWINGTALLYTABLE_ARN
-	API_GRAPHQL_DRAWINGTALLYTABLE_NAME
-	API_GRAPHQL_GAMETABLE_ARN
-	API_GRAPHQL_GAMETABLE_NAME
-	API_GRAPHQL_GRAPHQLAPIENDPOINTOUTPUT
-	API_GRAPHQL_GRAPHQLAPIIDOUTPUT
-	API_GRAPHQL_GRAPHQLAPIKEYOUTPUT
-	API_GRAPHQL_USERLIKETABLE_ARN
-	API_GRAPHQL_USERLIKETABLE_NAME
-	API_GRAPHQL_USERREPORTTABLE_ARN
-	API_GRAPHQL_USERREPORTTABLE_NAME
-	API_GRAPHQL_USERTABLE_ARN
-	API_GRAPHQL_USERTABLE_NAME
-	AUTH_FRANKENSKETCH2FD3A5AD_USERPOOLID
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
-
 var AWS = require("aws-sdk");
 const DynamoDB = require("aws-sdk/clients/dynamodb");
-const ddb = new DynamoDB();
+const ddb = new DynamoDB({ region: process.env.REGION });
 
-module.exports.queryDrawingsByArtist = async function (artist) {
-    const { Items = [] } = await ddb
-        .executeStatement({
-            Statement: `
-	      SELECT * FROM "${process.env.API_GRAPHQL_DRAWINGTABLE_NAME}"."artist-createdAt-index"
-	      WHERE "artist" = ?
-	    `,
-            Parameters: [{ S: artist }],
+const query = async (params) => {
+    const { Items: items = [] } = await ddb
+        .query({
+            ...params,
+            Limit: 100,
         })
         .promise();
-    const results = Items.map(AWS.DynamoDB.Converter.unmarshall);
-    return results;
+
+    return items.map(AWS.DynamoDB.Converter.unmarshall);
+};
+
+const queryBatch = async (filter) => {
+    let items = [];
+    await Promise.all(
+        filter.map(async (params) => {
+            const data = await query(params);
+            items = [...items, ...data];
+        })
+    );
+    return items;
+};
+
+module.exports.queryDrawingsByArtist = async function (artist) {
+    console.log("querying for artist", artist);
+    const params = {
+        TableName: process.env.API_GRAPHQL_DRAWINGTABLE_NAME,
+        IndexName: "artist-createdAt-index",
+        KeyConditionExpression: "artist = :artist",
+        ExpressionAttributeValues: {
+            ":artist": { S: "ethan" },
+        },
+    };
+    const items = await query(params);
+    return items;
 };
 
 module.exports.queryGamesByUser = async function (drawings) {
-    const filter = drawings.map(({ type, id }) => ({
-        SQL: `${
-            type === "head"
-                ? "gameHeadId"
-                : type === "torso"
-                ? "gameTorsoId"
-                : "gameLegsId"
-        } = ?`,
-        param: { S: id },
-    }));
+    const filter = drawings.map(({ type, id }) => {
+        let KeyConditionExpression, IndexName;
+        switch (type) {
+            default:
+            case "head":
+                KeyConditionExpression = "gameHeadId = :id";
+                IndexName = "gameHeadId-index";
+                break;
+            case "torso":
+                KeyConditionExpression = "gameTorsoId = :id";
+                IndexName = "gameTorsoId-index";
+                break;
+            case "legs":
+                KeyConditionExpression = "gameLegsId = :id";
+                IndexName = "gameLegsId-index";
+                break;
+        }
+        const params = {
+            TableName: process.env.API_GRAPHQL_GAMETABLE_NAME,
+            IndexName,
+            KeyConditionExpression,
+            ExpressionAttributeValues: { ":id": { S: id } },
+        };
+        console.log(params);
+        return params;
+    });
 
-    const statement = `
-	      SELECT * FROM "${process.env.API_GRAPHQL_GAMETABLE_NAME}"
-	      WHERE gameHeadId IS NOT NULL AND gameHeadId IS NOT NULL AND gameHeadId IS NOT NULL ${
-              filter.length > 0 ? "AND" : ""
-          } (${filter.map(({ SQL }) => SQL).join(" OR ")})
-	    `;
-
-    const { Items = [] } = await ddb
-        .executeStatement({
-            Statement: statement,
-            Parameters: filter.map((f) => f.param),
-        })
-        .promise();
-    const results = Items.map(AWS.DynamoDB.Converter.unmarshall);
-
-    return results;
+    return await queryBatch(filter);
 };

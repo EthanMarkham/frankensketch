@@ -22,7 +22,7 @@
       "function": {
         "restRoutes": {
           "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",
-          "s3Key": "amplify-builds/restRoutes-6661514a5a46532b5570-build.zip"
+          "s3Key": "amplify-builds/restRoutes-3067514b783561377432-build.zip"
         },
         "usersignupevent": {
           "deploymentBucketName": "amplify-frankensketch-dev-185353-deployment",

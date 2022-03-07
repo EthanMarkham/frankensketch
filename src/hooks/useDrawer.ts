@@ -17,9 +17,7 @@ function drawSectionAsync(
         let lines;
         try {
             lines = JSON.parse(lineData)[1];
-        } catch (e) {
-            console.log("Not a line", lineData);
-        }
+        } catch (e) {}
         if (!lines) return;
         let path = new Paper.Path(lines);
         path.position.y += verticleShift;
@@ -53,14 +51,11 @@ function useDrawer(
         const parent = container.current;
 
         if (element !== null && parent !== null && !isInit && game) {
-            console.log("initializing paper");
             Paper.setup(element);
             const parentSize = parent.getBoundingClientRect();
             const projectId = Paper.project.index;
 
-            console.log(parent.getBoundingClientRect(), Paper.view.bounds);
             let newScale = calculateScale(Paper.view.bounds, parentSize) * 0.2;
-            console.log("scaling to " + newScale);
             if (Paper.view) {
                 Paper.view.zoom = newScale;
             }

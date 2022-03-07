@@ -17,3 +17,130 @@ export function queryGamesByUsername(username: string) {
         resolve(data);
     });
 }
+
+export const listGameInfo = /* GraphQL */ `
+    query ListGames(
+        $filter: ModelGameFilterInput
+        $limit: Int
+        $nextToken: String
+    ) {
+        listGames(filter: $filter, limit: $limit, nextToken: $nextToken) {
+            items {
+                id
+                password
+                nsfw
+                head {
+                    id
+                    artist
+                    createdAt
+                }
+                torso {
+                    id
+                    artist
+                    createdAt
+                }
+                legs {
+                    id
+                    artist
+                    createdAt
+                }
+                UserReports {
+                    nextToken
+                    startedAt
+                }
+                UserLikes {
+                    items {
+                        id
+                        gameID
+                        user
+                        _version
+                    }
+                }
+                createdAt
+                updatedAt
+                gameHeadId
+                gameTorsoId
+                gameLegsId
+            }
+            nextToken
+            startedAt
+        }
+    }
+`;
+
+export const listGamesWithLikes = /* GraphQL */ `
+    query ListGames(
+        $filter: ModelGameFilterInput
+        $limit: Int
+        $nextToken: String
+    ) {
+        listGames(filter: $filter, limit: $limit, nextToken: $nextToken) {
+            items {
+                id
+                password
+                nsfw
+                head {
+                    id
+                    lines
+                    isRemoved
+                    isComplete
+                    type
+                    artist
+                    createdAt
+                    updatedAt
+                    _version
+                    _deleted
+                    _lastChangedAt
+                }
+                torso {
+                    id
+                    lines
+                    isRemoved
+                    isComplete
+                    type
+                    artist
+                    createdAt
+                    updatedAt
+                    _version
+                    _deleted
+                    _lastChangedAt
+                }
+                legs {
+                    id
+                    lines
+                    isRemoved
+                    isComplete
+                    type
+                    artist
+                    createdAt
+                    updatedAt
+                    _version
+                    _deleted
+                    _lastChangedAt
+                }
+                UserReports {
+                    nextToken
+                    startedAt
+                }
+                UserLikes {
+                    items {
+                        id
+                        gameID
+                        user
+                        _version
+                    }
+                }
+                createdAt
+                updatedAt
+                _version
+                _deleted
+                _lastChangedAt
+                gameHeadId
+                gameTorsoId
+                gameLegsId
+            }
+            nextToken
+            startedAt
+        }
+    }
+`;
