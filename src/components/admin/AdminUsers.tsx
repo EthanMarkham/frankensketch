@@ -21,7 +21,7 @@ const AdminUsers = () => {
     //Get Users
     useEffect(() => {
         getUsers()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     const getUsers = async () => {
         try {
@@ -35,8 +35,8 @@ const AdminUsers = () => {
             const data: User[] = response.data.listUsers.items
             let users: user[] = []
             data.forEach(e => {
-                if(!(e.createdAt === undefined) && !(e.updatedAt === undefined)){
-                    let temp: user = {id:e.id, userName:e.userName, createdAt:e.createdAt, updatedAt:e.updatedAt}
+                if (!(e.createdAt === undefined) && !(e.updatedAt === undefined)) {
+                    let temp: user = { id: e.id, userName: e.userName, createdAt: e.createdAt, updatedAt: e.updatedAt }
                     users.push(temp)
                 }
             });
@@ -56,7 +56,7 @@ const AdminUsers = () => {
                 setErrorMessage("")
                 break;
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [usersList])
 
     return (
@@ -70,7 +70,7 @@ const AdminUsers = () => {
                         placeholder="username"
                         value={searchField}
                     ></InputField>
-                    <Button margin="0 0 0 1rem" onClick={() => searchUser()} background="none"><img src={Icons.Search} width="30" alt=""/></Button>
+                    <Button margin="0 0 0 1rem" onClick={() => searchUser()} background="none"><img src={Icons.Search} width="30" alt="" /></Button>
                 </FlexBox>
                 <InputTextHelper color={COLORS.gray} fontSize='0.8em'>*case sensitive</InputTextHelper>
             </InputGroup>
@@ -80,11 +80,13 @@ const AdminUsers = () => {
                 </FlexBox>
             )}
 
-            {usersList.map((value, i) => {
-                return (
-                    <UserAccordion key={i} {...value}/>
-                )
-            })}
+            <FlexBox direction="column" css={{ overflowY: "auto" }} height='75vh'>
+                {usersList.map((value, i) => {
+                    return (
+                        <UserAccordion key={i} {...value} />
+                    )
+                })}
+            </FlexBox>
         </>
     );
 };

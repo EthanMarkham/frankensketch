@@ -38,12 +38,12 @@ const CommunityCard = ({ game }: { game: Game }) => {
     }
 
     return (
-        <div className="community-card">
+        <>
             <FlexBox direction="column" width="100%">
                 <FlexBox
                     height="63vh"
                     direction="column"
-                    backgroundColor={COLORS.bgSecondary}
+                    backgroundColor={COLORS.bgLight}
                     borderRadius="10px"
                 >
                     <FlexBox justifyContent="flex-end">
@@ -129,7 +129,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                     game={game}
                 />
             )}
-        </div>
+        </>
     );
 };
 

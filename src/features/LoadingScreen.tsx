@@ -16,7 +16,7 @@ function LoadingScreen() {
                 FrankenSketch
             </FrankenSketchHeader>
             <Text color={COLORS.secondaryGreen} fontSize="1.15em">
-                Custom Message will go here!
+                Please Wait...
             </Text>
             <Loader margin="2rem" width="200px" height="200px"></Loader>
             <Button onClick={() => Auth.signOut()} />

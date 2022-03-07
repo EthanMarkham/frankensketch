@@ -34,8 +34,8 @@ const InfiniteScroll = () => {
   }, [loading, hasMore])
 
   return (
-    <div className='community-card-container'>
-      <FlexBox direction='column' width='100%'>
+    <>
+      <FlexBox direction='column' width='100%' css={{ overflowY: "auto" }} height='100vh'>
         <Text color={COLORS.secondaryGreen} css={{ textAlign: 'center' }} margin='0 0 1rem 0'>Let's see what others have created!</Text>
         {gameList.map((g, i) => {
           if (gameList.length === i + 1) {
@@ -46,15 +46,12 @@ const InfiniteScroll = () => {
 
 
         })}
-        {loading && <div>LOADING GAMES</div>}
+        {loading && <div>LOADING FRANKENSKETCHES</div>}
 
         {(!error && !loading) && (
           <FlexBox direction='column' justifyContent='space-around' height='8rem'>
             <Text color={COLORS.secondaryGreen} css={{ textAlign: 'center' }}>
-              WOW, you have seen all the available drawings that the community has created so far.
-            </Text>
-            <Text color={COLORS.secondaryGreen} css={{ textAlign: 'center' }}>
-              Go do something productive with your life or go to Home and join a new game.
+              WOW, you have seen all the available drawings that the community has created so far. Go draw something of your own!
             </Text>
             <Text color={COLORS.secondaryGreen} css={{ textAlign: 'center' }}>
               We want to see what you do next!
@@ -63,7 +60,7 @@ const InfiniteScroll = () => {
 
         {error && <div>An error has occurred and we couldn't load more drawings! Sorry :(</div>}
       </FlexBox>
-    </div>
+    </>
   )
 }
 

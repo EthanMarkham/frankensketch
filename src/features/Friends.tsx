@@ -60,9 +60,11 @@ export default function Friends() {
         let friends = friendsList.filter((el) => el !== username)
 
         if (currentUser?.email) {
+
             let userInput: UpdateUserInput = {
                 id: currentUser?.email,
-                friends: friends
+                friends: friends,
+                _version: 19
             }
             try {
                 await API.graphql(graphqlOperation(updateUser, { input: userInput }))
