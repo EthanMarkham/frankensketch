@@ -658,6 +658,7 @@ export type ModelUserConnection = {
 export type ModelDrawingFilterInput = {
     id?: ModelIDInput | null;
     lines?: ModelStringInput | null;
+    artist?: ModelStringInput | null;
     isRemoved?: ModelBooleanInput | null;
     isComplete?: ModelBooleanInput | null;
     submittedAt?: ModelStringInput | null;
