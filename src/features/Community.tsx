@@ -80,7 +80,7 @@ function Community() {
                                 );
                             }
                         })}
-                        {loading && <div>LOADING GAMES</div>}
+                        {loading && <div>LOADING FRANKENSKETCHES</div>}
 
                         {!error && !loading && (
                             <FlexBox
@@ -92,16 +92,7 @@ function Community() {
                                     color={COLORS.secondaryGreen}
                                     css={{ textAlign: "center" }}
                                 >
-                                    WOW, you have seen all the available
-                                    drawings that the community has created so
-                                    far.
-                                </Text>
-                                <Text
-                                    color={COLORS.secondaryGreen}
-                                    css={{ textAlign: "center" }}
-                                >
-                                    Go do something productive with your life or
-                                    go to Home and join a new game.
+                                    WOW, you have seen all the available drawings that the community has created so far. Go draw something of your own!
                                 </Text>
                                 <Text
                                     color={COLORS.secondaryGreen}
