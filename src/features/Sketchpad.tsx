@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, FlexBox, SketchCanvas, Text, Div } from "styles";
+import React, { useCallback, useEffect } from "react";
+import { FlexBox, SketchCanvas, Text, Div } from "styles";
 import usePaper from "hooks/usePaper";
 import { useStore } from "store";
 import { GenericPageProps } from "types";

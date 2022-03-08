@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { GenericPageProps } from "types";
 import GameCard from "./GameCard";
-import { AnimatedFlex, Div, FlexBox, Grid, Loader, Text } from "styles";
+import { AnimatedFlex, Div, FlexBox, Grid, Loader } from "styles";
 import { useStore } from "store";
 import { gameGamesByDrawing } from "queries/queries";
 

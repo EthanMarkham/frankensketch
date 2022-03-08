@@ -1,4 +1,8 @@
 import {
+    CreateUserLikeInput,
+    CreateUserLikeMutationVariables,
+    DeleteUserLikeInput,
+    DeleteUserLikeMutationVariables,
     Drawing,
     Game,
     GetGameQueryVariables,
@@ -6,6 +10,7 @@ import {
     ListGamesQueryVariables,
 } from "API";
 import { API } from "aws-amplify";
+import { createUserLike, deleteUserLike } from "graphql/mutations";
 import { getGame, listDrawings } from "graphql/queries";
 import { capitalizeFirstLetter } from "utils";
 
@@ -34,7 +39,7 @@ export const getGames = (input: ListGamesQueryVariables) => {
     }>(async (resolve, reject) => {
         const response = (await API.graphql({
             query: listGamesWithLikes,
-            ...input,
+            variables: input,
         })) as any;
         resolve({
             games: response.data.listGames.items as Array<Game>,
@@ -60,7 +65,7 @@ export const getGamesMin = (input: ListGamesQueryVariables) => {
     }>(async (resolve, reject) => {
         const response = (await API.graphql({
             query: listGamesMin,
-            ...input,
+            variables: input,
         })) as any;
         resolve({
             games: response.data.listGames.items as Array<Game>,
@@ -76,7 +81,7 @@ export const getDrawingIdType = (input: ListDrawingsQueryVariables) => {
     }>(async (resolve, reject) => {
         const response = (await API.graphql({
             query: listDrawingsIdType,
-            ...input,
+            variables: input,
         })) as any;
         resolve({
             drawings: response.data.listDrawings.items as Array<{
@@ -88,6 +93,34 @@ export const getDrawingIdType = (input: ListDrawingsQueryVariables) => {
     });
 };
 
+export const unLikeDrawing = (like: DeleteUserLikeInput) => {
+    return new Promise(async (resolve, reject) => {
+        let variables: DeleteUserLikeMutationVariables = {
+            input: like,
+        };
+        const { data } = (await API.graphql({
+            query: deleteUserLike,
+            variables,
+        })) as any;
+
+        resolve(data);
+    });
+};
+
+export const likeDrawing = (like: CreateUserLikeInput) => {
+    return new Promise(async (resolve, reject) => {
+        let variables: CreateUserLikeMutationVariables = {
+            input: like,
+        };
+        const { data } = (await API.graphql({
+            query: createUserLike,
+            variables,
+        })) as any;
+
+        resolve(data.createUserLike);
+    });
+};
+
 export const getDrawings = (input: ListDrawingsQueryVariables) => {
     return new Promise<{
         drawings: Array<Drawing>;
@@ -95,7 +128,7 @@ export const getDrawings = (input: ListDrawingsQueryVariables) => {
     }>(async (resolve, reject) => {
         const response = (await API.graphql({
             query: listDrawings,
-            ...input,
+            variables: input,
         })) as any;
         resolve({
             drawings: response.data.listDrawings.items as Array<Drawing>,
@@ -116,30 +149,29 @@ export const gameGamesByDrawing = (input: ListDrawingsQueryVariables) => {
         if (!drawings || drawings.length === 0)
             resolve({ games: [], nextToken: null });
 
-        const first = drawings.shift();
+        //const first = drawings.shift();
         const filter = drawings.reduce<any>(
             (acc, { type, id }) => {
                 switch (type) {
                     default:
                     case "head":
-                        acc.or.push({ gameHeadId: { eq: id } });
+                        acc.and.or.push({ gameHeadId: { eq: id } });
                         break;
                     case "legs":
-                        acc.or.push({ gameLegsId: { eq: id } });
+                        acc.and.or.push({ gameLegsId: { eq: id } });
                         break;
                     case "torso":
-                        acc.or.push({ gameHeadId: { eq: id } });
+                        acc.and.or.push({ gameHeadId: { eq: id } });
                         break;
                 }
                 return acc;
             },
             {
-                [getFieldName(first!!.type!!)]: { eq: first!!.id },
-                or: [],
                 and: {
                     gameLegsId: { attributeExists: true },
                     gameTorsoId: { attributeExists: true },
                     gameHeadId: { attributeExists: true },
+                    or: [],
                 },
             }
         );
