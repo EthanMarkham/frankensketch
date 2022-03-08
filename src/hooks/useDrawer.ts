@@ -4,12 +4,23 @@ import { Drawing, Game } from "models";
 import { calculateScale } from "utils";
 
 function drawSectionAsync(
-    { type, lines }: Drawing,
+    { type, lines, id }: Drawing,
     verticleShift: number,
     line_delay: number,
-    projectId: number
+    projectId: number,
+    gameId: string
 ): Promise<paper.Rectangle> {
-    if (!lines) throw new Error("missing line data");
+    if (!lines) {
+        console.log("missing line data");
+        return new Promise<paper.Rectangle>((resolve) => {
+            resolve(
+                new paper.Rectangle(
+                    new paper.Point(0, verticleShift),
+                    new paper.Size(0, 0)
+                )
+            );
+        });
+    }
 
     const group = new Paper.Group();
 
@@ -17,14 +28,13 @@ function drawSectionAsync(
         let lines;
         try {
             lines = JSON.parse(lineData)[1];
+            let path = new Paper.Path(lines);
+            path.position.y += verticleShift;
+            path.selected = false;
+            group.addChild(path);
         } catch (e) {
-            console.log("Not a line", lineData);
+            console.log(`error drawing game ${gameId}, ${type} drawing ${id}`);
         }
-        if (!lines) return;
-        let path = new Paper.Path(lines);
-        path.position.y += verticleShift;
-        path.selected = false;
-        group.addChild(path);
     };
 
     return new Promise<paper.Rectangle>((resolve) => {
@@ -53,14 +63,11 @@ function useDrawer(
         const parent = container.current;
 
         if (element !== null && parent !== null && !isInit && game) {
-            console.log("initializing paper");
             Paper.setup(element);
             const parentSize = parent.getBoundingClientRect();
             const projectId = Paper.project.index;
 
-            console.log(parent.getBoundingClientRect(), Paper.view.bounds);
             let newScale = calculateScale(Paper.view.bounds, parentSize) * 0.2;
-            console.log("scaling to " + newScale);
             if (Paper.view) {
                 Paper.view.zoom = newScale;
             }
@@ -68,14 +75,16 @@ function useDrawer(
                 game.head!!,
                 Paper.view.bounds.top,
                 line_delay,
-                projectId
+                projectId,
+                game.id
             )
                 .then(({ bottom }) => {
                     return drawSectionAsync(
                         game.torso!!,
                         bottom,
                         line_delay,
-                        projectId
+                        projectId,
+                        game.id
                     );
                 })
                 .then(({ bottom }) => {
@@ -83,7 +92,8 @@ function useDrawer(
                         game.legs!!,
                         bottom,
                         line_delay,
-                        projectId
+                        projectId,
+                        game.id
                     );
                 })
                 .then(() => {

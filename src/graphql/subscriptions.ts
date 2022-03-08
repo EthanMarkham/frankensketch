@@ -2,48 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUserLike = /* GraphQL */ `
-  subscription OnCreateUserLike {
-    onCreateUserLike {
-      id
-      user
-      gameID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onUpdateUserLike = /* GraphQL */ `
-  subscription OnUpdateUserLike {
-    onUpdateUserLike {
-      id
-      user
-      gameID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const onDeleteUserLike = /* GraphQL */ `
-  subscription OnDeleteUserLike {
-    onDeleteUserLike {
-      id
-      user
-      gameID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
 export const onCreateUserReport = /* GraphQL */ `
   subscription OnCreateUserReport {
     onCreateUserReport {
@@ -80,6 +38,48 @@ export const onDeleteUserReport = /* GraphQL */ `
       id
       isReviewed
       reportedBy
+      gameID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onCreateUserLike = /* GraphQL */ `
+  subscription OnCreateUserLike {
+    onCreateUserLike {
+      id
+      user
+      gameID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onUpdateUserLike = /* GraphQL */ `
+  subscription OnUpdateUserLike {
+    onUpdateUserLike {
+      id
+      user
+      gameID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const onDeleteUserLike = /* GraphQL */ `
+  subscription OnDeleteUserLike {
+    onDeleteUserLike {
+      id
+      user
       gameID
       createdAt
       updatedAt

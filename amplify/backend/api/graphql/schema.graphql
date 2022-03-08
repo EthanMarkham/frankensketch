@@ -1,4 +1,4 @@
-type UserLike @model @auth(rules: [{ allow: private }]) {
+type UserLike @model @auth(rules: [{ allow: public }, { allow: private }]) {
     id: ID!
     user: String
     gameID: ID! @index(name: "byGame")

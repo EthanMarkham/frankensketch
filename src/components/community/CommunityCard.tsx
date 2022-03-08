@@ -1,40 +1,91 @@
 import useDrawer from "hooks/useDrawer";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Button, FlexBox, SketchCanvas, Text } from "styles";
-import { Game } from "models";
 import { COLORS } from "utils/DEFS";
 import { Icons } from "styles/svg/ui-icons/icons";
-import { formatNumberWithMetricPrefix } from "utils/functions";
 import Modal from "features/Modal";
+import { useStore } from "store";
+import { createUserLike, deleteUserLike } from "graphql/mutations";
+import { API } from "aws-amplify";
+import {
+    CreateUserLikeInput,
+    CreateUserLikeMutationVariables,
+    DeleteUserLikeInput,
+    DeleteUserLikeMutationVariables,
+    Game,
+    UserLike,
+} from "API";
+
+const unLikeDrawing = (like: DeleteUserLikeInput) => {
+    return new Promise(async (resolve, reject) => {
+        let variables: DeleteUserLikeMutationVariables = {
+            input: like,
+        };
+        const { data } = (await API.graphql({
+            query: deleteUserLike,
+            variables,
+        })) as any;
+
+        resolve(data);
+    });
+};
+const likeDrawing = (like: CreateUserLikeInput) => {
+    return new Promise(async (resolve, reject) => {
+        let variables: CreateUserLikeMutationVariables = {
+            input: like,
+        };
+        const { data } = (await API.graphql({
+            query: createUserLike,
+            variables,
+        })) as any;
+
+        resolve(data.createUserLike);
+    });
+};
 
 const CommunityCard = ({ game }: { game: Game }) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
-    useDrawer(game, canvasRef, containerRef);
+    const userData = useStore((state) => state.userData);
+    const [likeCount, setLikeCount] = useState<number>(
+        game.UserLikes
+            ? game.UserLikes.items.filter((l) => l?._deleted !== true).length
+            : 0
+    );
+    const [isLiking, setLiking] = useState(false);
+    const [like, setLike] = useState(
+        game.UserLikes?.items.find(
+            (l) => l?.user === userData?.username && l?._deleted !== true
+        )
+    );
 
-    //Control is modal should be shown
+    useDrawer(game as any, canvasRef, containerRef, 0);
     const [isShown, setIsShown] = useState(false);
 
-    //TODO - Change with actual like state
-    const [like, setLike] = useState(false);
+    const updateLike = useCallback(async () => {
+        if (isLiking) return;
+        setLiking(true);
 
-    //Update like state
-    const updateLike = () => {
-        setLike(!like);
-        //TODO - Increase
-    };
+        if (like !== undefined && like !== null) {
+            await unLikeDrawing({ id: like.id, _version: like._version });
+            setLike(null);
+            setLiking(false);
+            setLikeCount((cur) => cur - 1);
+        } else {
+            const data = await likeDrawing({
+                gameID: game.id,
+                user: userData?.username,
+            });
+
+            setLike(data as UserLike);
+            setLiking(false);
+            setLikeCount((cur) => cur + 1);
+        }
+    }, [isLiking, like, game.id, userData?.username]);
 
     let gameDate = new Date();
     if (game.updatedAt) {
         gameDate = new Date(game.updatedAt);
-    }
-
-    //Simplify Likes Count
-    let likesCount = "";
-    if (game.UserLikes?.length) {
-        likesCount = formatNumberWithMetricPrefix(game.UserLikes?.length);
-    } else {
-        likesCount = "0";
     }
 
     return (
@@ -106,18 +157,22 @@ const CommunityCard = ({ game }: { game: Game }) => {
                     <FlexBox direction="column">
                         <Button
                             background="none"
-                            onClick={() => updateLike()}
+                            onClick={updateLike}
                             height="57px"
                         >
                             <img
-                                src={like ? Icons.RedHeart : Icons.WhiteHeart}
+                                src={
+                                    like !== null && like !== undefined
+                                        ? Icons.RedHeart
+                                        : Icons.WhiteHeart
+                                }
                                 width="40"
                                 height="40"
                                 alt="heart icon"
                             />
                         </Button>
                         <Text fontWeight="300" margin="0.5rem 0 0 0">
-                            {likesCount} likes
+                            {likeCount} likes
                         </Text>
                     </FlexBox>
                 </FlexBox>
@@ -126,7 +181,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                 <Modal
                     setIsShown={setIsShown}
                     type="createReport"
-                    game={game}
+                    game={game as any}
                 />
             )}
         </>

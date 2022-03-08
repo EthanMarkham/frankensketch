@@ -13,7 +13,6 @@ import Friends from "./Friends";
 import Settings from "./Settings";
 import GameViewer from "./GameViewer";
 import Admin from "./Admin";
-import Pallet from "components/svg/Pallet";
 import NavBar from "components/navbar/NavBar";
 import Header from "components/header/header";
 import { ToastContainer } from "react-toastify";

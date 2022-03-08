@@ -1,81 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { GenericPageProps } from "types";
 import GameCard from "./GameCard";
-import { Game, ModelGameFilterInput } from "types/API";
-import { Div, Grid } from "styles";
+import { AnimatedFlex, Div, FlexBox, Grid, Loader, Text } from "styles";
 import { useStore } from "store";
-import { queryGamesByUsername } from "queries/queries";
-import { listGameInfo } from "graphql/queries";
-import { API } from "aws-amplify";
+import { gameGamesByDrawing } from "queries/queries";
 
-function getGameInfo(gameList: any) {
-    return new Promise<Game>(async (resolve, reject) => {
-        const filter: ModelGameFilterInput = { or: [] };
-
-        gameList.forEach((g: any) => {
-            filter!!.or!!.push({ id: { eq: g.id } });
-        });
-
-        console.log(filter);
-
-        const { data } = (await API.graphql({
-            query: listGameInfo,
-            variables: {
-                filter: filter,
-            },
-        })) as any;
-
-        if (data.listGames) resolve(data.listGames);
-        else reject(data.error);
-    });
-}
+import { config, useTransition } from "react-spring";
 
 function GameCarousel({ container }: GenericPageProps) {
-    const [gameList, setGameList] = useState<[Game]>();
+    const [gameList, setGameList] = useState<any[]>();
+    const [loading, setLoading] = useState(false);
     const user = useStore((state) => state.userData);
+
+    const transitions = useTransition(gameList, {
+        from: { opacity: 0 },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+        trail: 100,
+        config: config.molasses,
+    });
 
     useEffect(() => {
         if (!user?.username) return;
 
-        queryGamesByUsername(user?.username).then((data) => {
-            console.log("games", data);
-            getGameInfo(data).then((g) => {
-                console.log(g);
-            });
-        });
-
-        /*
-        getUserDrawings(user?.username).then((data) => {
-            console.log(data[0]);
-
-            if (data.length === 0) return;
-            const first = data.shift();
-            const filter = data.reduce((acc, cur, i) => {
-                let ptx: any = acc;
-                let n = 0;
-                while (n < i) {
-                    if (!ptx.or) ptx.or = {};
-                    ptx = ptx.or;
-                    n++;
-                }
-                ptx.or = getFilterVar(cur.type!!, cur.id);
-                return acc;
-            }, getFilterVar(first!!.type!!, first!!.id));
-            console.log(filter);
-            getGames(filter).then((games) => {
-                let finishedGames: Game[] = [];
-                let unfinished = 0;
-
-                games.forEach((g) => {
-                    if (g.gameHeadId && g.gameLegsId && g.gameTorsoId)
-                        finishedGames.push(g);
-                    else unfinished++;
+        gameGamesByDrawing({
+            filter: {
+                artist: { eq: user.username },
+            },
+        }).then((data) => {
+            let test = data.games
+                .filter(({ head, torso, legs }: any) => head && torso && legs)
+                .map((game: any) => {
+                    const createdDate = [
+                        game.head.createdAt,
+                        game.torso.createdAt,
+                        game.legs.createdAt,
+                    ].reduce((a, b) => {
+                        return a > b ? a : b;
+                    });
+                    return { ...game, createdAt: createdDate };
+                })
+                .sort((a: any, b: any) => {
+                    return b.createdAt < a.createdAt ? -1 : 1;
                 });
-                setGameList(finishedGames);
-                alert("You have " + unfinished + " unfinished games!");
-            });
+            setGameList(test);
+            setLoading(true);
         });
-        */
     }, [user]);
 
     return (
@@ -84,20 +54,37 @@ function GameCarousel({ container }: GenericPageProps) {
                 flex: "0 1",
                 justifySelf: "flex-end",
                 flexBasis: container?.current
-                    ? container.current.offsetHeight * 0.7 + "px"
+                    ? container.current.offsetHeight - 50 + "px"
                     : "10px",
                 overflowY: "auto",
             }}
         >
             <Grid
+                position="relative"
                 style={{
                     justifyContent: "space-around",
                     gridTemplateColumns: "repeat(auto-fit, 400px)",
                     gap: "0.2em",
                 }}
             >
-                {gameList &&
-                    gameList.map((g) => <GameCard game={g} key={g.id} />)}
+                {loading === false ? (
+                    <FlexBox
+                        justifyContent="center"
+                        width="100%"
+                        height="80%"
+                        style={{ top: "100px" }}
+                        position="absolute"
+                        margin="auto"
+                    >
+                        <Loader margin="2rem" width="100px" height="100px" />
+                    </FlexBox>
+                ) : null}
+
+                {transitions((style, item) => (
+                    <AnimatedFlex style={style}>
+                        <GameCard game={item} key={item.id} />
+                    </AnimatedFlex>
+                ))}
             </Grid>
         </Div>
     );

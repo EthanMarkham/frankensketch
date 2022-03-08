@@ -8,6 +8,7 @@ import { COLORS } from "utils/DEFS";
 import BackButton from "components/general/BackButton";
 import { Leva } from "leva";
 import Pallet from "components/svg/Pallet";
+import { Point } from "paper/dist/paper-core";
 
 /*--------------------------------------------------------------------//
                       J S X      E X P O R T
@@ -27,16 +28,23 @@ const Sketchpad = ({ container }: GenericPageProps) => {
     const saveGame = useCallback(() => {
         if (!project) return;
         try {
-            const lineData = JSON.parse(project.exportJSON())[1][1].children;
+            const p = project as any;
+            console.log(p);
+            p.view.scale = 1;
+            p.view.center = new Point(0, 0);
+
+            const lineData = JSON.parse(p.exportJSON())[1][1].children;
             console.log(lineData);
-            postGame(lineData, serverProps.drawing);
+            if (!lineData || lineData.length === 0) {
+                changePage(1);
+            } else postGame(lineData, serverProps.drawing);
         } catch (e) {
             console.log(e);
             return;
         } finally {
             project.clear();
         }
-    }, [postGame, project, serverProps.drawing]);
+    }, [changePage, postGame, project, serverProps.drawing]);
 
     const drawingType = serverProps.drawing;
 

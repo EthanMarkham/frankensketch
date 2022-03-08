@@ -8,6 +8,8 @@ import { COLORS } from "utils/DEFS";
 function NavBar() {
     //Navigation Flow
     const changePage = useStore((state) => state.actions.setPage);
+    const joinGame = useStore((state) => state.actions.joinGame);
+
     const user = useStore((state) => state.userData);
     const OnClickNavButton = (pageNumber: number) => {
         changePage(pageNumber);
@@ -54,6 +56,15 @@ function NavBar() {
                 >
                     <img src={Icons.Home} alt="Home icon" />
                     <Text color={COLORS.white}>Home</Text>
+                </Button>
+
+                <Button
+                    background="none"
+                    borderRadius="0"
+                    onClick={(_) => joinGame()}
+                >
+                    <img src={Icons.Pencil} alt="Draw icon" />
+                    <Text color={COLORS.white}>Draw</Text>
                 </Button>
 
                 <Button

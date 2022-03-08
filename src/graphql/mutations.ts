@@ -2,57 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createUserLike = /* GraphQL */ `
-  mutation CreateUserLike(
-    $input: CreateUserLikeInput!
-    $condition: ModelUserLikeConditionInput
-  ) {
-    createUserLike(input: $input, condition: $condition) {
-      id
-      user
-      gameID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const updateUserLike = /* GraphQL */ `
-  mutation UpdateUserLike(
-    $input: UpdateUserLikeInput!
-    $condition: ModelUserLikeConditionInput
-  ) {
-    updateUserLike(input: $input, condition: $condition) {
-      id
-      user
-      gameID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
-export const deleteUserLike = /* GraphQL */ `
-  mutation DeleteUserLike(
-    $input: DeleteUserLikeInput!
-    $condition: ModelUserLikeConditionInput
-  ) {
-    deleteUserLike(input: $input, condition: $condition) {
-      id
-      user
-      gameID
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-    }
-  }
-`;
 export const createUserReport = /* GraphQL */ `
   mutation CreateUserReport(
     $input: CreateUserReportInput!
@@ -98,6 +47,57 @@ export const deleteUserReport = /* GraphQL */ `
       id
       isReviewed
       reportedBy
+      gameID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const createUserLike = /* GraphQL */ `
+  mutation CreateUserLike(
+    $input: CreateUserLikeInput!
+    $condition: ModelUserLikeConditionInput
+  ) {
+    createUserLike(input: $input, condition: $condition) {
+      id
+      user
+      gameID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const updateUserLike = /* GraphQL */ `
+  mutation UpdateUserLike(
+    $input: UpdateUserLikeInput!
+    $condition: ModelUserLikeConditionInput
+  ) {
+    updateUserLike(input: $input, condition: $condition) {
+      id
+      user
+      gameID
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+  }
+`;
+export const deleteUserLike = /* GraphQL */ `
+  mutation DeleteUserLike(
+    $input: DeleteUserLikeInput!
+    $condition: ModelUserLikeConditionInput
+  ) {
+    deleteUserLike(input: $input, condition: $condition) {
+      id
+      user
       gameID
       createdAt
       updatedAt

@@ -2,20 +2,43 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateUserLikeInput = {
+export type CreateUserReportInput = {
   id?: string | null,
-  user?: string | null,
+  isReviewed?: boolean | null,
+  reportedBy?: string | null,
   gameID: string,
   _version?: number | null,
 };
 
-export type ModelUserLikeConditionInput = {
-  user?: ModelStringInput | null,
+export type ModelUserReportConditionInput = {
+  isReviewed?: ModelBooleanInput | null,
+  reportedBy?: ModelStringInput | null,
   gameID?: ModelIDInput | null,
-  and?: Array< ModelUserLikeConditionInput | null > | null,
-  or?: Array< ModelUserLikeConditionInput | null > | null,
-  not?: ModelUserLikeConditionInput | null,
+  and?: Array< ModelUserReportConditionInput | null > | null,
+  or?: Array< ModelUserReportConditionInput | null > | null,
+  not?: ModelUserReportConditionInput | null,
 };
+
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export enum ModelAttributeTypes {
+  binary = "binary",
+  binarySet = "binarySet",
+  bool = "bool",
+  list = "list",
+  map = "map",
+  number = "number",
+  numberSet = "numberSet",
+  string = "string",
+  stringSet = "stringSet",
+  _null = "_null",
+}
+
 
 export type ModelStringInput = {
   ne?: string | null,
@@ -32,20 +55,6 @@ export type ModelStringInput = {
   attributeType?: ModelAttributeTypes | null,
   size?: ModelSizeInput | null,
 };
-
-export enum ModelAttributeTypes {
-  binary = "binary",
-  binarySet = "binarySet",
-  bool = "bool",
-  list = "list",
-  map = "map",
-  number = "number",
-  numberSet = "numberSet",
-  string = "string",
-  stringSet = "stringSet",
-  _null = "_null",
-}
-
 
 export type ModelSizeInput = {
   ne?: number | null,
@@ -73,54 +82,6 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type UserLike = {
-  __typename: "UserLike",
-  id: string,
-  user?: string | null,
-  gameID: string,
-  createdAt: string,
-  updatedAt: string,
-  _version: number,
-  _deleted?: boolean | null,
-  _lastChangedAt: number,
-};
-
-export type UpdateUserLikeInput = {
-  id: string,
-  user?: string | null,
-  gameID?: string | null,
-  _version?: number | null,
-};
-
-export type DeleteUserLikeInput = {
-  id: string,
-  _version?: number | null,
-};
-
-export type CreateUserReportInput = {
-  id?: string | null,
-  isReviewed?: boolean | null,
-  reportedBy?: string | null,
-  gameID: string,
-  _version?: number | null,
-};
-
-export type ModelUserReportConditionInput = {
-  isReviewed?: ModelBooleanInput | null,
-  reportedBy?: ModelStringInput | null,
-  gameID?: ModelIDInput | null,
-  and?: Array< ModelUserReportConditionInput | null > | null,
-  or?: Array< ModelUserReportConditionInput | null > | null,
-  not?: ModelUserReportConditionInput | null,
-};
-
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type UserReport = {
   __typename: "UserReport",
   id: string,
@@ -143,6 +104,45 @@ export type UpdateUserReportInput = {
 };
 
 export type DeleteUserReportInput = {
+  id: string,
+  _version?: number | null,
+};
+
+export type CreateUserLikeInput = {
+  id?: string | null,
+  user?: string | null,
+  gameID: string,
+  _version?: number | null,
+};
+
+export type ModelUserLikeConditionInput = {
+  user?: ModelStringInput | null,
+  gameID?: ModelIDInput | null,
+  and?: Array< ModelUserLikeConditionInput | null > | null,
+  or?: Array< ModelUserLikeConditionInput | null > | null,
+  not?: ModelUserLikeConditionInput | null,
+};
+
+export type UserLike = {
+  __typename: "UserLike",
+  id: string,
+  user?: string | null,
+  gameID: string,
+  createdAt: string,
+  updatedAt: string,
+  _version: number,
+  _deleted?: boolean | null,
+  _lastChangedAt: number,
+};
+
+export type UpdateUserLikeInput = {
+  id: string,
+  user?: string | null,
+  gameID?: string | null,
+  _version?: number | null,
+};
+
+export type DeleteUserLikeInput = {
   id: string,
   _version?: number | null,
 };
@@ -354,15 +354,6 @@ export type DeleteDrawingInput = {
   _version?: number | null,
 };
 
-export type ModelUserLikeFilterInput = {
-  id?: ModelIDInput | null,
-  user?: ModelStringInput | null,
-  gameID?: ModelIDInput | null,
-  and?: Array< ModelUserLikeFilterInput | null > | null,
-  or?: Array< ModelUserLikeFilterInput | null > | null,
-  not?: ModelUserLikeFilterInput | null,
-};
-
 export type ModelUserReportFilterInput = {
   id?: ModelIDInput | null,
   isReviewed?: ModelBooleanInput | null,
@@ -371,6 +362,15 @@ export type ModelUserReportFilterInput = {
   and?: Array< ModelUserReportFilterInput | null > | null,
   or?: Array< ModelUserReportFilterInput | null > | null,
   not?: ModelUserReportFilterInput | null,
+};
+
+export type ModelUserLikeFilterInput = {
+  id?: ModelIDInput | null,
+  user?: ModelStringInput | null,
+  gameID?: ModelIDInput | null,
+  and?: Array< ModelUserLikeFilterInput | null > | null,
+  or?: Array< ModelUserLikeFilterInput | null > | null,
+  not?: ModelUserLikeFilterInput | null,
 };
 
 export type ModelDrawingTallyFilterInput = {
@@ -442,63 +442,6 @@ export type ModelDrawingConnection = {
   startedAt?: number | null,
 };
 
-export type CreateUserLikeMutationVariables = {
-  input: CreateUserLikeInput,
-  condition?: ModelUserLikeConditionInput | null,
-};
-
-export type CreateUserLikeMutation = {
-  createUserLike?:  {
-    __typename: "UserLike",
-    id: string,
-    user?: string | null,
-    gameID: string,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type UpdateUserLikeMutationVariables = {
-  input: UpdateUserLikeInput,
-  condition?: ModelUserLikeConditionInput | null,
-};
-
-export type UpdateUserLikeMutation = {
-  updateUserLike?:  {
-    __typename: "UserLike",
-    id: string,
-    user?: string | null,
-    gameID: string,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type DeleteUserLikeMutationVariables = {
-  input: DeleteUserLikeInput,
-  condition?: ModelUserLikeConditionInput | null,
-};
-
-export type DeleteUserLikeMutation = {
-  deleteUserLike?:  {
-    __typename: "UserLike",
-    id: string,
-    user?: string | null,
-    gameID: string,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
 export type CreateUserReportMutationVariables = {
   input: CreateUserReportInput,
   condition?: ModelUserReportConditionInput | null,
@@ -550,6 +493,63 @@ export type DeleteUserReportMutation = {
     id: string,
     isReviewed?: boolean | null,
     reportedBy?: string | null,
+    gameID: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type CreateUserLikeMutationVariables = {
+  input: CreateUserLikeInput,
+  condition?: ModelUserLikeConditionInput | null,
+};
+
+export type CreateUserLikeMutation = {
+  createUserLike?:  {
+    __typename: "UserLike",
+    id: string,
+    user?: string | null,
+    gameID: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type UpdateUserLikeMutationVariables = {
+  input: UpdateUserLikeInput,
+  condition?: ModelUserLikeConditionInput | null,
+};
+
+export type UpdateUserLikeMutation = {
+  updateUserLike?:  {
+    __typename: "UserLike",
+    id: string,
+    user?: string | null,
+    gameID: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type DeleteUserLikeMutationVariables = {
+  input: DeleteUserLikeInput,
+  condition?: ModelUserLikeConditionInput | null,
+};
+
+export type DeleteUserLikeMutation = {
+  deleteUserLike?:  {
+    __typename: "UserLike",
+    id: string,
+    user?: string | null,
     gameID: string,
     createdAt: string,
     updatedAt: string,
@@ -1027,75 +1027,6 @@ export type DeleteDrawingMutation = {
   } | null,
 };
 
-export type GetUserLikeQueryVariables = {
-  id: string,
-};
-
-export type GetUserLikeQuery = {
-  getUserLike?:  {
-    __typename: "UserLike",
-    id: string,
-    user?: string | null,
-    gameID: string,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type ListUserLikesQueryVariables = {
-  filter?: ModelUserLikeFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListUserLikesQuery = {
-  listUserLikes?:  {
-    __typename: "ModelUserLikeConnection",
-    items:  Array< {
-      __typename: "UserLike",
-      id: string,
-      user?: string | null,
-      gameID: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
-export type SyncUserLikesQueryVariables = {
-  filter?: ModelUserLikeFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  lastSync?: number | null,
-};
-
-export type SyncUserLikesQuery = {
-  syncUserLikes?:  {
-    __typename: "ModelUserLikeConnection",
-    items:  Array< {
-      __typename: "UserLike",
-      id: string,
-      user?: string | null,
-      gameID: string,
-      createdAt: string,
-      updatedAt: string,
-      _version: number,
-      _deleted?: boolean | null,
-      _lastChangedAt: number,
-    } | null >,
-    nextToken?: string | null,
-    startedAt?: number | null,
-  } | null,
-};
-
 export type GetUserReportQueryVariables = {
   id: string,
 };
@@ -1156,6 +1087,75 @@ export type SyncUserReportsQuery = {
       id: string,
       isReviewed?: boolean | null,
       reportedBy?: string | null,
+      gameID: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type GetUserLikeQueryVariables = {
+  id: string,
+};
+
+export type GetUserLikeQuery = {
+  getUserLike?:  {
+    __typename: "UserLike",
+    id: string,
+    user?: string | null,
+    gameID: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type ListUserLikesQueryVariables = {
+  filter?: ModelUserLikeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListUserLikesQuery = {
+  listUserLikes?:  {
+    __typename: "ModelUserLikeConnection",
+    items:  Array< {
+      __typename: "UserLike",
+      id: string,
+      user?: string | null,
+      gameID: string,
+      createdAt: string,
+      updatedAt: string,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type SyncUserLikesQueryVariables = {
+  filter?: ModelUserLikeFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  lastSync?: number | null,
+};
+
+export type SyncUserLikesQuery = {
+  syncUserLikes?:  {
+    __typename: "ModelUserLikeConnection",
+    items:  Array< {
+      __typename: "UserLike",
+      id: string,
+      user?: string | null,
       gameID: string,
       createdAt: string,
       updatedAt: string,
@@ -1638,48 +1638,6 @@ export type SyncDrawingsQuery = {
   } | null,
 };
 
-export type OnCreateUserLikeSubscription = {
-  onCreateUserLike?:  {
-    __typename: "UserLike",
-    id: string,
-    user?: string | null,
-    gameID: string,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnUpdateUserLikeSubscription = {
-  onUpdateUserLike?:  {
-    __typename: "UserLike",
-    id: string,
-    user?: string | null,
-    gameID: string,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
-export type OnDeleteUserLikeSubscription = {
-  onDeleteUserLike?:  {
-    __typename: "UserLike",
-    id: string,
-    user?: string | null,
-    gameID: string,
-    createdAt: string,
-    updatedAt: string,
-    _version: number,
-    _deleted?: boolean | null,
-    _lastChangedAt: number,
-  } | null,
-};
-
 export type OnCreateUserReportSubscription = {
   onCreateUserReport?:  {
     __typename: "UserReport",
@@ -1716,6 +1674,48 @@ export type OnDeleteUserReportSubscription = {
     id: string,
     isReviewed?: boolean | null,
     reportedBy?: string | null,
+    gameID: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnCreateUserLikeSubscription = {
+  onCreateUserLike?:  {
+    __typename: "UserLike",
+    id: string,
+    user?: string | null,
+    gameID: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnUpdateUserLikeSubscription = {
+  onUpdateUserLike?:  {
+    __typename: "UserLike",
+    id: string,
+    user?: string | null,
+    gameID: string,
+    createdAt: string,
+    updatedAt: string,
+    _version: number,
+    _deleted?: boolean | null,
+    _lastChangedAt: number,
+  } | null,
+};
+
+export type OnDeleteUserLikeSubscription = {
+  onDeleteUserLike?:  {
+    __typename: "UserLike",
+    id: string,
+    user?: string | null,
     gameID: string,
     createdAt: string,
     updatedAt: string,
