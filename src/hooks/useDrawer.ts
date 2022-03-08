@@ -4,12 +4,23 @@ import { Drawing, Game } from "models";
 import { calculateScale } from "utils";
 
 function drawSectionAsync(
-    { type, lines }: Drawing,
+    { type, lines, id }: Drawing,
     verticleShift: number,
     line_delay: number,
-    projectId: number
+    projectId: number,
+    gameId: string
 ): Promise<paper.Rectangle> {
-    if (!lines) throw new Error("missing line data");
+    if (!lines) {
+        console.log("missing line data");
+        return new Promise<paper.Rectangle>((resolve) => {
+            resolve(
+                new paper.Rectangle(
+                    new paper.Point(0, verticleShift),
+                    new paper.Size(0, 0)
+                )
+            );
+        });
+    }
 
     const group = new Paper.Group();
 
@@ -17,12 +28,13 @@ function drawSectionAsync(
         let lines;
         try {
             lines = JSON.parse(lineData)[1];
-        } catch (e) {}
-        if (!lines) return;
-        let path = new Paper.Path(lines);
-        path.position.y += verticleShift;
-        path.selected = false;
-        group.addChild(path);
+            let path = new Paper.Path(lines);
+            path.position.y += verticleShift;
+            path.selected = false;
+            group.addChild(path);
+        } catch (e) {
+            console.log(`error drawing game ${gameId}, ${type} drawing ${id}`);
+        }
     };
 
     return new Promise<paper.Rectangle>((resolve) => {
@@ -63,14 +75,16 @@ function useDrawer(
                 game.head!!,
                 Paper.view.bounds.top,
                 line_delay,
-                projectId
+                projectId,
+                game.id
             )
                 .then(({ bottom }) => {
                     return drawSectionAsync(
                         game.torso!!,
                         bottom,
                         line_delay,
-                        projectId
+                        projectId,
+                        game.id
                     );
                 })
                 .then(({ bottom }) => {
@@ -78,7 +92,8 @@ function useDrawer(
                         game.legs!!,
                         bottom,
                         line_delay,
-                        projectId
+                        projectId,
+                        game.id
                     );
                 })
                 .then(() => {

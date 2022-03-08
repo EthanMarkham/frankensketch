@@ -23,7 +23,6 @@ const getGames = (nextToken?: string | null | undefined) => {
             query: listGamesWithLikes,
             variables,
         })) as any;
-        console.log(response);
         resolve({
             games: response.data.listGames.items as Array<Game>,
             nextToken: response.data.listGames.nextToken as string | null,
@@ -36,14 +35,15 @@ export default function useCommunityContent() {
     const [gameList, setGameList] = useState<Array<Game>>(new Array<Game>());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [nextToken, setNextToken] = useState<string | null>();
+    const [nextToken, setNextToken] = useState<string | null | undefined>(
+        "start"
+    );
 
     const loadGames = useCallback(async () => {
         setLoading(true);
         setError(false);
         getGames(nextToken)
             .then((res) => {
-                console.log(res);
                 //Update GameList
                 setGameList([...gameList, ...res.games]);
                 setNextToken(res.nextToken);

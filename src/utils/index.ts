@@ -23,3 +23,7 @@ export function calculateScale(
     const ratioH = containerSize.height / imageSize.height;
     return ratioW < ratioH ? ratioW : ratioH;
 }
+
+export function capitalizeFirstLetter(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}

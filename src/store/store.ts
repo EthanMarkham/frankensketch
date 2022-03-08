@@ -1,3 +1,4 @@
+import { getGameById } from "queries/queries";
 import { Store } from "types";
 import create from "zustand";
 import { joinGame } from "./actions/joinGame";
@@ -28,7 +29,7 @@ const useStore = create<Store>((set, _get) => ({
             set((store) => ({
                 ...store,
                 userData: data,
-                pageIndex: data === null ? 0 : 1
+                pageIndex: data === null ? 0 : 1,
             }));
         },
         subscribe: (key, callback) => {
@@ -46,12 +47,17 @@ const useStore = create<Store>((set, _get) => ({
             });
         },
         joinGame: joinGame(set),
-        viewGame: (game) => {
-            set((store) => ({
-                ...store,
-                serverSideProps: { game },
-                pageIndex: 9,
-            }));
+        viewGame: (gameId) => {
+            set((store) => ({ ...store, pageIndex: -1 }));
+
+            getGameById({ id: gameId }).then((data) => {
+                console.log("gamedata", data);
+                set((store) => ({
+                    ...store,
+                    serverSideProps: { game: data },
+                    pageIndex: 9,
+                }));
+            });
         },
         postGame: postGame(set),
         setError(data) {

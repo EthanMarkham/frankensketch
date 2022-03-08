@@ -30,7 +30,6 @@ export default function useAuth() {
                             "cognito:groups"
                         ];
                     getUsername(authData.username).then((data) => {
-                        console.log(data);
                         setUser({
                             username: data.userName,
                             email: authData.username,

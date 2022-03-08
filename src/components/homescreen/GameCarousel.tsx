@@ -1,64 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { GenericPageProps } from "types";
 import GameCard from "./GameCard";
-import { ModelGameFilterInput } from "types/API";
-import { Div, FlexBox, Grid, Loader } from "styles";
+import { AnimatedFlex, Div, FlexBox, Grid, Loader, Text } from "styles";
 import { useStore } from "store";
-import { listGameInfo, queryGamesByUsername } from "queries/queries";
-import { API } from "aws-amplify";
-import { GameRecord } from "types/home";
+import { gameGamesByDrawing } from "queries/queries";
 
-function getGameInfo(gameList: any) {
-    return new Promise(async (resolve, reject) => {
-        const filter: ModelGameFilterInput = { or: [] };
-
-        gameList.forEach((g: any) => {
-            filter!!.or!!.push({ id: { eq: g.id } });
-        });
-
-        const { data } = (await API.graphql({
-            query: listGameInfo,
-            variables: {
-                filter: filter,
-            },
-        })) as any;
-
-        if (data.listGames) resolve(data.listGames.items);
-        else reject(data.error);
-    });
-}
+import { config, useTransition } from "react-spring";
 
 function GameCarousel({ container }: GenericPageProps) {
-    const [gameList, setGameList] = useState<[GameRecord]>();
+    const [gameList, setGameList] = useState<any[]>();
     const [loading, setLoading] = useState(false);
     const user = useStore((state) => state.userData);
+
+    const transitions = useTransition(gameList, {
+        from: { opacity: 0 },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+        trail: 100,
+        config: config.molasses,
+    });
 
     useEffect(() => {
         if (!user?.username) return;
 
-        queryGamesByUsername(user?.username).then((data) => {
-            console.log("games", data);
-            getGameInfo(data).then((g: any) => {
-                let test = g
-                    .filter(
-                        ({ head, torso, legs }: any) => head && torso && legs
-                    )
-                    .map((game: any) => {
-                        const createdDate = [
-                            game.head.createdAt,
-                            game.torso.createdAt,
-                            game.legs.createdAt,
-                        ].reduce((a, b) => {
-                            return a > b ? a : b;
-                        });
-                        return { ...game, createdAt: createdDate };
-                    })
-                    .sort((a: any, b: any) => {
-                        return b.createdAt < a.createdAt ? -1 : 1;
+        gameGamesByDrawing({
+            filter: {
+                artist: { eq: user.username },
+            },
+        }).then((data) => {
+            let test = data.games
+                .filter(({ head, torso, legs }: any) => head && torso && legs)
+                .map((game: any) => {
+                    const createdDate = [
+                        game.head.createdAt,
+                        game.torso.createdAt,
+                        game.legs.createdAt,
+                    ].reduce((a, b) => {
+                        return a > b ? a : b;
                     });
-                setGameList(test);
-                setLoading(true);
-            });
+                    return { ...game, createdAt: createdDate };
+                })
+                .sort((a: any, b: any) => {
+                    return b.createdAt < a.createdAt ? -1 : 1;
+                });
+            setGameList(test);
+            setLoading(true);
         });
     }, [user]);
 
@@ -68,12 +54,13 @@ function GameCarousel({ container }: GenericPageProps) {
                 flex: "0 1",
                 justifySelf: "flex-end",
                 flexBasis: container?.current
-                    ? container.current.offsetHeight * 0.7 + "px"
+                    ? container.current.offsetHeight - 50 + "px"
                     : "10px",
                 overflowY: "auto",
             }}
         >
             <Grid
+                position="relative"
                 style={{
                     justifyContent: "space-around",
                     gridTemplateColumns: "repeat(auto-fit, 400px)",
@@ -81,12 +68,23 @@ function GameCarousel({ container }: GenericPageProps) {
                 }}
             >
                 {loading === false ? (
-                    <FlexBox justifyContent="center" width="100%">
-                        <Loader margin="2rem" width="200px" height="200px" />
+                    <FlexBox
+                        justifyContent="center"
+                        width="100%"
+                        height="80%"
+                        style={{ top: "100px" }}
+                        position="absolute"
+                        margin="auto"
+                    >
+                        <Loader margin="2rem" width="100px" height="100px" />
                     </FlexBox>
                 ) : null}
-                {gameList &&
-                    gameList.map((g) => <GameCard game={g} key={g.id} />)}
+
+                {transitions((style, item) => (
+                    <AnimatedFlex style={style}>
+                        <GameCard game={item} key={item.id} />
+                    </AnimatedFlex>
+                ))}
             </Grid>
         </Div>
     );

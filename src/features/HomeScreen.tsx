@@ -1,16 +1,16 @@
 //TODO: GROUP THESE IMPORTS SO WE CAN DO ALL FROM components/homescreen
-import ActionButton from "components/general/ActionButton";
+//import ActionButton from "components/general/ActionButton";
 import GameCarousel from "components/homescreen/GameCarousel";
 import SectionText from "components/general/SectionText";
 import { FlexBox } from "styles";
 import { HomeScreenProps } from "types";
-import { COLORS } from "utils/DEFS";
-import { useStore } from "store";
-import { useState } from "react";
-import Modal from "./Modal";
+//import { COLORS } from "utils/DEFS";
+//import { useStore } from "store";
 
 function HomeScreen({ games, container }: HomeScreenProps) {
-    const [isShown, setIsShown] = useState(false);
+    /*
+        const [isShown, setIsShown] = useState(false);
+
     const [modalType, setModalType] = useState("");
     const [isNewGame, setIsNewGame] = useState(true);
     const joinGame = useStore((state) => state.actions.joinGame);
@@ -26,8 +26,10 @@ function HomeScreen({ games, container }: HomeScreenProps) {
         setIsShown(true);
     };
 
+    */
     return (
         <FlexBox direction="column" padding="0 1.5rem">
+            {/*
             <SectionText text="New Game" />
             <FlexBox
                 padding="0 0.3rem"
@@ -53,18 +55,10 @@ function HomeScreen({ games, container }: HomeScreenProps) {
                     color={COLORS.success}
                 />
             </FlexBox>
-
-            <SectionText text="Past Games" />
+          */}
+            <SectionText text="Past Games" style={{ height: "50px" }} />
 
             <GameCarousel container={container} />
-
-            {isShown && (
-                <Modal
-                    setIsShown={setIsShown}
-                    type={modalType}
-                    isNewGame={isNewGame}
-                />
-            )}
         </FlexBox>
     );
 }

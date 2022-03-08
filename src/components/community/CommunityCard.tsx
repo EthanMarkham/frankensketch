@@ -1,5 +1,5 @@
 import useDrawer from "hooks/useDrawer";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Button, FlexBox, SketchCanvas, Text } from "styles";
 import { COLORS } from "utils/DEFS";
 import { Icons } from "styles/svg/ui-icons/icons";
@@ -49,13 +49,13 @@ const CommunityCard = ({ game }: { game: Game }) => {
     const userData = useStore((state) => state.userData);
     const [likeCount, setLikeCount] = useState<number>(
         game.UserLikes
-            ? game.UserLikes.items.filter((l) => l?._deleted === false).length
+            ? game.UserLikes.items.filter((l) => l?._deleted !== true).length
             : 0
     );
     const [isLiking, setLiking] = useState(false);
     const [like, setLike] = useState(
         game.UserLikes?.items.find(
-            (l) => l?.user === userData?.username && l?._deleted === false
+            (l) => l?.user === userData?.username && l?._deleted !== true
         )
     );
 
@@ -64,11 +64,9 @@ const CommunityCard = ({ game }: { game: Game }) => {
 
     const updateLike = useCallback(async () => {
         if (isLiking) return;
-        console.log(like);
         setLiking(true);
 
         if (like !== undefined && like !== null) {
-            console.log(like);
             await unLikeDrawing({ id: like.id, _version: like._version });
             setLike(null);
             setLiking(false);
@@ -78,6 +76,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                 gameID: game.id,
                 user: userData?.username,
             });
+
             setLike(data as UserLike);
             setLiking(false);
             setLikeCount((cur) => cur + 1);

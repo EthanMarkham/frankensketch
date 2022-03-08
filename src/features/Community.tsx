@@ -21,8 +21,6 @@ function Community() {
                 (entries) => {
                     if (entries[0].isIntersecting && nextToken) {
                         loadGames();
-                    } else {
-                        alert("no more data");
                     }
                 },
                 {
