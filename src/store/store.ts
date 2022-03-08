@@ -1,7 +1,6 @@
-import { getGameById } from "queries/queries";
+import { getGameById, getSuggestedDrawing } from "queries/queries";
 import { Store } from "types";
 import create from "zustand";
-import { joinGame } from "./actions/joinGame";
 import { postGame } from "./actions/postGame";
 /*
 PAGE INDEXS
@@ -25,6 +24,15 @@ const useStore = create<Store>((set, _get) => ({
         setPage(index) {
             set((store) => ({ ...store, pageIndex: index }));
         },
+        setServerSideProps(data) {
+            set((store) => ({
+                ...store,
+                serverSideProps:
+                    data === null
+                        ? null
+                        : { ...store.serverSideProps, ...data },
+            }));
+        },
         setUser(data) {
             set((store) => ({
                 ...store,
@@ -46,7 +54,19 @@ const useStore = create<Store>((set, _get) => ({
                 return copy;
             });
         },
-        joinGame: joinGame(set),
+        joinGame: () => {
+            set((store) => ({ ...store, pageIndex: -1 }));
+
+            //console.log(API.endpoint("api"));
+            getSuggestedDrawing().then((data) => {
+                console.log(data);
+                set((store) => ({
+                    ...store,
+                    pageIndex: 2,
+                    serverSideProps: { drawing: data },
+                }));
+            });
+        },
         viewGame: (gameId) => {
             set((store) => ({ ...store, pageIndex: -1 }));
 

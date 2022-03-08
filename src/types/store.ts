@@ -1,5 +1,3 @@
-import { Game } from "types/API";
-
 export interface ErrorData {
     autoDismiss?: number; //how long until auto dismiss.
     uuid?: number;
@@ -15,6 +13,7 @@ export interface Store {
     error: ErrorData | null;
     actions: {
         setPage: (index: number) => void;
+        setServerSideProps: (data: any | null) => void;
         setUser: (
             data: { username: string; email: string; groups?: string[] } | null
         ) => void;

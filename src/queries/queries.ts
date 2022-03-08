@@ -138,9 +138,6 @@ export const getDrawings = (input: ListDrawingsQueryVariables) => {
 };
 
 export const gameGamesByDrawing = (input: ListDrawingsQueryVariables) => {
-    const getFieldName = (type: string) =>
-        `game${capitalizeFirstLetter(type)}Id`;
-
     return new Promise<{
         games: Array<Game>;
         nextToken: string | null | undefined;
@@ -177,6 +174,25 @@ export const gameGamesByDrawing = (input: ListDrawingsQueryVariables) => {
         );
         const response = await getGamesMin({ filter: filter });
         resolve(response);
+    });
+};
+
+export const getSuggestedDrawing = () => {
+    return new Promise<string>(async (resolve, reject) => {
+        const response = (await API.graphql({
+            query: listDrawingTalliesMin,
+        })) as any;
+        const minTally = response.data.listDrawingTallies.items.reduce(
+            (acc: any, val: any) => {
+                if (!acc) return val;
+                else if (acc.count > val.count) return val;
+                else if (acc.count < val.count) return acc;
+                else return Math.round(Math.random()) === 1 ? acc : val;
+            }
+        );
+        console.log(minTally);
+
+        resolve(minTally.id);
     });
 };
 
@@ -376,6 +392,25 @@ export const listDrawingsIdType = /* GraphQL */ `
             }
             nextToken
             startedAt
+        }
+    }
+`;
+
+export const listDrawingTalliesMin = /* GraphQL */ `
+    query ListDrawingTallies(
+        $filter: ModelDrawingTallyFilterInput
+        $limit: Int
+        $nextToken: String
+    ) {
+        listDrawingTallies(
+            filter: $filter
+            limit: $limit
+            nextToken: $nextToken
+        ) {
+            items {
+                id
+                count
+            }
         }
     }
 `;

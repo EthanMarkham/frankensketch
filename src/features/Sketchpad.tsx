@@ -18,6 +18,7 @@ const Sketchpad = ({ container }: GenericPageProps) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
     const serverProps = useStore((state) => state.serverSideProps);
     const changePage = useStore((state) => state.actions.setPage);
+
     //const [scale, setScale] = useState<number | null>(null);
     const [project, init] = usePaper(
         canvasRef,

@@ -341,7 +341,7 @@ function usePaper(
                     break;
                 case TOOL.ERASER:
                     path.simplify(10);
-
+                    setLastChild(null);
                     path.selected = false;
                     //path.remove();
                     /*
