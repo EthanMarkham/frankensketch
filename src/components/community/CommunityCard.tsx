@@ -5,43 +5,8 @@ import { COLORS } from "utils/DEFS";
 import { Icons } from "styles/svg/ui-icons/icons";
 import Modal from "features/Modal";
 import { useStore } from "store";
-import { createUserLike, deleteUserLike } from "graphql/mutations";
-import { API } from "aws-amplify";
-import {
-    CreateUserLikeInput,
-    CreateUserLikeMutationVariables,
-    DeleteUserLikeInput,
-    DeleteUserLikeMutationVariables,
-    Game,
-    UserLike,
-} from "API";
-
-const unLikeDrawing = (like: DeleteUserLikeInput) => {
-    return new Promise(async (resolve, reject) => {
-        let variables: DeleteUserLikeMutationVariables = {
-            input: like,
-        };
-        const { data } = (await API.graphql({
-            query: deleteUserLike,
-            variables,
-        })) as any;
-
-        resolve(data);
-    });
-};
-const likeDrawing = (like: CreateUserLikeInput) => {
-    return new Promise(async (resolve, reject) => {
-        let variables: CreateUserLikeMutationVariables = {
-            input: like,
-        };
-        const { data } = (await API.graphql({
-            query: createUserLike,
-            variables,
-        })) as any;
-
-        resolve(data.createUserLike);
-    });
-};
+import { Game, UserLike } from "API";
+import { unLikeDrawing, likeDrawing } from "queries/queries";
 
 const CommunityCard = ({ game }: { game: Game }) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
