@@ -238,7 +238,7 @@ module.exports.addDrawingToGame = async function (drawing, game) {
                 }
             `;
             gameInput = {
-                gameHeadId: drawing.id,
+                gameTorsoId: drawing.id,
                 id: game.id,
                 _version: game._version,
             };
