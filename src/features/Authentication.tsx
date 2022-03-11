@@ -15,7 +15,6 @@ import { COLORS } from "utils/DEFS";
 import { LoginDetails, SignUpDetails } from "types";
 import { getDateTimeFormat } from "utils";
 import useError from "hooks/useError";
-import { useStore } from "store";
 
 enum MODE {
     SIGN_IN,
@@ -79,13 +78,14 @@ function Authentication() {
         );
 
     return (
-        <FlexBox direction="column" verticalAlignment="center">
+        <FlexBox direction="column">
             {Error && Error}
             <FrankenSketchHeader fontSize="4em" margin="1rem">
                 FrankenSketch
             </FrankenSketchHeader>
-            <Stiches margin="0 0 5rem 0" width="100%" />
+            <Stiches margin="0 0 2rem 0" width="100%" />
 
+            <FlexBox css={{ overflowY: 'scroll'}} height='70vh' alignContent="center" direction="column">
             <InputGroup>
                 <InputLabel>Email</InputLabel>
                 <InputField
@@ -174,6 +174,7 @@ function Authentication() {
             >
                 {mode === MODE.SIGN_UP ? "Sign In" : "Sign Up"}
             </Button>
+            </FlexBox>
         </FlexBox>
     );
 }
