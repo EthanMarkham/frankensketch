@@ -6,6 +6,7 @@ import { Button, FlexBox, Text } from "styles";
 import { COLORS } from "utils/DEFS";
 import { CreateUserReportInput } from "API";
 import { useStore } from "store";
+import { toast } from "react-toastify";
 
 const ReportModal = ({ game }: { game?: Game }) => {
     const currentUser = useStore((state) => state.userData);
@@ -28,10 +29,12 @@ const ReportModal = ({ game }: { game?: Game }) => {
             setError(false)
             setFeedback('Your report has been submitted!, thank you for making FrankenSketch a better place. Our admins and moderators will look into this. Now, click Cancel to close this modal.')
             setIsSubmitted(true)
+            toast.success('Report has been submitted!')
         } catch (error) {
             setError(true)
             setFeedback(`Failed to process your report at this moment, please try again in another moment. Please, click Cancel to close this modal.`)
             setIsSubmitted(false)
+            toast.error('Failed to submit report.')
         }
 
     }

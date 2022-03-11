@@ -1,6 +1,6 @@
 import ChangePasswordModal from "components/modal/changePasswordModal"
 import FriendModal from "components/modal/friendModal"
-import GameInfoModal from "components/modal/gameInfoModal"
+import HelpModal from "components/modal/ helpModal"
 import ReportModal from "components/modal/reportModal"
 import StartGameModal from "components/modal/startGameModal"
 import { Game } from "models"
@@ -8,7 +8,7 @@ import { Button, FlexBox, Stiches, Text } from "styles"
 import { Icons } from "styles/svg/ui-icons/icons"
 import { COLORS } from "utils/DEFS"
 
-//ModalTypes: addFriend, startGame, createReport, gameInfo, changePassword
+//ModalTypes: addFriend, startGame, createReport, help, changePassword
 //Add optional game info
 const Modal = ({
 	setIsShown,
@@ -41,17 +41,17 @@ const Modal = ({
 							onClick={() => setIsShown(false)}
 						>
 							{showCancel ? (
-								<Text fontSize="1.75em" color={COLORS.danger}>Cancel</Text>
+								<Text fontSize="1.75em" color={COLORS.white}>Cancel</Text>
 							) : (
 								<img src={Icons.GoBack} alt="go back icon" />
 							)}
 						</Button>
 						<Stiches margin="-0.25rem 0 .5rem 0" width="100%" />
 					</div>
-					<FlexBox direction="column" padding="0 1rem">
-						{type === "addFriend" && <FriendModal friends={friends} />}
+					<FlexBox direction="column" padding="0 1rem" css={{ overflowY: 'scroll' }} height='90%'>
+						{type === "addFriend" && <FriendModal friends={friends} setIsShown={setIsShown} />}
 						{type === "createReport" && <ReportModal game={game} />}
-						{type === "gameInfo" && <GameInfoModal />}
+						{type === "help" && <HelpModal />}
 						{type === "startGame" && <StartGameModal isNewGame={isNewGame} />}
 						{type === "changePassword" && <ChangePasswordModal />}
 					</FlexBox>

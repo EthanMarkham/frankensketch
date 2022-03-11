@@ -1,4 +1,4 @@
-import { UserReport } from "models";
+import { UserReport } from "API";
 import { API, graphqlOperation } from "aws-amplify";
 import { listUserReports } from "graphql/queries";
 import { useEffect, useState } from "react";
@@ -67,7 +67,7 @@ const AdminReports = () => {
     }, [reportsList])
 
     return (
-        <>
+        <FlexBox direction="column" height="65vh">
             <InputGroup width="100%">
                 <InputLabel>Filter</InputLabel>
                 <DropdownField onChange={(event) => setFilter(event.target.value)} value={filter}>
@@ -82,14 +82,14 @@ const AdminReports = () => {
                 </FlexBox>
             )}
 
-            <FlexBox direction="column" css={{ overflowY: "auto" }}>
+            <FlexBox direction="column" css={{ overflowY: "scroll" }} height='60vh'>
                 {reportsList.map((value, i) => {
                     return (
                         <ReportAccordion key={i} {...value} />
                     )
                 })}
             </FlexBox>
-        </>
+        </FlexBox>
     );
 };
 

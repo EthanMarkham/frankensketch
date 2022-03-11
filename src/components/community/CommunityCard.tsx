@@ -59,7 +59,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                 <FlexBox
                     height="63vh"
                     direction="column"
-                    backgroundColor={COLORS.bgLight}
+                    backgroundColor={COLORS.bgSecondary}
                     borderRadius="10px"
                 >
                     <FlexBox justifyContent="flex-end">
@@ -83,6 +83,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                         margin="0 0 1.5rem 0"
                         padding="0.5rem"
                         ref={containerRef}
+                        backgroundColor={COLORS.bgLight}
                     >
                         <SketchCanvas
                             ref={canvasRef}

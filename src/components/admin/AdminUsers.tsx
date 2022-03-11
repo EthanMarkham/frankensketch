@@ -60,7 +60,7 @@ const AdminUsers = () => {
     }, [usersList])
 
     return (
-        <>
+        <FlexBox direction="column" height="65vh">
             <InputGroup width="100%">
                 <InputLabel>Search</InputLabel>
                 <FlexBox direction="row" justifyContent="flex-start" margin="0.5rem 0">
@@ -80,14 +80,14 @@ const AdminUsers = () => {
                 </FlexBox>
             )}
 
-            <FlexBox direction="column" css={{ overflowY: "auto" }} height='75vh'>
+            <FlexBox direction="column" css={{ overflowY: "scroll" }} height='55vh'>
                 {usersList.map((value, i) => {
                     return (
                         <UserAccordion key={i} {...value} />
                     )
                 })}
             </FlexBox>
-        </>
+        </FlexBox>
     );
 };
 

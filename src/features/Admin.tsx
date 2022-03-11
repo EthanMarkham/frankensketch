@@ -8,7 +8,7 @@ const Admin = () => {
     const [page, setPage] = useState(0)
 
     return (
-        <FlexBox direction="column">
+        <FlexBox direction="column" height="74vh">
             <AdminNavBar setPage={setPage} page={page} />
             <Stiches margin=" 0.5rem 0 0.5rem 0" width="100%" />
             <FlexBox margin="0 1.5rem" direction="column">

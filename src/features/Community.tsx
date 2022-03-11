@@ -1,6 +1,6 @@
 import CommunityCard from "components/community/CommunityCard";
 import useCommunityContent from "hooks/useCommunityContent";
-import { useState, useRef, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import { FlexBox, Text } from "styles";
 import { COLORS } from "utils/DEFS";
 
@@ -35,8 +35,8 @@ function Community() {
         <FlexBox
             direction="column"
             padding="0 1.5rem"
-            css={{ overflowY: "auto" }}
-            height="100vh"
+            css={{ overflowY: "scroll" }}
+            height="74vh"
         >
             <FlexBox
                 direction="column"

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { GenericPageProps } from "types";
 import GameCard from "./GameCard";
-import { AnimatedFlex, Div, FlexBox, Grid, Loader } from "styles";
+import { AnimatedFlex, Div, FlexBox, Grid, Loader, Text } from "styles";
 import { useStore } from "store";
 import { gameGamesByDrawing } from "queries/queries";
 
 import { config, useTransition } from "react-spring";
+import { COLORS } from "utils/DEFS";
 
 function GameCarousel({ container }: GenericPageProps) {
     const [gameList, setGameList] = useState<any[]>();
@@ -59,6 +60,8 @@ function GameCarousel({ container }: GenericPageProps) {
                 overflowY: "auto",
             }}
         >
+            {gameList?.length === 0 && <Text color={COLORS.danger}>This place looks empty, go and draw some sketches by clicking on the draw button locate on the navigation bar and let your creativity go wild.</Text>}
+
             <Grid
                 position="relative"
                 style={{

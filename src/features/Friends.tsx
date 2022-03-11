@@ -22,6 +22,8 @@ export default function Friends() {
     const [errorMessage, setErrorMessage] = useState("0 friends available");
     const [hasFriends, setHasFriends] = useState(false);
 
+    const [VERSION, setVERSION] = useState(0)
+
     const currentUser = useStore((state) => state.userData);
 
     //Control is modal should be shown
@@ -32,7 +34,7 @@ export default function Friends() {
     useEffect(() => {
         getFriends();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isShown]);
     //WE HAVE AUTH INFO IN STATE ALREADY. CALL HOOK USE AUTH
     const getFriends = () => {
         try {
@@ -41,6 +43,7 @@ export default function Friends() {
                     graphqlOperation(getUser, { id: data.username })
                 )) as unknown as any;
                 const friends: [] = userData.data.getUser.friends;
+                setVERSION(userData.data.getUser._version)
                 if (friends.length === 0) {
                     setErrorMessage(getRandomItem(noFriendResponses));
                     setHasFriends(false);
@@ -55,8 +58,8 @@ export default function Friends() {
         }
     };
 
-    //TODO - Fix error when removing friend where data is duplicated
     const removeFriend = async (username: string) => {
+
         let friends = friendsList.filter((el) => el !== username)
 
         if (currentUser?.email) {
@@ -64,11 +67,12 @@ export default function Friends() {
             let userInput: UpdateUserInput = {
                 id: currentUser?.email,
                 friends: friends,
-                _version: 19
+                _version: VERSION
             }
             try {
                 await API.graphql(graphqlOperation(updateUser, { input: userInput }))
                 toast.success(`${username} has been removed from your friends`)
+                getFriends()
             } catch (error) {
                 toast.error(`Failed to remove ${username} from friends, please try again later!`)
             }
@@ -76,7 +80,7 @@ export default function Friends() {
     };
 
     return (
-        <FlexBox direction="column">
+        <FlexBox direction="column" height="74vh">
             <FlexBox
                 direction="row"
                 justifyContent="space-between"
@@ -87,7 +91,7 @@ export default function Friends() {
                     <img src={Icons.Plus} alt="Plus icon" />
                 </Button>
             </FlexBox>
-            <FlexBox direction="column" margin="0 1.5rem" css={{ overflowY: "auto" }} height='100vh'>
+            <FlexBox direction="column" margin="0 1.5rem" css={{ overflowY: "scroll" }} height='74vh'>
                 {!hasFriends && (
                     <Text fontSize="1.5em" fontWeight="300" color={COLORS.danger}>
                         {errorMessage}

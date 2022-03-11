@@ -16,6 +16,12 @@ function Settings() {
 
 	//Control is modal should be shown
 	const [isShown, setIsShown] = useState(false)
+	const [modalType, setModalType] = useState("")
+	const displayModal = (type: string) => {
+		setModalType(type)
+		setIsShown(true)
+	}
+
 
 	//Get user information to be display in settings
 	useEffect(() => {
@@ -35,7 +41,7 @@ function Settings() {
 	}
 
 	return (
-		<FlexBox direction="column">
+		<FlexBox direction="column" css={{ overflowY: "scroll" }} height='75vh'>
 			<FlexBox direction="column" margin="0 1.5rem">
 				<FlexBox
 					direction="column"
@@ -70,13 +76,31 @@ function Settings() {
 						<Text fontSize="1.15em">Security</Text>
 						<Button
 							padding="0.5rem"
-							color={COLORS.white}
 							backgroundColor={COLORS.warning}
+							color={COLORS.white}
 							width="10rem"
-							onClick={() => setIsShown(true)}
+							onClick={() => displayModal('changePassword')}
 							fontSize='1em'
 						>
 							Change Password
+						</Button>
+					</FlexBox>
+				</FlexBox>
+				<FlexBox direction="column" margin="1rem 0 0 0">
+					<SectionText text="Help" />
+					<FlexBox alignContent="center" justifyContent="space-between">
+						<Text color={COLORS.white} fontSize="1.15em" margin="0 0.5rem 0 0">
+							Need help?
+						</Text>
+						<Button
+							padding="0.5rem"
+							backgroundColor={COLORS.primaryBTN}
+							color={COLORS.white}
+							width="7rem"
+							fontSize='1em'
+							onClick={() => displayModal('help')}
+						>
+							Click here!
 						</Button>
 					</FlexBox>
 				</FlexBox>
@@ -94,11 +118,11 @@ function Settings() {
 						>
 							<img
 								src={Icons.Logout}
-								width="30"
-								height="30"
+								width="20"
+								height="20"
 								alt="logout icon"
 							/>
-							<Text color={COLORS.white} fontSize="1.5em" margin="0 0 0 0.5rem">
+							<Text color={COLORS.white} margin="0 0 0 0.5rem">
 								Logout
 							</Text>
 						</FlexBox>
@@ -106,7 +130,7 @@ function Settings() {
 				</FlexBox>
 			</FlexBox>
 
-			{isShown && <Modal setIsShown={setIsShown} type="changePassword" />}
+			{isShown && <Modal setIsShown={setIsShown} type={modalType} />}
 		</FlexBox>
 	)
 }

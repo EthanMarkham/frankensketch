@@ -1,8 +1,8 @@
-import { UpdateUserReportInput } from "API";
+import { UpdateUserReportInput, UserReport } from "API";
 import { API, graphqlOperation } from "aws-amplify";
 import { updateUserReport } from "graphql/mutations";
-import { UserReport } from "models";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Button, FlexBox, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
 import { COLORS } from "utils/DEFS";
@@ -11,38 +11,28 @@ const ReportAccordion = (reportData: UserReport) => {
     const [isActive, setIsActive] = useState(false)
     const [status, setStatus] = useState(false)
 
-    const updateReportStatus = async (reportStatus: string) => {
-        let reviewed: boolean = false
+    useEffect(() => {
+        if(reportData.isReviewed !== undefined && reportData.isReviewed !== null)
+            setStatus(reportData.isReviewed)
+            
+    }, [reportData])
+    
 
-        switch (reportStatus) {
-            case 'pending':
-                reviewed = false
-                break;
-            case 'reviewed':
-                reviewed = true
-                break;
-        }
-
+    const updateReportStatus = async (reportStatus: boolean) => {
         let reportInput: UpdateUserReportInput = {
             id: reportData.id,
-            isReviewed: reviewed
+            isReviewed: reportStatus,
+            _version: reportData._version
         }
 
         try {
             await API.graphql(graphqlOperation(updateUserReport, { input: reportInput }))
-            setStatus(reviewed)
+            setStatus(reportStatus)
+            toast.success(`The status of this report has changed to ${reportStatus ? 'reviewed.' : 'pending.'}`)
         } catch (error) {
-
+            toast.error(`Failed to update the status of report #${reportData.id}.`)
         }
     }
-
-    //Set status icon for the report
-    useEffect(() => {
-        if (reportData.isReviewed) {
-            setStatus(reportData.isReviewed)
-        }
-    }, [reportData.isReviewed])
-
 
     return (
         <>
@@ -61,10 +51,10 @@ const ReportAccordion = (reportData: UserReport) => {
                         <Text fontWeight="300" margin="0.5rem 0">Created At: {reportData.createdAt}</Text>
                         <Text fontWeight="300">Update At: {reportData.updatedAt}</Text>
                         <FlexBox direction="row" justifyContent="flex-end" margin="1rem 0 0 0">
-                            <Button margin="0 1rem" background="none" onClick={() => updateReportStatus("pending")}>
+                            <Button margin="0 1rem" background="none" onClick={() => updateReportStatus(false)}>
                                 <img src={Icons.PendingReport} alt="" />
                             </Button>
-                            <Button margin="0 1rem" background="none" onClick={() => updateReportStatus("reviewed")}>
+                            <Button margin="0 1rem" background="none" onClick={() => updateReportStatus(true)}>
                                 <img src={Icons.GreenCheckmark} alt="" />
                             </Button>
                         </FlexBox>
