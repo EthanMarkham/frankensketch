@@ -1,5 +1,6 @@
 import { Auth } from "aws-amplify"
 import React, { useState } from "react"
+import { toast } from "react-toastify"
 import {
 	Button,
 	FlexBox,
@@ -40,6 +41,7 @@ const ChangePasswordModal = () => {
 					setNewPassword("")
 					setOldPassword("")
 					setIsSuccess(true)
+					toast.success('Your password has been updated correctly!')
 				})
 				.catch((err) => {
 					setNewPassword("")
@@ -51,6 +53,7 @@ const ChangePasswordModal = () => {
 						e2: "Re-enter new password",
 						e1: "Unable to change password, try again."
 					})
+					toast.error("Couldn't update your password, please check your information and try again.")
 				})
 		}
 	}

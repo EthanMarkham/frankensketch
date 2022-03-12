@@ -1,4 +1,4 @@
-import { UserReport } from "models";
+import { UserReport } from "API";
 import { API, graphqlOperation } from "aws-amplify";
 import { listUserReports } from "graphql/queries";
 import { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ const AdminReports = () => {
     //Get Reports
     useEffect(() => {
         getReports()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filter])
     const getReports = async () => {
         try {
@@ -48,7 +48,7 @@ const AdminReports = () => {
                     data = response.data.listUserReports.items
                     setReportsList(data)
                     break;
-            } 
+            }
         } catch (error) {
         }
     }
@@ -63,14 +63,14 @@ const AdminReports = () => {
                 setErrorMessage("")
                 break;
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [reportsList])
 
     return (
-        <>
+        <FlexBox direction="column" height="65vh">
             <InputGroup width="100%">
                 <InputLabel>Filter</InputLabel>
-                <DropdownField  onChange={(event) => setFilter(event.target.value)} value={filter}>
+                <DropdownField onChange={(event) => setFilter(event.target.value)} value={filter}>
                     <option value={""}>None</option>
                     <option value={"pending"}>Pending</option>
                     <option value={"reviewed"}>Reviewed</option>
@@ -82,12 +82,14 @@ const AdminReports = () => {
                 </FlexBox>
             )}
 
-            {reportsList.map((value, i) => {
-                return (
-                    <ReportAccordion key={i} {...value}/>
-                )
-            })}
-        </>
+            <FlexBox direction="column" css={{ overflowY: "scroll" }} height='60vh'>
+                {reportsList.map((value, i) => {
+                    return (
+                        <ReportAccordion key={i} {...value} />
+                    )
+                })}
+            </FlexBox>
+        </FlexBox>
     );
 };
 

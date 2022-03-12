@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useStore } from "store";
 import { Button, Div, FlexBox, Stiches, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
@@ -16,10 +15,7 @@ function NavBar() {
     };
     return (
         <Div
-            height="20%"
-            style={{
-                maxHeight: "122px",
-            }}
+            height="115px"
             width="100%"
             backgroundColor={COLORS.bgPrimary}
         >

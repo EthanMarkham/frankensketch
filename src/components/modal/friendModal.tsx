@@ -19,7 +19,7 @@ import { User } from "types/API";
 import { COLORS } from "utils/DEFS";
 import { toast } from "react-toastify";
 
-const FriendModal = ({ friends }: { friends?: string[] }) => {
+const FriendModal = ({ friends, setIsShown }: { friends?: string[], setIsShown: any }) => {
     const [searchField, setSearchField] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [userList, setUserList] = useState([""]);
@@ -82,9 +82,6 @@ const FriendModal = ({ friends }: { friends?: string[] }) => {
 
     //Add Friend
     const addFriend = async (username: string) => {
-        // if (friends) {
-        //     friends.push(username)
-        // }
         if (currentUser?.email) {
             let userInput: UpdateUserInput = {
                 id: currentUser.email,
@@ -95,7 +92,7 @@ const FriendModal = ({ friends }: { friends?: string[] }) => {
                     graphqlOperation(updateUser, { input: userInput })
                 );
                 toast.success(`${username} has been added to your friends!`);
-                getUsers();
+                setIsShown(false)
             } catch (error) {
                 toast.error(
                     `Failed to add ${username} as a friend, please try again later!`

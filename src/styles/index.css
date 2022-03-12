@@ -128,16 +128,6 @@ body {
 }
 
 /*-------------------------------- Community --------------------------------*/
-.community-card-container {
-    width: 100%;
-    scroll-snap-type: y proximity;
-}
-
-.community-card {
-    width: 100%;
-    scroll-snap-align: start;
-}
-
 .community-card-separator {
     border: 2px solid var(--gray);
     border-radius: 5px;

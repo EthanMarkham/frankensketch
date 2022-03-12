@@ -54,7 +54,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
     }
 
     return (
-        <div className="community-card">
+        <>
             <FlexBox direction="column" width="100%">
                 <FlexBox
                     height="63vh"
@@ -83,6 +83,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                         margin="0 0 1.5rem 0"
                         padding="0.5rem"
                         ref={containerRef}
+                        backgroundColor={COLORS.bgLight}
                     >
                         <SketchCanvas
                             ref={canvasRef}
@@ -149,7 +150,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                     game={game as any}
                 />
             )}
-        </div>
+        </>
     );
 };
 
