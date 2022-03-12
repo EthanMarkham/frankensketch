@@ -12,7 +12,6 @@ import {
 import { API } from "aws-amplify";
 import { createUserLike, deleteUserLike } from "graphql/mutations";
 import { getGame, listDrawings } from "graphql/queries";
-import { capitalizeFirstLetter } from "utils";
 
 export function queryGamesByUsername(username: string) {
     return new Promise<[any]>(async (resolve, reject) => {
@@ -137,15 +136,15 @@ export const getDrawings = (input: ListDrawingsQueryVariables) => {
     });
 };
 
-export const gameGamesByDrawing = (input: ListDrawingsQueryVariables) => {
+export const getGamesByUsername = (input: ListDrawingsQueryVariables) => {
     return new Promise<{
         games: Array<Game>;
         nextToken: string | null | undefined;
     }>(async (resolve, reject) => {
         const { drawings } = await getDrawings(input);
-        if (!drawings || drawings.length === 0)
+        if (!drawings || drawings.length === 0) {
             resolve({ games: [], nextToken: null });
-
+        }
         //const first = drawings.shift();
         const filter = drawings.reduce<any>(
             (acc, { type, id }) => {
@@ -158,7 +157,7 @@ export const gameGamesByDrawing = (input: ListDrawingsQueryVariables) => {
                         acc.and.or.push({ gameLegsId: { eq: id } });
                         break;
                     case "torso":
-                        acc.and.or.push({ gameHeadId: { eq: id } });
+                        acc.and.or.push({ gameTorsoId: { eq: id } });
                         break;
                 }
                 return acc;
@@ -172,6 +171,99 @@ export const gameGamesByDrawing = (input: ListDrawingsQueryVariables) => {
                 },
             }
         );
+        const response = await getGamesMin({ filter: filter });
+        resolve(response);
+    });
+};
+
+export const getUnfishedGamesByUsername = (
+    input: ListDrawingsQueryVariables
+) => {
+    return new Promise<{
+        games: Array<Game>;
+        nextToken: string | null | undefined;
+    }>(async (resolve, reject) => {
+        const { drawings } = await getDrawings(input);
+        if (!drawings || drawings.length === 0) {
+            resolve({ games: [], nextToken: null });
+        }
+        //const first = drawings.shift();
+        const filter = drawings.reduce<any>(
+            (acc, { type, id }) => {
+                switch (type) {
+                    default:
+                    case "head":
+                        acc.or.push({
+                            and: [
+                                { gameHeadId: { eq: id } },
+                                {
+                                    or: [
+                                        {
+                                            gameTorsoId: {
+                                                attributeExists: false,
+                                            },
+                                        },
+                                        {
+                                            gameLegsId: {
+                                                attributeExists: false,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        });
+                        break;
+                    case "legs":
+                        acc.or.push({
+                            and: [
+                                { gameLegsId: { eq: id } },
+                                {
+                                    or: [
+                                        {
+                                            gameTorsoId: {
+                                                attributeExists: false,
+                                            },
+                                        },
+                                        {
+                                            gameHeadId: {
+                                                attributeExists: false,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        });
+                        break;
+                    case "torso":
+                        acc.or.push({
+                            and: [
+                                { gameTorsoId: { eq: id } },
+                                {
+                                    or: [
+                                        {
+                                            gameHeadId: {
+                                                attributeExists: false,
+                                            },
+                                        },
+                                        {
+                                            gameLegsId: {
+                                                attributeExists: false,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        });
+                        break;
+                }
+                return acc;
+            },
+            {
+                or: [],
+            }
+        );
+
+        console.log(filter);
         const response = await getGamesMin({ filter: filter });
         resolve(response);
     });

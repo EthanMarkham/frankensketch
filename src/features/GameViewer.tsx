@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FlexBox, SketchCanvas, Text } from "styles";
 import { useStore } from "store";
 import useDrawer from "hooks/useDrawer";
 import { GenericPageProps } from "types";
+import BackButton from "components/general/BackButton";
 
 /*--------------------------------------------------------------------//
                       J S X      E X P O R T
@@ -11,13 +12,13 @@ const GameViewer = ({ container }: GenericPageProps) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const { game } = useStore((state) => state.serverSideProps);
+    const changePage = useStore((state) => state.actions.setPage);
 
     useDrawer(game, canvasRef, containerRef);
 
     const parentSize = container?.current
         ? container.current.getBoundingClientRect()
         : { width: 0, height: 0 };
-    console.log(parentSize);
 
     const topOffset = 12.3468 - 0.03 * parentSize.width;
 
@@ -37,6 +38,7 @@ const GameViewer = ({ container }: GenericPageProps) => {
             <FlexBox padding="4em" height="20%" justifyContent="center">
                 <Text>WHAT A MASTERPIECE</Text>
             </FlexBox>
+            <BackButton onClick={() => changePage(1)} />
 
             <FlexBox
                 height="60%"

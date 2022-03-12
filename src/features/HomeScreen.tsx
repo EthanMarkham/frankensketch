@@ -2,9 +2,12 @@
 //import ActionButton from "components/general/ActionButton";
 import SectionText from "components/general/SectionText";
 import { HomeScreenProps } from "types";
-import { AnimatedFlex, Button, Div, FlexBox, Grid, Loader } from "styles";
+import { AnimatedFlex, Button, Div, FlexBox, Grid, Text } from "styles";
 import { useStore } from "store";
-import { gameGamesByDrawing } from "queries/queries";
+import {
+    getGamesByUsername,
+    getUnfishedGamesByUsername,
+} from "queries/queries";
 import { config, useTransition } from "react-spring";
 import { useEffect, useMemo, useState } from "react";
 import GameCard from "components/homescreen/GameCard";
@@ -24,7 +27,7 @@ function HomeScreen({ container }: HomeScreenProps) {
         from: { opacity: 0 },
         enter: { opacity: 1 },
         //leave: { opacity: 0 },
-        trail: 100,
+        trail: 10,
         config: config.molasses,
     });
 
@@ -47,18 +50,28 @@ function HomeScreen({ container }: HomeScreenProps) {
     }, [serverSideProps, user]);
 
     const cancelViewAs = () => {
+        setGameList([]);
         setServerSideProps({ viewAs: null });
     };
 
     useEffect(() => {
         if (viewAs === null) return;
-        console.log("fetching games for " + viewAs);
-
-        gameGamesByDrawing({
+        const filter = {
             filter: {
                 artist: { eq: viewAs },
             },
-        }).then((data) => {
+        };
+
+        /*
+        getUnfishedGamesByUsername(filter)
+            .then((data) => {
+                console.log("unfisihed games", data);
+            })
+            .catch((err) => console.log("oops", err));
+
+        console.log("fetching games for " + viewAs, filter);
+        */
+        getGamesByUsername(filter).then((data) => {
             let test = data.games
                 .filter(({ head, torso, legs }: any) => head && torso && legs)
                 .map((game: any) => {
@@ -132,11 +145,7 @@ function HomeScreen({ container }: HomeScreenProps) {
                             position="absolute"
                             margin="auto"
                         >
-                            <Loader
-                                margin="2rem"
-                                width="100px"
-                                height="100px"
-                            />
+                            <Text>Loading</Text>
                         </FlexBox>
                     ) : null}
 

@@ -71,7 +71,6 @@ const useStore = create<Store>((set, _get) => ({
             set((store) => ({ ...store, pageIndex: -1 }));
 
             getGameById({ id: gameId }).then((data) => {
-                console.log("gamedata", data);
                 set((store) => ({
                     ...store,
                     serverSideProps: { game: data },

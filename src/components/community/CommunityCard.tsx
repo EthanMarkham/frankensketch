@@ -24,7 +24,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
         )
     );
 
-    useDrawer(game as any, canvasRef, containerRef, 0);
+    useDrawer(game as any, canvasRef, containerRef, 50);
     const [isShown, setIsShown] = useState(false);
 
     const updateLike = useCallback(async () => {

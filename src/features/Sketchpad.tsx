@@ -31,7 +31,7 @@ const Sketchpad = ({ container }: GenericPageProps) => {
         try {
             const p = project as any;
             console.log(p);
-            p.view.scale = 1;
+            p.view.zoom = 1;
             p.view.center = new Point(0, 0);
 
             const lineData = JSON.parse(p.exportJSON())[1][1].children;

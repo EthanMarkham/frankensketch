@@ -11,6 +11,12 @@ function BackButton({
 }) {
     return (
         <Button
+            style={{
+                position: "fixed",
+                left: "5%",
+                top: "8%",
+                zIndex: 1000,
+            }}
             disabled={disabled}
             background="none"
             borderRadius="0"
