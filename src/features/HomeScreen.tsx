@@ -4,20 +4,19 @@ import SectionText from "components/general/SectionText";
 import { HomeScreenProps } from "types";
 import { AnimatedFlex, Button, Div, FlexBox, Grid, Text } from "styles";
 import { useStore } from "store";
-import {
-    getGamesByUsername,
-    getUnfishedGamesByUsername,
-} from "queries/queries";
+import { getGamesByUsername } from "queries/queries";
 import { config, useTransition } from "react-spring";
 import { useEffect, useMemo, useState } from "react";
 import GameCard from "components/homescreen/GameCard";
 import { capitalizeFirstLetter } from "utils";
 import { Icons } from "styles/svg/ui-icons/icons";
+import { Game } from "API";
 
-function HomeScreen({ container }: HomeScreenProps) {
+function HomeScreen(props: HomeScreenProps) {
     const [gameList, setGameList] = useState<any[]>();
     const [loading, setLoading] = useState(false);
     const user = useStore((state) => state.userData);
+    const games = useStore((state) => state.games);
     const setServerSideProps = useStore(
         (state) => state.actions.setServerSideProps
     );
@@ -50,29 +49,14 @@ function HomeScreen({ container }: HomeScreenProps) {
     }, [serverSideProps, user]);
 
     const cancelViewAs = () => {
-        setGameList([]);
         setServerSideProps({ viewAs: null });
     };
 
     useEffect(() => {
-        if (viewAs === null) return;
-        const filter = {
-            filter: {
-                artist: { eq: viewAs },
-            },
-        };
+        console.log("init", viewAs);
 
-        /*
-        getUnfishedGamesByUsername(filter)
-            .then((data) => {
-                console.log("unfisihed games", data);
-            })
-            .catch((err) => console.log("oops", err));
-
-        console.log("fetching games for " + viewAs, filter);
-        */
-        getGamesByUsername(filter).then((data) => {
-            let test = data.games
+        const sortGames = (games: Array<Game>) => {
+            let test = games
                 .filter(({ head, torso, legs }: any) => head && torso && legs)
                 .map((game: any) => {
                     const createdDate = [
@@ -87,17 +71,45 @@ function HomeScreen({ container }: HomeScreenProps) {
                 .sort((a: any, b: any) => {
                     return b.createdAt < a.createdAt ? -1 : 1;
                 });
-            setGameList(test);
-            setLoading(true);
-        });
-
-        return () => {
-            //@TODO: Cancel pending calls
+            return test;
         };
-    }, [viewAs]);
+
+        if (!user?.username) return;
+
+        if (viewAs === null || viewAs === user.username) {
+            console.log("setting gameList to self");
+            let sorted = sortGames(games);
+            setGameList(sorted);
+            setLoading(false);
+        } else {
+            console.log("fetching gameList for " + viewAs);
+
+            const filter = {
+                filter: {
+                    artist: { eq: viewAs },
+                },
+            };
+            setLoading(true);
+
+            getGamesByUsername(filter).then((data) => {
+                let sorted = sortGames(data.games);
+                setGameList(sorted);
+                setLoading(false);
+            });
+
+            return () => {
+                setGameList([]);
+            };
+        }
+    }, [games, user?.username, viewAs]);
 
     return (
-        <FlexBox direction="column" padding="0 1.5rem">
+        <FlexBox
+            direction="column"
+            padding="0 1.5rem"
+            width="100%"
+            height="100%"
+        >
             <FlexBox direction="row" justifyContent="flex-start">
                 <SectionText
                     text={
@@ -120,11 +132,8 @@ function HomeScreen({ container }: HomeScreenProps) {
 
             <Div
                 style={{
-                    flex: "0 1",
+                    flex: "0 1 100%",
                     justifySelf: "flex-end",
-                    flexBasis: container?.current
-                        ? container.current.offsetHeight - 50 + "px"
-                        : "10px",
                     overflowY: "auto",
                 }}
             >
@@ -136,7 +145,7 @@ function HomeScreen({ container }: HomeScreenProps) {
                         gap: "0.2em",
                     }}
                 >
-                    {loading === false ? (
+                    {loading === true ? (
                         <FlexBox
                             justifyContent="center"
                             width="100%"
@@ -149,9 +158,28 @@ function HomeScreen({ container }: HomeScreenProps) {
                         </FlexBox>
                     ) : null}
 
+                    {gameList?.length === 0 && loading === false ? (
+                        <FlexBox
+                            justifyContent="center"
+                            width="100%"
+                            height="80%"
+                            style={{ top: "100px" }}
+                            position="absolute"
+                            margin="auto"
+                        >
+                            <Text>
+                                {viewingSelf === false ? viewAs : "You"} should
+                                draw some games!
+                            </Text>
+                        </FlexBox>
+                    ) : null}
+
                     {transitions((style, item) => (
                         <AnimatedFlex style={style}>
-                            <GameCard game={item} key={item.id} />
+                            <GameCard
+                                game={item}
+                                key={item.id + item._version}
+                            />
                         </AnimatedFlex>
                     ))}
                 </Grid>

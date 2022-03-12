@@ -114,7 +114,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                     justifyContent="space-between"
                     backgroundColor={COLORS.bgSecondary}
                     style={{
-                        zIndex: 10,
+                        zIndex: 1,
                         padding: "0.8em",
                     }}
                 >

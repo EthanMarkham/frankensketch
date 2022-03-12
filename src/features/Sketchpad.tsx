@@ -13,17 +13,14 @@ import { Point } from "paper/dist/paper-core";
 /*--------------------------------------------------------------------//
                       J S X      E X P O R T
 //--------------------------------------------------------------------*/
-const Sketchpad = ({ container }: GenericPageProps) => {
+const Sketchpad = (props: GenericPageProps) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const containerRef = React.useRef<HTMLDivElement>(null);
     const serverProps = useStore((state) => state.serverSideProps);
     const changePage = useStore((state) => state.actions.setPage);
 
     //const [scale, setScale] = useState<number | null>(null);
-    const [project, init] = usePaper(
-        canvasRef,
-        container?.current?.getBoundingClientRect()
-    );
+    const [project, init] = usePaper(canvasRef);
     const postGame = useStore((state) => state.actions.postGame);
 
     const saveGame = useCallback(() => {
@@ -58,11 +55,7 @@ const Sketchpad = ({ container }: GenericPageProps) => {
     return (
         <Div
             ref={containerRef}
-            height={
-                container?.current
-                    ? container.current.offsetHeight + "px"
-                    : "0px"
-            }
+            height="100%"
             style={{
                 position: "relative",
             }}
@@ -91,7 +84,7 @@ const Sketchpad = ({ container }: GenericPageProps) => {
                     left: 0,
                 }}
             >
-                <Text>
+                <Text fontSize="2em">
                     Draw&nbsp;{drawingType === "legs" ? "some" : "a"}&nbsp;
                     {drawingType}
                 </Text>
@@ -101,7 +94,7 @@ const Sketchpad = ({ container }: GenericPageProps) => {
             <FlexBox
                 style={{
                     position: "absolute",
-                    height: "80%",
+                    height: "100%",
                     width: "100%",
                     justifyContent: "center",
                     overflow: "hidden",

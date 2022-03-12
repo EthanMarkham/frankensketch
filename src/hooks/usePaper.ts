@@ -86,10 +86,7 @@ interface InitialPaper {
 }
 // MOUSE EVENTS
 
-function usePaper(
-    canvas: React.RefObject<HTMLCanvasElement>,
-    parentSize: { width: number; height: number } = { width: 0, height: 0 }
-) {
+function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
     const [drawingType, setType] = useState<string | null>();
     const [project, setProject] = useState<paper.Project>();
     const [init, setInit] = useState<InitialPaper | null>();
@@ -437,25 +434,29 @@ function usePaper(
     //Init.
     useEffect(() => {
         const element = canvas.current;
-        if (element !== null && drawingType) {
+        if (element !== null && drawingType && !init) {
             console.log("initializing paper");
             paper.setup(element);
             setProject(paper.project);
-        }
-    }, [canvas, drawingType]);
 
-    //Post loaded
-    useEffect(() => {
-        if (!project || init) return;
-        addGuidelines();
-        setInit({
-            bounds: paper.view.bounds,
-            center: paper.view.center,
-        });
-        set({
-            scale: calculateScale(paper.view.bounds, parentSize) * 0.7, //My scale off?
-        });
-    }, [addGuidelines, init, parentSize, project, set]);
+            addGuidelines();
+            const newScale =
+                calculateScale(
+                    paper.view.bounds,
+                    element.parentElement!!.getBoundingClientRect()
+                ) * 0.8;
+
+            set({
+                scale: newScale,
+            });
+
+            setInit({
+                bounds: paper.view.bounds,
+                center: paper.view.center,
+            });
+        }
+        return () => {};
+    }, [addGuidelines, canvas, drawingType, init, set]);
 
     //All the drawing ishh
     useEffect(draw, [draw]);

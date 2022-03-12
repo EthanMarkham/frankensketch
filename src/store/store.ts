@@ -20,9 +20,35 @@ const useStore = create<Store>((set, _get) => ({
     userData: null, //maybe we dont need?
     pageIndex: -1,
     error: null, //GET RID OF
+    games: [],
+    drawings: [],
     actions: {
         setPage(index) {
             set((store) => ({ ...store, pageIndex: index }));
+        },
+        setGames(games) {
+            set((store) => ({
+                ...store,
+                games: games,
+            }));
+        },
+        addGame(game) {
+            set((store) => ({
+                ...store,
+                games: [...store.games, game],
+            }));
+        },
+        setDrawings(drawings) {
+            set((store) => ({
+                ...store,
+                drawings: drawings,
+            }));
+        },
+        addDrawing(drawing) {
+            set((store) => ({
+                ...store,
+                drawings: [...store.drawings, drawing],
+            }));
         },
         setServerSideProps(data) {
             set((store) => ({
@@ -37,7 +63,7 @@ const useStore = create<Store>((set, _get) => ({
             set((store) => ({
                 ...store,
                 userData: data,
-                pageIndex: data === null ? 0 : 1,
+                pageIndex: data === null ? 0 : store.pageIndex,
             }));
         },
         subscribe: (key, callback) => {
@@ -73,7 +99,7 @@ const useStore = create<Store>((set, _get) => ({
             getGameById({ id: gameId }).then((data) => {
                 set((store) => ({
                     ...store,
-                    serverSideProps: { game: data },
+                    serverSideProps: { ...store.serverSideProps, game: data },
                     pageIndex: 9,
                 }));
             });

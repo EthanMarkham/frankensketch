@@ -4,13 +4,13 @@ import SectionText from "components/general/SectionText";
 import { getUser } from "graphql/queries";
 import { User } from "models";
 import { useEffect, useState } from "react";
-import { Button, FlexBox, InputField, Text, Div } from "styles";
+import { Button, FlexBox, Text } from "styles";
 import { COLORS } from "utils/DEFS";
 import Modal from "./Modal";
 
 function Settings() {
     //TODO - use this value to change user preferences, button is disabled right now
-    const [isNSFW, setIsNSFW] = useState(true);
+    //const [isNSFW, setIsNSFW] = useState(true);
 
     const [userInfo, setUserInfo] = useState<User>();
 
@@ -106,7 +106,7 @@ function Settings() {
                     <FlexBox
                         alignContent="center"
                         justifyContent="space-around"
-                        style={{ flexWrap: "wrap" }}
+                        style={{ flexWrap: "wrap", gap: "10px" }}
                     >
                         <Button
                             padding="0.5rem"

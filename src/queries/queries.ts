@@ -55,6 +55,23 @@ export const getGamesMin = (input: ListGamesQueryVariables) => {
     });
 };
 
+export const syncGamesMin = (input: ListGamesQueryVariables) => {
+    return new Promise<{
+        games: Array<Game>;
+        nextToken: string | null | undefined;
+    }>(async (resolve, reject) => {
+        const response = (await API.graphql({
+            query: syncGameListMin,
+            variables: input,
+        })) as any;
+        console.log(response);
+        resolve({
+            games: response.data.syncGames.items as Array<Game>,
+            nextToken: response.data.syncGames.nextToken as string | null,
+        });
+    });
+};
+
 export const getDrawingIdType = (input: ListDrawingsQueryVariables) => {
     return new Promise<{
         drawings: Array<{ id: string; type: string }>;
@@ -118,15 +135,70 @@ export const getDrawings = (input: ListDrawingsQueryVariables) => {
     });
 };
 
+export const getDrawingsMin = (input: ListDrawingsQueryVariables) => {
+    return new Promise<{
+        drawings: Array<Drawing>;
+        nextToken: string | null | undefined;
+    }>(async (resolve, reject) => {
+        const response = (await API.graphql({
+            query: listDrawingsMin,
+            variables: input,
+        })) as any;
+        console.log("drawings min", response);
+        resolve({
+            drawings: response.data.listDrawings.items as Array<Drawing>,
+            nextToken: response.data.listDrawings.nextToken as string | null,
+        });
+    });
+};
+
 export const getGamesByUsername = (input: ListDrawingsQueryVariables) => {
     return new Promise<{
         games: Array<Game>;
         nextToken: string | null | undefined;
     }>(async (resolve, reject) => {
-        const { drawings } = await getDrawings(input);
+        const { drawings } = await getDrawingsMin(input);
+
         if (!drawings || drawings.length === 0) {
             resolve({ games: [], nextToken: null });
+        } else {
+            //const first = drawings.shift();
+            const filter = drawings.reduce<any>(
+                (acc, { type, id }) => {
+                    switch (type) {
+                        default:
+                        case "head":
+                            acc.and.or.push({ gameHeadId: { eq: id } });
+                            break;
+                        case "legs":
+                            acc.and.or.push({ gameLegsId: { eq: id } });
+                            break;
+                        case "torso":
+                            acc.and.or.push({ gameTorsoId: { eq: id } });
+                            break;
+                    }
+                    return acc;
+                },
+                {
+                    and: {
+                        gameLegsId: { attributeExists: true },
+                        gameTorsoId: { attributeExists: true },
+                        gameHeadId: { attributeExists: true },
+                        or: [],
+                    },
+                }
+            );
+            const response = await getGamesMin({ filter: filter });
+            resolve(response);
         }
+    });
+};
+
+export const getFinishedGamesByDrawing = (drawings: Array<Drawing>) => {
+    return new Promise<{
+        games: Array<Game>;
+        nextToken: string | null | undefined;
+    }>(async (resolve, reject) => {
         //const first = drawings.shift();
         const filter = drawings.reduce<any>(
             (acc, { type, id }) => {
@@ -267,6 +339,37 @@ export const getSuggestedDrawing = () => {
         console.log(minTally);
 
         resolve(minTally.id);
+    });
+};
+
+export const syncGamesByDrawing = (drawings: Array<Drawing>) => {
+    return new Promise<{
+        games: Array<Game>;
+        nextToken: string | null | undefined;
+    }>(async (resolve, reject) => {
+        //const first = drawings.shift();
+        const filter = drawings.reduce<any>(
+            (acc, { type, id }) => {
+                switch (type) {
+                    default:
+                    case "head":
+                        acc.or.push({ gameHeadId: { eq: id } });
+                        break;
+                    case "legs":
+                        acc.or.push({ gameLegsId: { eq: id } });
+                        break;
+                    case "torso":
+                        acc.or.push({ gameTorsoId: { eq: id } });
+                        break;
+                }
+                return acc;
+            },
+            {
+                or: [],
+            }
+        );
+        const response = await syncGamesMin({ filter: filter });
+        resolve(response);
     });
 };
 
@@ -453,6 +556,57 @@ export const listGamesMin = /* GraphQL */ `
     }
 `;
 
+export const syncGameListMin = /* GraphQL */ `
+    query SyncGames(
+        $filter: ModelGameFilterInput
+        $limit: Int
+        $nextToken: String
+    ) {
+        syncGames(filter: $filter, limit: $limit, nextToken: $nextToken) {
+            items {
+                id
+                password
+                nsfw
+                head {
+                    artist
+                    createdAt
+                }
+                torso {
+                    artist
+                    createdAt
+                }
+                legs {
+                    artist
+                    createdAt
+                }
+                UserReports {
+                    nextToken
+                    startedAt
+                }
+                UserLikes {
+                    items {
+                        id
+                        gameID
+                        user
+                        _version
+                        _deleted
+                    }
+                }
+                createdAt
+                updatedAt
+                _version
+                _deleted
+                _lastChangedAt
+                gameHeadId
+                gameTorsoId
+                gameLegsId
+            }
+            nextToken
+            startedAt
+        }
+    }
+`;
+
 export const listDrawingsIdType = /* GraphQL */ `
     query ListDrawings(
         $filter: ModelDrawingFilterInput
@@ -485,6 +639,30 @@ export const listDrawingTalliesMin = /* GraphQL */ `
                 id
                 count
             }
+        }
+    }
+`;
+
+export const listDrawingsMin = /* GraphQL */ `
+    query ListDrawings(
+        $filter: ModelDrawingFilterInput
+        $limit: Int
+        $nextToken: String
+    ) {
+        listDrawings(filter: $filter, limit: $limit, nextToken: $nextToken) {
+            items {
+                id
+                isRemoved
+                type
+                artist
+                createdAt
+                updatedAt
+                _version
+                _deleted
+                _lastChangedAt
+            }
+            nextToken
+            startedAt
         }
     }
 `;

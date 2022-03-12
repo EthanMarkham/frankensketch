@@ -15,11 +15,15 @@ function NavBar() {
     };
     return (
         <Div
-            height="115px"
+            height="auto"
             width="100%"
             backgroundColor={COLORS.bgPrimary}
+            style={{
+                flex: "0 0",
+                zIndex: 5,
+            }}
         >
-            <Stiches margin=".75rem 0" width="100%" />
+            <Stiches margin="0 0 .75rem 0" width="100%" />
             <FlexBox
                 justifyContent="space-between"
                 alignContent="center"
