@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { FlexBox, SketchCanvas, Text } from "styles";
 import { useStore } from "store";
 import useDrawer from "hooks/useDrawer";
 import { GenericPageProps } from "types";
 import BackButton from "components/general/BackButton";
+import useWindowSize from "hooks/useWindowSize";
 
 /*--------------------------------------------------------------------//
                       J S X      E X P O R T
@@ -13,24 +14,42 @@ const GameViewer = ({ container }: GenericPageProps) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
     const { game } = useStore((state) => state.serverSideProps);
     const changePage = useStore((state) => state.actions.setPage);
+    const windowSize = useWindowSize();
 
     useDrawer(game, canvasRef, containerRef);
 
-    const parentSize = container?.current
-        ? container.current.getBoundingClientRect()
-        : { width: 0, height: 0 };
+    const parentSize = useMemo(
+        () =>
+            container?.current
+                ? container.current.getBoundingClientRect()
+                : { width: 0, height: 0 },
+        [container]
+    );
 
-    const topOffset = 12.3468 - 0.03 * parentSize.width;
+    const topOffset = useMemo(() => {
+        let output = 25;
+        if (windowSize.width >= 1016) {
+            output -= (windowSize.width - 1016) * 0.6;
+        }
+        return output;
+    }, [windowSize]);
+
+    useEffect(() => {
+        console.log(topOffset);
+    }, [topOffset]);
 
     return (
         <FlexBox
             direction="column"
-            height={parentSize.height + "px"}
-            css={{ overflowY: "scroll" }}
             background='url("images/stage.jpg")'
             style={{
+                borderRadius: "30px",
+                overflow: "hidden",
+                width: "80%",
+                height: parentSize.height,
+                margin: "auto",
                 backgroundAttachment: "fixed",
-                backgroundPosition: `center ${topOffset}vh`,
+                backgroundPosition: `center ${topOffset}px`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
             }}
@@ -41,19 +60,13 @@ const GameViewer = ({ container }: GenericPageProps) => {
             <BackButton onClick={() => changePage(1)} />
 
             <FlexBox
-                height="60%"
                 position="relative"
                 justifyContent="center"
-                margin="auto 0"
                 ref={containerRef}
+                css={{ flex: "1 1" }}
             >
                 <SketchCanvas ref={canvasRef} height="100%" width="100%" />
             </FlexBox>
-            <FlexBox
-                padding="4em"
-                height="20%"
-                justifyContent="center"
-            ></FlexBox>
         </FlexBox>
     );
 };

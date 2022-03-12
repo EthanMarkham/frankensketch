@@ -36,7 +36,7 @@ function Community() {
             direction="column"
             padding="0 1.5rem"
             css={{ overflowY: "scroll" }}
-            height="74vh"
+            height="80vh"
         >
             <FlexBox
                 direction="column"
@@ -58,12 +58,11 @@ function Community() {
                                     <FlexBox
                                         direction="column"
                                         width="100%"
-                                        margin="0 0 0.5rem 0"
+                                        margin="0 0 0.8rem 0"
                                         ref={lastGameRef}
                                         key={i}
                                     >
                                         <CommunityCard game={g} key={g.id} />{" "}
-                                        <hr className="community-card-separator" />{" "}
                                     </FlexBox>
                                 );
                             } else {
@@ -71,11 +70,10 @@ function Community() {
                                     <FlexBox
                                         direction="column"
                                         width="100%"
-                                        margin="0 0 0.5rem 0"
+                                        margin="0 0 0.8rem 0"
                                         key={i}
                                     >
                                         <CommunityCard game={g} key={g.id} />{" "}
-                                        <hr className="community-card-separator" />{" "}
                                     </FlexBox>
                                 );
                             }
@@ -92,7 +90,9 @@ function Community() {
                                     color={COLORS.secondaryGreen}
                                     css={{ textAlign: "center" }}
                                 >
-                                    WOW, you have seen all the available drawings that the community has created so far. Go draw something of your own!
+                                    WOW, you have seen all the available
+                                    drawings that the community has created so
+                                    far. Go draw something of your own!
                                 </Text>
                                 <Text
                                     color={COLORS.secondaryGreen}

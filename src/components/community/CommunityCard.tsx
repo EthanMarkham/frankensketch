@@ -7,6 +7,7 @@ import Modal from "features/Modal";
 import { useStore } from "store";
 import { Game, UserLike } from "API";
 import { unLikeDrawing, likeDrawing } from "queries/queries";
+import InfoSVG from "components/svg/Info";
 
 const CommunityCard = ({ game }: { game: Game }) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
@@ -55,32 +56,47 @@ const CommunityCard = ({ game }: { game: Game }) => {
 
     return (
         <>
-            <FlexBox direction="column" width="100%">
+            <FlexBox
+                direction="column"
+                width="100%"
+                style={{
+                    borderRadius: "10px",
+                    boxShadow: "1px -1px 1px 1px #00000030",
+                    overflow: "hidden",
+                }}
+            >
                 <FlexBox
                     height="63vh"
                     direction="column"
                     backgroundColor={COLORS.bgSecondary}
+                    style={{
+                        position: "relative",
+                    }}
                     borderRadius="10px"
                 >
-                    <FlexBox justifyContent="flex-end">
-                        <Button
-                            background="none"
-                            onClick={() => setIsShown(true)}
-                            padding="0.5rem"
-                        >
-                            <img
-                                src={Icons.Info}
-                                width="25"
-                                height="25"
-                                alt="report icon"
-                            />
-                        </Button>
-                    </FlexBox>
+                    <InfoSVG
+                        onClick={() => setIsShown(true)}
+                        svg={{
+                            width: 100,
+                            height: 100,
+                        }}
+                        path={{
+                            fill: COLORS.bgSecondary,
+                            scale: 0.5,
+                        }}
+                        style={{
+                            position: "absolute",
+                            top: "-5px",
+                            right: "-5px",
+                            zIndex: 20,
+                            transform: "scale(0.5)",
+                        }}
+                    />
+
                     <FlexBox
                         vhCenter={true}
                         width="100%"
                         height="100%"
-                        margin="0 0 1.5rem 0"
                         padding="0.5rem"
                         ref={containerRef}
                         backgroundColor={COLORS.bgLight}
@@ -96,8 +112,11 @@ const CommunityCard = ({ game }: { game: Game }) => {
                 <FlexBox
                     direction="row"
                     justifyContent="space-between"
-                    height="10vh"
-                    margin="1rem 0"
+                    backgroundColor={COLORS.bgSecondary}
+                    style={{
+                        zIndex: 10,
+                        padding: "0.8em",
+                    }}
                 >
                     <FlexBox direction="column">
                         <FlexBox direction="row">

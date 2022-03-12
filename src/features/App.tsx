@@ -16,7 +16,7 @@ import Admin from "./Admin";
 import NavBar from "components/navbar/NavBar";
 import Header from "components/header/header";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 /*
 const Authentication = React.lazy(() => import("features/Authentication"));
@@ -61,7 +61,7 @@ function App() {
             justifyContent="center"
             style={{
                 position: "fixed",
-                overflow: "hidden",
+                overflowY: "auto",
             }}
         >
             {showHeader && <Header />}
@@ -167,7 +167,7 @@ function App() {
 
             {showNav && <NavBar />}
             <ToastContainer
-                position='top-center'
+                position="top-center"
                 autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop={false}

@@ -1,28 +1,10 @@
 import { useEffect, useState } from "react";
 import Paper from "paper";
-import { Drawing, Game } from "models";
+import { Game } from "models";
 import { calculateScale } from "utils";
+import { DrawSettingsIn, LineSettingsIn } from "types/sketchpad";
 
-interface LineSettingsIn {
-    lineData: any;
-    delay: number;
-    projectId: number;
-    gameId: string;
-    scale: number;
-    verticleShift: number;
-    group: paper.Group;
-    type: string;
-    id: string;
-}
-
-interface DrawSettingsIn {
-    drawing: Drawing;
-    verticleShift: number;
-    line_delay: number;
-    projectId: number;
-    gameId: string;
-    scale: number;
-}
+const debug = false;
 
 function drawLine({
     lineData,
@@ -46,21 +28,24 @@ function drawLine({
                     case "Group":
                         const grp = new Paper.Group(lines);
                         grp.position.y += verticleShift;
+                        grp.position.x += 5;
                         grp.selected = false;
                         group.addChild(grp);
                         break;
                     default:
                         const path = new Paper.Path(lines);
                         path.position.y += verticleShift;
+                        path.position.x += 5;
                         path.selected = false;
                         group.addChild(path);
                         break;
                 }
             } catch (e) {
-                console.log(
-                    `error drawing game ${gameId}, ${type} drawing ${id}`,
-                    test
-                );
+                if (debug)
+                    console.log(
+                        `error drawing game ${gameId}, ${type} drawing ${id}`,
+                        test
+                    );
             } finally {
                 resolve(true);
             }
@@ -78,13 +63,15 @@ function drawSection({
 }: DrawSettingsIn): Promise<paper.Rectangle> {
     const { lines, type, id } = drawing;
 
-    const testLine = new Paper.Path.Line(
-        new Paper.Point(-100, verticleShift),
-        new Paper.Point(100, verticleShift)
-    );
-    testLine.strokeWidth = 10;
-    testLine.strokeColor = new Paper.Color(255, 255, 255);
-    testLine.selected = false;
+    if (debug) {
+        const testLine = new Paper.Path.Line(
+            new Paper.Point(-100, verticleShift),
+            new Paper.Point(100, verticleShift)
+        );
+        testLine.strokeWidth = 10;
+        testLine.strokeColor = new Paper.Color(255, 255, 255);
+        testLine.selected = false;
+    }
 
     //Step: If lines don't exist resolve rect with point passed in
     if (!lines) {
@@ -101,7 +88,7 @@ function drawSection({
 
     //Step: Create Group to track all the paths/drawing bounds
     const group = new Paper.Group();
-    console.log("starting section at " + verticleShift);
+    if (debug) console.log("starting section at " + verticleShift);
 
     return new Promise<paper.Rectangle>((resolve) => {
         let promises = [];
@@ -122,9 +109,11 @@ function drawSection({
             );
         }
         Promise.all(promises).then((_) => {
-            const rect = new Paper.Path.Rectangle(group.bounds);
-            rect.strokeColor = new Paper.Color(255, 255, 255);
-            rect.selected = false;
+            if (debug) {
+                const rect = new Paper.Path.Rectangle(group.bounds);
+                rect.strokeColor = new Paper.Color(255, 255, 255);
+                rect.selected = false;
+            }
             group.selected = false;
             group.scale(1);
             resolve(group.bounds);

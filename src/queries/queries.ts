@@ -13,24 +13,6 @@ import { API } from "aws-amplify";
 import { createUserLike, deleteUserLike } from "graphql/mutations";
 import { getGame, listDrawings } from "graphql/queries";
 
-export function queryGamesByUsername(username: string) {
-    return new Promise<[any]>(async (resolve, reject) => {
-        const data = await API.post("rest", `/rest/listGames`, {
-            body: {
-                artist: username,
-            },
-        }).then(({ body, err }) => {
-            if (err) {
-                console.log(err);
-                return [];
-            }
-            const response = JSON.parse(body);
-            return response;
-        });
-        resolve(data);
-    });
-}
-
 export const getGames = (input: ListGamesQueryVariables) => {
     return new Promise<{
         games: Array<Game>;
