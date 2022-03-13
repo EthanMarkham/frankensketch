@@ -17,10 +17,7 @@ function LoadingScreen() {
             <FrankenSketchHeader fontSize="4em">
                 FrankenSketch
             </FrankenSketchHeader>
-            <Text color={COLORS.secondaryGreen} fontSize="1.15em">
-                Loading, Please Wait...
-            </Text>
-            <Text color={COLORS.secondaryGreen} margin='2rem 0 0 '>
+            <Text color={COLORS.secondaryGreen} margin="2rem 0 0 ">
                 {getRandomItem(loadingTipsResponses)}
             </Text>
             <Loader margin="2rem" width="200px" height="200px"></Loader>

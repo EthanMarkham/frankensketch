@@ -52,10 +52,6 @@ function Authentication() {
     }, [dob, email, mode, password, username]);
 
     const loginAction = useCallback(() => {
-        const handleError = (data: any) => {
-            errorActions.show(data.log, data.name);
-        };
-
         switch (mode) {
             case MODE.SIGN_IN:
                 Auth.signIn(loginDetails as LoginDetails).catch((err) => {});
@@ -76,7 +72,7 @@ function Authentication() {
                     });
                 break;
         }
-    }, [mode, loginDetails, errorActions, passwordVerify]);
+    }, [mode, loginDetails, passwordVerify]);
 
     const switchMode = () =>
         setMode((mode) =>
