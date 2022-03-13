@@ -1,8 +1,8 @@
 export const loadingTipsResponses: string[] = [
-    "Tip: Use the shape when drawing to make perfect shapes and fill parts.",
-    "Tip: Mistakes can be undo, don't get stress about it.",
+    "Tip: Use the shape tool, is really cool!",
+    "Mistakes can be undone, don't get stress about it.",
     "Draw!, Draw!, Draw!",
-    "Tip: Use the guidelines while drawing, they are really helpful!",
+    "Tip: Use the guidelines, they are really helpful!",
     "Less is more!",
     "Be creative!",
     "It doesn't have to be perfect.",
@@ -13,5 +13,13 @@ export const loadingTipsResponses: string[] = [
     "Let your creative juices flow!",
     "Let's draw!",
     "Head, shoulders, knees and ... wait, that doesn't sound right.",
-    "Create. Explore. Have Fun."
+    "Create. Explore. Have Fun.",
+    "1 + 1 + 1 = 3",
+    "Talk to your friends about FrankenSketch!",
+    "Have fun!",
+    "Add the FrankenSketch to your homescreen or install it for the best experience.",
+    "Colors? We have all of them.",
+    "Lets FrankenSketch!",
+    "Tip: Use the eraser to remove your mistakes.",
+    "Tip: Explore the community for inspiration."
 ];

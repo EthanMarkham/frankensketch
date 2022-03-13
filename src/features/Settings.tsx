@@ -102,7 +102,7 @@ function Settings() {
                     </FlexBox>
 					*/}
 
-                    <SectionText text="Help" style={{ margin: "0 0 1em 0" }} />
+                    <SectionText text="Help" style={{ margin: "1rem 0" }} />
                     <FlexBox
                         alignContent="center"
                         justifyContent="space-around"
