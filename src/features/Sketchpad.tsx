@@ -27,12 +27,10 @@ const Sketchpad = (props: GenericPageProps) => {
         if (!project) return;
         try {
             const p = project as any;
-            console.log(p);
             p.view.zoom = 1;
             p.view.center = new Point(0, 0);
 
             const lineData = JSON.parse(p.exportJSON())[1][1].children;
-            console.log(lineData);
             if (!lineData || lineData.length === 0) {
                 changePage(1);
             } else postGame(lineData, serverProps.drawing);

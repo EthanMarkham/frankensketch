@@ -4,7 +4,7 @@ import SectionText from "components/general/SectionText";
 import { HomeScreenProps } from "types";
 import { AnimatedFlex, Button, Div, FlexBox, Grid, Text } from "styles";
 import { useStore } from "store";
-import { getGamesByUsername } from "queries/queries";
+import { getDrawingsMin, getFinishedGamesByDrawing } from "queries/queries";
 import { config, useTransition } from "react-spring";
 import { useEffect, useMemo, useState } from "react";
 import GameCard from "components/homescreen/GameCard";
@@ -53,30 +53,25 @@ function HomeScreen(props: HomeScreenProps) {
     };
 
     useEffect(() => {
-        console.log("init", viewAs);
-
         if (!user?.username) return;
 
         if (viewAs === null || viewAs === user.username) {
-            console.log("setting gameList to self");
             setGameList(games);
             setLoading(false);
         } else {
-            console.log("fetching gameList for " + viewAs);
-
-            const filter = {
+            setGameList([]);
+            setLoading(true);
+            getDrawingsMin({
                 filter: {
                     artist: { eq: viewAs },
                 },
-            };
-            setLoading(true);
-
-            getGamesByUsername(filter).then((data) => {
-                let sorted = sortGames(data.games);
-                setGameList(sorted);
-                setLoading(false);
+            }).then(({ drawings }) => {
+                getFinishedGamesByDrawing(drawings).then(({ games }) => {
+                    let sorted = sortGames(games);
+                    setGameList(sorted);
+                    setLoading(false);
+                });
             });
-
             return () => {
                 setGameList([]);
             };

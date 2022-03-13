@@ -16,84 +16,72 @@ interface GameState {
     games: Array<any>;
     drawings: Array<any>;
 }
-function getReducer(onClick: (id: string) => any) {
-    return function gameReducer(
-        state: GameState,
-        { type, payload }: { type: string; payload: any }
-    ): GameState {
-        switch (type) {
-            case "setDrawing":
-                if (!payload.drawings) return state;
-                console.log("setting drawings to", payload.drawings);
-                return { ...state, drawings: payload.drawings };
-            case "set":
-                if (!payload.games) return state;
-                payload.callback(payload.games);
-                return { ...state, games: payload.games };
+function gameReducer(
+    state: GameState,
+    { type, payload }: { type: string; payload: any }
+): GameState {
+    switch (type) {
+        case "setDrawing":
+            if (!payload.drawings) return state;
+            return { ...state, drawings: payload.drawings };
+        case "set":
+            if (!payload.games) return state;
+            payload.callback(payload.games);
+            return { ...state, games: payload.games };
 
-            case "add":
-                if (!payload.game) return state;
-                const isOwnedGame = state.drawings.findIndex(
-                    (d) =>
-                        d.id === payload.game.gameHeadId ||
-                        d.id === payload.game.gameTorsoId ||
-                        d.id === payload.game.gameLegsId
-                );
-                if (isOwnedGame) {
-                    console.log("sub caught", payload.game);
-
-                    getGamesMin({
-                        filter: {
-                            id: {
-                                eq: payload.game.id,
-                            },
+        case "add":
+            if (!payload.game) return state;
+            const isOwnedGame = state.drawings.findIndex(
+                (d) =>
+                    d.id === payload.game.gameHeadId ||
+                    d.id === payload.game.gameTorsoId ||
+                    d.id === payload.game.gameLegsId
+            );
+            if (isOwnedGame) {
+                getGamesMin({
+                    filter: {
+                        id: {
+                            eq: payload.game.id,
                         },
-                    })
-                        .then(({ games }) => {
-                            if (!games || games.length === 0) {
-                                return state;
-                            }
-                            const game = games[0]!!;
-
-                            const gameIndex = state.games.findIndex(
-                                (g) => g.id === game.id
-                            );
-                            console.log("found game at", gameIndex);
-
-                            if (gameIndex > -1) {
-                                let copy = state.games.slice();
-                                copy[gameIndex] = game;
-                                payload.callback(copy);
-                                return { ...state, games: copy };
-                            } else if (
-                                game.gameLegsId &&
-                                game.gameTorsoId &&
-                                game.gameHeadId
-                            ) {
-                                toast.success("A new game has finished!", {
-                                    onClick: () => {
-                                        onClick(game.id);
-                                    },
-                                });
-
-                                const games = sortGames([...state.games, game]);
-                                payload.callback(games);
-                                return {
-                                    ...state,
-                                    games,
-                                };
-                            }
-                        })
-                        .catch((e) => {
-                            console.log(e);
+                    },
+                })
+                    .then(({ games }) => {
+                        if (!games || games.length === 0) {
                             return state;
-                        });
-                }
-                return state;
-            default:
-                return state;
-        }
-    };
+                        }
+                        const game = games[0]!!;
+
+                        const gameIndex = state.games.findIndex(
+                            (g) => g.id === game.id
+                        );
+
+                        if (gameIndex > -1) {
+                            let copy = state.games.slice();
+                            copy[gameIndex] = game;
+                            payload.callback(copy);
+                            return { ...state, games: copy };
+                        } else if (
+                            game.gameLegsId &&
+                            game.gameTorsoId &&
+                            game.gameHeadId
+                        ) {
+                            const games = sortGames([...state.games, game]);
+                            payload.callback(games);
+                            return {
+                                ...state,
+                                games,
+                            };
+                        }
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                        return state;
+                    });
+            }
+            return state;
+        default:
+            return state;
+    }
 }
 
 const initialState = {
@@ -104,12 +92,7 @@ const initialState = {
 function useGameSubscription(setGameList: (games: Array<Game>) => void) {
     const viewGame = useStore((state) => state.actions.viewGame);
 
-    const [store, dispatch] = useReducer(
-        getReducer((id) => {
-            viewGame(id);
-        }),
-        initialState
-    );
+    const [store, dispatch] = useReducer(gameReducer, initialState);
     const setDrawings = useStore((state) => state.actions.setDrawings);
     const setPage = useStore((state) => state.actions.setPage);
 
@@ -118,6 +101,7 @@ function useGameSubscription(setGameList: (games: Array<Game>) => void) {
 
     const [initGames, setInitGames] = useState(false);
     const [initDrawings, setInitDrawings] = useState(false);
+    const [curGameLength, setGameLength] = useState(0);
 
     // Step: Get inital drawings
     useEffect(() => {
@@ -142,8 +126,8 @@ function useGameSubscription(setGameList: (games: Array<Game>) => void) {
                     type: "set",
                     payload: { games, callback: setGameList },
                 });
+                setGameLength(games.length);
                 setInitGames(true);
-                console.log("syncing games", games);
             });
         } else {
             setInitGames(true);
@@ -162,10 +146,8 @@ function useGameSubscription(setGameList: (games: Array<Game>) => void) {
         const call = API.graphql(
             graphqlOperation(onUpdateGameMin)
         ) as Observable<Object>;
-        console.log("subscribing to games");
         const subscription = call.subscribe({
             next: ({ value }: any) => {
-                console.log("sub caught", value);
                 dispatch({
                     type: "add",
                     payload: {
@@ -181,9 +163,21 @@ function useGameSubscription(setGameList: (games: Array<Game>) => void) {
     }, [setGameList]);
 
     useEffect(() => {
-        console.log("updating drawing list");
         dispatch({ type: "setDrawings", payload: { drawings } });
     }, [drawings]);
+
+    //Listen for changes in game length to notify user
+    useEffect(() => {
+        if (!initGames) return;
+        if (store.games.length !== curGameLength) {
+            toast.success("A new game has finished!", {
+                onClick: () => {
+                    viewGame(store.games[0]!!.id);
+                },
+            });
+            setGameLength(store.games.length);
+        }
+    }, [curGameLength, initGames, store.games, viewGame]);
 }
 
 export default useGameSubscription;

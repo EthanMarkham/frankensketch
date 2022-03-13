@@ -1,9 +1,8 @@
 import useAuth from "hooks/useAuth";
-import React, { Suspense, useEffect, useMemo, useState } from "react";
+import React, { Suspense, useMemo } from "react";
 import { useStore } from "store";
 import { AnimatedDiv, FlexBox, Div } from "styles";
 import { useTransition, config } from "react-spring";
-import { getDrawingsMin, syncGamesByDrawing } from "queries/queries";
 import Authentication from "features/Authentication";
 import HomeScreen from "./HomeScreen";
 import LoadingScreen from "./LoadingScreen";

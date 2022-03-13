@@ -30,7 +30,6 @@ export default function useAuth() {
 
     useEffect(() => {
         function callback(data: any) {
-            console.log(data.payload.event);
             switch (data.payload.event) {
                 case "signOut":
                     setUser(null);
@@ -38,7 +37,6 @@ export default function useAuth() {
                 case "signIn":
                     Auth.currentAuthenticatedUser()
                         .then((authData) => {
-                            console.log(authData);
                             const groups =
                                 authData.signInUserSession.accessToken.payload[
                                     "cognito:groups"
@@ -49,8 +47,6 @@ export default function useAuth() {
                                     email: authData.username,
                                     groups: groups ? groups : null,
                                 };
-                                console.log(user);
-
                                 setUser(user);
                             });
                         })
@@ -59,10 +55,9 @@ export default function useAuth() {
                         });
                     break;
                 case "signUp":
-                    console.log(data.payload);
+                    //Handled by Auth component
                     break;
                 case "signIn_failure":
-                    console.log(data.payload);
                     toast.error(data.payload.data.message);
                     break;
                 case "signUp_failure":

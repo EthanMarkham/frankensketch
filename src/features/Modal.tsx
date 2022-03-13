@@ -2,7 +2,6 @@ import ChangePasswordModal from "components/modal/changePasswordModal";
 import FriendModal from "components/modal/friendModal";
 import HelpModal from "components/modal/ helpModal";
 import ReportModal from "components/modal/reportModal";
-import StartGameModal from "components/modal/startGameModal";
 import { Game } from "models";
 import { Button, FlexBox, Stiches, Text } from "styles";
 import { Icons } from "styles/svg/ui-icons/icons";
@@ -63,9 +62,6 @@ const Modal = ({
                         )}
                         {type === "createReport" && <ReportModal game={game} />}
                         {type === "help" && <HelpModal />}
-                        {type === "startGame" && (
-                            <StartGameModal isNewGame={isNewGame} />
-                        )}
                         {type === "changePassword" && <ChangePasswordModal />}
                     </FlexBox>
                 </div>

@@ -75,7 +75,6 @@ function drawSection({
 
     //Step: If lines don't exist resolve rect with point passed in
     if (!lines) {
-        console.log("missing line data");
         return new Promise<paper.Rectangle>((resolve) => {
             resolve(
                 new paper.Rectangle(

@@ -14,20 +14,34 @@ import { API } from "aws-amplify";
 import { createUserLike, deleteUserLike } from "graphql/mutations";
 import { getGame, getUser, listDrawings } from "graphql/queries";
 
-export const getGames = (input: ListGamesQueryVariables) => {
-    return new Promise<{
-        games: Array<Game>;
-        nextToken: string | null | undefined;
-    }>(async (resolve, reject) => {
-        const response = (await API.graphql({
-            query: listGamesWithLikes,
-            variables: input,
-        })) as any;
-        resolve({
-            games: response.data.listGames.items as Array<Game>,
-            nextToken: response.data.listGames.nextToken as string | null,
-        });
-    });
+const createFilterFromDrawings = (drawings: Array<Drawing>) => {
+    const filter = drawings.reduce<any>(
+        (acc, { type, id }) => {
+            if (!id || !type) return acc;
+            switch (type) {
+                default:
+                case "head":
+                    acc.and.or.push({ gameHeadId: { eq: id } });
+                    break;
+                case "legs":
+                    acc.and.or.push({ gameLegsId: { eq: id } });
+                    break;
+                case "torso":
+                    acc.and.or.push({ gameTorsoId: { eq: id } });
+                    break;
+            }
+            return acc;
+        },
+        {
+            and: {
+                gameLegsId: { attributeExists: true },
+                gameTorsoId: { attributeExists: true },
+                gameHeadId: { attributeExists: true },
+                or: [],
+            },
+        }
+    );
+    return { filter };
 };
 
 export const getGameById = (input: GetGameQueryVariables) => {
@@ -43,54 +57,110 @@ export const getGameById = (input: GetGameQueryVariables) => {
 export const getGamesMin = (input: ListGamesQueryVariables) => {
     return new Promise<{
         games: Array<Game>;
+    }>(async (resolve, reject) => {
+        try {
+            const response = (await API.graphql({
+                query: listGamesMin,
+                variables: input,
+            })) as any;
+
+            let games = response.data.listGames.items;
+
+            if (response.data.listGames.nextToken !== null) {
+                input.nextToken = response.data.listDrawings.nextToken;
+                const newResponse = await getGamesMin(input);
+                games = [...games, newResponse.games];
+            }
+
+            resolve({
+                games: games as Array<Game>,
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    });
+};
+
+export const getDrawingsMin = (input: ListDrawingsQueryVariables) => {
+    return new Promise<{
+        drawings: Array<Drawing>;
         nextToken: string | null | undefined;
     }>(async (resolve, reject) => {
-        const response = (await API.graphql({
-            query: listGamesMin,
+        let response = (await API.graphql({
+            query: listDrawingsMin,
             variables: input,
         })) as any;
+        let drawings = response.data.listDrawings.items;
+        if (response.data.listDrawings.nextToken !== null) {
+            input.nextToken = response.data.listDrawings.nextToken;
+            const newResponse = await getDrawingsMin(input);
+            drawings = [...drawings, ...newResponse.drawings];
+        }
         resolve({
-            games: response.data.listGames.items as Array<Game>,
-            nextToken: response.data.listGames.nextToken as string | null,
+            drawings: drawings as Array<Drawing>,
+            nextToken: response.data.listDrawings.nextToken as string | null,
         });
     });
 };
 
-export const syncGamesMin = (input: ListGamesQueryVariables) => {
+export const getFinishedGamesByDrawing = (drawings: Array<Drawing>) => {
     return new Promise<{
         games: Array<Game>;
-        nextToken: string | null | undefined;
     }>(async (resolve, reject) => {
-        const response = (await API.graphql({
-            query: syncGameListMin,
-            variables: input,
-        })) as any;
-        console.log(response);
-        resolve({
-            games: response.data.syncGames.items as Array<Game>,
-            nextToken: response.data.syncGames.nextToken as string | null,
-        });
+        const chunkSize = 20;
+        let chunks = new Array<Array<Drawing>>(),
+            i = 0,
+            n = drawings.length;
+        while (i < n) {
+            chunks.push(drawings.slice(i, (i += chunkSize)));
+        }
+        const promises = chunks
+            .filter((c) => c.length > 0)
+            .map((c) => {
+                let filter = createFilterFromDrawings(c);
+                return getGamesMin(filter);
+            });
+        const response = await Promise.all(promises);
+        const games = response.reduce((acc, cur) => {
+            return [...acc, ...cur.games];
+        }, new Array<Game>());
+        resolve({ games });
     });
 };
 
-export const getDrawingIdType = (input: ListDrawingsQueryVariables) => {
-    return new Promise<{
-        drawings: Array<{ id: string; type: string }>;
-        nextToken: string | null | undefined;
-    }>(async (resolve, reject) => {
+export const getSuggestedDrawing = () => {
+    return new Promise<string>(async (resolve, reject) => {
         const response = (await API.graphql({
-            query: listDrawingsIdType,
-            variables: input,
+            query: listDrawingTalliesMin,
         })) as any;
-        resolve({
-            drawings: response.data.listDrawings.items as Array<{
-                id: string;
-                type: string;
-            }>,
-            nextToken: response.data.listGames.nextToken as string | null,
-        });
+        const minTally = response.data.listDrawingTallies.items.reduce(
+            (acc: any, val: any) => {
+                if (!acc) return val;
+                else if (acc.count > val.count) return val;
+                else if (acc.count < val.count) return acc;
+                else return Math.round(Math.random()) === 1 ? acc : val;
+            }
+        );
+        resolve(minTally.id);
     });
 };
+
+export const getUsername = (email: string) => {
+    return new Promise<User>(async (resolve, reject) => {
+        const { data } = (await API.graphql({
+            query: getUser,
+            variables: {
+                id: email,
+            },
+        })) as any;
+        if (data.getUser) resolve(data.getUser);
+        else reject(data.error);
+    });
+};
+
+/************************************************************************************
+ *                             MUTATIONS                                            *
+ ************************************************************************************/
 
 export const unLikeDrawing = (like: DeleteUserLikeInput) => {
     return new Promise(async (resolve, reject) => {
@@ -117,273 +187,6 @@ export const likeDrawing = (like: CreateUserLikeInput) => {
         })) as any;
 
         resolve(data.createUserLike);
-    });
-};
-
-export const getDrawings = (input: ListDrawingsQueryVariables) => {
-    return new Promise<{
-        drawings: Array<Drawing>;
-        nextToken: string | null | undefined;
-    }>(async (resolve, reject) => {
-        const response = (await API.graphql({
-            query: listDrawings,
-            variables: input,
-        })) as any;
-        resolve({
-            drawings: response.data.listDrawings.items as Array<Drawing>,
-            nextToken: response.data.listDrawings.nextToken as string | null,
-        });
-    });
-};
-
-export const getDrawingsMin = (input: ListDrawingsQueryVariables) => {
-    return new Promise<{
-        drawings: Array<Drawing>;
-        nextToken: string | null | undefined;
-    }>(async (resolve, reject) => {
-        const response = (await API.graphql({
-            query: listDrawingsMin,
-            variables: input,
-        })) as any;
-        console.log("drawings min", response);
-        resolve({
-            drawings: response.data.listDrawings.items as Array<Drawing>,
-            nextToken: response.data.listDrawings.nextToken as string | null,
-        });
-    });
-};
-
-export const getGamesByUsername = (input: ListDrawingsQueryVariables) => {
-    return new Promise<{
-        games: Array<Game>;
-        nextToken: string | null | undefined;
-    }>(async (resolve, reject) => {
-        const { drawings } = await getDrawingsMin(input);
-
-        if (!drawings || drawings.length === 0) {
-            resolve({ games: [], nextToken: null });
-        } else {
-            //const first = drawings.shift();
-            const filter = drawings.reduce<any>(
-                (acc, { type, id }) => {
-                    switch (type) {
-                        default:
-                        case "head":
-                            acc.and.or.push({ gameHeadId: { eq: id } });
-                            break;
-                        case "legs":
-                            acc.and.or.push({ gameLegsId: { eq: id } });
-                            break;
-                        case "torso":
-                            acc.and.or.push({ gameTorsoId: { eq: id } });
-                            break;
-                    }
-                    return acc;
-                },
-                {
-                    and: {
-                        gameLegsId: { attributeExists: true },
-                        gameTorsoId: { attributeExists: true },
-                        gameHeadId: { attributeExists: true },
-                        or: [],
-                    },
-                }
-            );
-            const response = await getGamesMin({ filter: filter });
-            resolve(response);
-        }
-    });
-};
-
-export const getFinishedGamesByDrawing = (drawings: Array<Drawing>) => {
-    return new Promise<{
-        games: Array<Game>;
-        nextToken: string | null | undefined;
-    }>(async (resolve, reject) => {
-        //const first = drawings.shift();
-        const filter = drawings.reduce<any>(
-            (acc, { type, id }) => {
-                switch (type) {
-                    default:
-                    case "head":
-                        acc.and.or.push({ gameHeadId: { eq: id } });
-                        break;
-                    case "legs":
-                        acc.and.or.push({ gameLegsId: { eq: id } });
-                        break;
-                    case "torso":
-                        acc.and.or.push({ gameTorsoId: { eq: id } });
-                        break;
-                }
-                return acc;
-            },
-            {
-                and: {
-                    gameLegsId: { attributeExists: true },
-                    gameTorsoId: { attributeExists: true },
-                    gameHeadId: { attributeExists: true },
-                    or: [],
-                },
-            }
-        );
-        const response = await getGamesMin({ filter: filter });
-        resolve(response);
-    });
-};
-
-export const getUnfishedGamesByUsername = (
-    input: ListDrawingsQueryVariables
-) => {
-    return new Promise<{
-        games: Array<Game>;
-        nextToken: string | null | undefined;
-    }>(async (resolve, reject) => {
-        const { drawings } = await getDrawings(input);
-        if (!drawings || drawings.length === 0) {
-            resolve({ games: [], nextToken: null });
-        }
-        //const first = drawings.shift();
-        const filter = drawings.reduce<any>(
-            (acc, { type, id }) => {
-                switch (type) {
-                    default:
-                    case "head":
-                        acc.or.push({
-                            and: [
-                                { gameHeadId: { eq: id } },
-                                {
-                                    or: [
-                                        {
-                                            gameTorsoId: {
-                                                attributeExists: false,
-                                            },
-                                        },
-                                        {
-                                            gameLegsId: {
-                                                attributeExists: false,
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        });
-                        break;
-                    case "legs":
-                        acc.or.push({
-                            and: [
-                                { gameLegsId: { eq: id } },
-                                {
-                                    or: [
-                                        {
-                                            gameTorsoId: {
-                                                attributeExists: false,
-                                            },
-                                        },
-                                        {
-                                            gameHeadId: {
-                                                attributeExists: false,
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        });
-                        break;
-                    case "torso":
-                        acc.or.push({
-                            and: [
-                                { gameTorsoId: { eq: id } },
-                                {
-                                    or: [
-                                        {
-                                            gameHeadId: {
-                                                attributeExists: false,
-                                            },
-                                        },
-                                        {
-                                            gameLegsId: {
-                                                attributeExists: false,
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        });
-                        break;
-                }
-                return acc;
-            },
-            {
-                or: [],
-            }
-        );
-
-        console.log(filter);
-        const response = await getGamesMin({ filter: filter });
-        resolve(response);
-    });
-};
-
-export const getSuggestedDrawing = () => {
-    return new Promise<string>(async (resolve, reject) => {
-        const response = (await API.graphql({
-            query: listDrawingTalliesMin,
-        })) as any;
-        const minTally = response.data.listDrawingTallies.items.reduce(
-            (acc: any, val: any) => {
-                if (!acc) return val;
-                else if (acc.count > val.count) return val;
-                else if (acc.count < val.count) return acc;
-                else return Math.round(Math.random()) === 1 ? acc : val;
-            }
-        );
-        console.log(minTally);
-
-        resolve(minTally.id);
-    });
-};
-
-export const syncGamesByDrawing = (drawings: Array<Drawing>) => {
-    return new Promise<{
-        games: Array<Game>;
-        nextToken: string | null | undefined;
-    }>(async (resolve, reject) => {
-        //const first = drawings.shift();
-        const filter = drawings.reduce<any>(
-            (acc, { type, id }) => {
-                switch (type) {
-                    default:
-                    case "head":
-                        acc.or.push({ gameHeadId: { eq: id } });
-                        break;
-                    case "legs":
-                        acc.or.push({ gameLegsId: { eq: id } });
-                        break;
-                    case "torso":
-                        acc.or.push({ gameTorsoId: { eq: id } });
-                        break;
-                }
-                return acc;
-            },
-            {
-                or: [],
-            }
-        );
-        const response = await syncGamesMin({ filter: filter });
-        resolve(response);
-    });
-};
-
-export const getUsername = (email: string) => {
-    return new Promise<User>(async (resolve, reject) => {
-        const { data } = (await API.graphql({
-            query: getUser,
-            variables: {
-                id: email,
-            },
-        })) as any;
-        if (data.getUser) resolve(data.getUser);
-        else reject(data.error);
     });
 };
 /************************************************************************************

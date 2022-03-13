@@ -137,13 +137,9 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
                     if (!paper.project) return;
                     try {
                         const deleting = paper.project?.activeLayer?.lastChild;
-
                         const typeOfLast = JSON.parse(deleting.exportJSON())[0];
-                        console.log(typeOfLast);
-                        console.log(project?.layers);
                         switch (typeOfLast) {
                             case "Group":
-                                console.log("doing this", lastChild);
                                 paper.project?.activeLayer.removeChildren();
                                 paper.project?.activeLayer.addChildren(
                                     lastChild!!
@@ -183,15 +179,6 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
                     disabled: history.length === 0,
                 }
             ),
-            /*
-        undo: buttonGroup({
-            undo: () => console.log("hi"),
-            opts: {
-                title
-            },
-        
-        }),
-         */
         }),
         [history, lastChild]
     );
@@ -220,7 +207,6 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
             path.add(new paper.Point(to));
             path.lineTo(new paper.Point(from));
             path.selected = false;
-            console.log("adding line", from, to);
         });
         //Step: create new layer to capture user lines
         const layer: paper.Layer = new paper.Layer();
@@ -285,26 +271,9 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
                 event.point.y < init.bounds.top ||
                 event.point.y > init.bounds.bottom
             ) {
-                console.log("out of bounds");
                 return;
             } else {
                 path.add(event.point);
-                /*
-                switch (tool) {
-                    case TOOL.ERASER:
-                        const intersectItem = paper.project.activeLayer.getItem(
-                            {
-                                position: event.point,
-                            }
-                        );
-                        if (intersectItem) {
-                            intersectItem.remove();
-                            intersectItem.visible = false;
-
-                            console.log(intersectItem);
-                        }
-                }
-                */
             }
         };
 
@@ -319,10 +288,6 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
 
                         path.closed = true;
                         path.fillColor = new paper.Color(color);
-                        const items = path.getItems({
-                            overlapping: path.bounds,
-                        });
-                        console.log(items, path);
                     } catch (e) {
                         console.log(e);
                     }
@@ -340,86 +305,11 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
                     path.simplify(10);
                     setLastChild(null);
                     path.selected = false;
-                    //path.remove();
-                    /*
-                    try {
-                        path.simplify(10);
-                        const eraseRadius =
-                            (stroke * paper.view.pixelRatio) / 2;
-
-                        const outerPath = OffsetUtils.offsetPath(
-                            path.clone({ insert: false }),
-                            eraseRadius
-                        );
-                        const innerPath = OffsetUtils.offsetPath(
-                            path.clone({ insert: false }),
-                            -eraseRadius
-                        );
-                        path.selected = false;
-                        path.remove();
-
-                        innerPath.reverse(); // reverse one path so we can combine them end-to-end
-
-                        // create a new path and connect the two offset paths into one shape
-                        const deleteShape = new paper.Path({
-                            closed: true,
-                            insert: false,
-                        });
-                        deleteShape.addSegments(outerPath.segments);
-                        deleteShape.addSegments(innerPath.segments);
-
-                        // create round endcaps for the shape
-                        // as they aren't included in the offset paths
-                        console.log(path.segments);
-                        const endCaps = new paper.CompoundPath({
-                            children: [
-                                new paper.Path.Circle({
-                                    center: path.firstSegment.point,
-                                    radius: eraseRadius,
-                                }),
-                                new paper.Path.Circle({
-                                    center: path.lastSegment.point,
-                                    radius: eraseRadius,
-                                }),
-                            ],
-                            insert: false,
-                        });
-
-                        // unite the shape with the endcaps
-                        // this also removes all overlaps from the stroke
-                        const deletePath = deleteShape.unite(endCaps);
-                        deletePath.simplify(10);
-
-                        // grab all the items from the tmpGroup in the mask group
-                        var items = group?.getItems({
-                            overlapping: deleteShape.bounds,
-                        });
-
-                        items?.forEach((item) => {
-                            deleteShape.removeSegment(item.index); // probably need to detect closed vs open path and tweak these settings
-                        });
-                        if (group) {
-                            paper.project.activeLayer.addChildren(
-                                group.removeChildren()
-                            );
-                            group.selected = false;
-                        }
-                        if (mask) {
-                            mask.selected = false;
-                        }
-                    } catch (e) {
-                        console.log(e);
-                    } finally {
-                        group = null;
-                        mask = null;
-                        break;
-                    } */
                     break;
                 case TOOL.PENCIL:
                     path.simplify(10);
                     path.selected = false;
                     setLastChild([path]);
-
                     break;
             }
             path = null;
@@ -435,7 +325,6 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
     useEffect(() => {
         const element = canvas.current;
         if (element !== null && drawingType && !init) {
-            console.log("initializing paper");
             paper.setup(element);
             setProject(paper.project);
 
@@ -469,7 +358,6 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
 
     useLayoutEffect(() => {
         if (!project || !init) return;
-        console.log(paper.view.center);
         paper.view.center = new paper.Point(
             init.center.x + position.x * scale,
             init.center.y + position.y * scale

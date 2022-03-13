@@ -14,7 +14,6 @@ import {
 import { COLORS } from "utils/DEFS";
 import { LoginDetails, SignUpDetails } from "types";
 import { getDateTimeFormat } from "utils";
-import useError from "hooks/useError";
 import { toast } from "react-toastify";
 
 enum MODE {
@@ -33,7 +32,6 @@ function Authentication() {
 
     const currentDate = getDateTimeFormat();
 
-    const [Error, errorActions] = useError();
     const loginDetails = useMemo<LoginDetails | SignUpDetails>(() => {
         return mode === MODE.SIGN_UP
             ? {
@@ -81,7 +79,6 @@ function Authentication() {
 
     return (
         <FlexBox direction="column">
-            {Error && Error}
             <FrankenSketchHeader fontSize="4em" margin="1rem">
                 FrankenSketch
             </FrankenSketchHeader>
