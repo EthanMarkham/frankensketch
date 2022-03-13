@@ -1,7 +1,7 @@
-import { User } from "API";
-import { Auth, Hub, API } from "aws-amplify";
-import { getUser } from "graphql/queries";
+import { Auth, Hub } from "aws-amplify";
+import { getUsername } from "queries/queries";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 import { useStore } from "store";
 
 export default function useAuth() {
@@ -9,53 +9,79 @@ export default function useAuth() {
     const setUser = useStore((store) => store.actions.setUser);
 
     useEffect(() => {
-        function getUsername(email: string) {
-            return new Promise<User>(async (resolve, reject) => {
-                const { data } = (await API.graphql({
-                    query: getUser,
-                    variables: {
-                        id: email,
-                    },
-                })) as any;
-                if (data.getUser) resolve(data.getUser);
-                else reject(data.error);
-            });
-        }
-
-        function updateUser() {
-            Auth.currentAuthenticatedUser()
-                .then((authData) => {
-                    const groups =
-                        authData.signInUserSession.accessToken.payload[
-                            "cognito:groups"
-                        ];
-                    getUsername(authData.username).then((data) => {
-                        setUser({
-                            username: data.userName,
-                            email: authData.username,
-                            groups: groups ? groups : null,
-                        });
+        Auth.currentAuthenticatedUser()
+            .then((authData) => {
+                const groups =
+                    authData.signInUserSession.accessToken.payload[
+                        "cognito:groups"
+                    ];
+                getUsername(authData.username).then((data) => {
+                    setUser({
+                        username: data.userName,
+                        email: authData.username,
+                        groups: groups ? groups : null,
                     });
-                })
-                .catch(() => {
-                    setUser(null);
                 });
-        }
+            })
+            .catch(() => {
+                setUser(null);
+            });
+    }, [setUser]);
 
-        updateUser();
-
-        Hub.listen("auth", (data) => {
+    useEffect(() => {
+        function callback(data: any) {
+            console.log(data.payload.event);
             switch (data.payload.event) {
-                case "signIn":
-                case "signUp": //Note: fallthrough by design
-                    updateUser();
-                    break;
-                default:
                 case "signOut":
                     setUser(null);
                     break;
+                case "signIn":
+                    Auth.currentAuthenticatedUser()
+                        .then((authData) => {
+                            console.log(authData);
+                            const groups =
+                                authData.signInUserSession.accessToken.payload[
+                                    "cognito:groups"
+                                ];
+                            getUsername(authData.username).then((data) => {
+                                const user = {
+                                    username: data.userName,
+                                    email: authData.username,
+                                    groups: groups ? groups : null,
+                                };
+                                console.log(user);
+
+                                setUser(user);
+                            });
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                    break;
+                case "signUp":
+                    console.log(data.payload);
+                    break;
+                case "signIn_failure":
+                    console.log(data.payload);
+                    toast.error(data.payload.data.message);
+                    break;
+                case "signUp_failure":
+                    let msg = data.payload.data.message.replace(
+                        "PreSignUp failed with error",
+                        ""
+                    );
+                    toast.error(msg);
+                    break;
+                default:
+                    break;
             }
-        });
+        }
+
+        Hub.listen("auth", callback);
+
+        return () => {
+            Hub.remove("auth", callback);
+        };
     }, [setUser]);
 
     return null;

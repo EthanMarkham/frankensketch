@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import GameCard from "components/homescreen/GameCard";
 import { capitalizeFirstLetter } from "utils";
 import { Icons } from "styles/svg/ui-icons/icons";
-import { Game } from "API";
+import { sortGames } from "utils/functions";
 
 function HomeScreen(props: HomeScreenProps) {
     const [gameList, setGameList] = useState<any[]>();
@@ -55,31 +55,11 @@ function HomeScreen(props: HomeScreenProps) {
     useEffect(() => {
         console.log("init", viewAs);
 
-        const sortGames = (games: Array<Game>) => {
-            let test = games
-                .filter(({ head, torso, legs }: any) => head && torso && legs)
-                .map((game: any) => {
-                    const createdDate = [
-                        game.head.createdAt,
-                        game.torso.createdAt,
-                        game.legs.createdAt,
-                    ].reduce((a, b) => {
-                        return a > b ? a : b;
-                    });
-                    return { ...game, createdAt: createdDate };
-                })
-                .sort((a: any, b: any) => {
-                    return b.createdAt < a.createdAt ? -1 : 1;
-                });
-            return test;
-        };
-
         if (!user?.username) return;
 
         if (viewAs === null || viewAs === user.username) {
             console.log("setting gameList to self");
-            let sorted = sortGames(games);
-            setGameList(sorted);
+            setGameList(games);
             setLoading(false);
         } else {
             console.log("fetching gameList for " + viewAs);

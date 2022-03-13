@@ -8,10 +8,11 @@ import {
     GetGameQueryVariables,
     ListDrawingsQueryVariables,
     ListGamesQueryVariables,
+    User,
 } from "API";
 import { API } from "aws-amplify";
 import { createUserLike, deleteUserLike } from "graphql/mutations";
-import { getGame, listDrawings } from "graphql/queries";
+import { getGame, getUser, listDrawings } from "graphql/queries";
 
 export const getGames = (input: ListGamesQueryVariables) => {
     return new Promise<{
@@ -373,6 +374,18 @@ export const syncGamesByDrawing = (drawings: Array<Drawing>) => {
     });
 };
 
+export const getUsername = (email: string) => {
+    return new Promise<User>(async (resolve, reject) => {
+        const { data } = (await API.graphql({
+            query: getUser,
+            variables: {
+                id: email,
+            },
+        })) as any;
+        if (data.getUser) resolve(data.getUser);
+        else reject(data.error);
+    });
+};
 /************************************************************************************
  *                             GRAPHQL QUERIES                                      *
  ************************************************************************************/

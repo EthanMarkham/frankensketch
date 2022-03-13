@@ -3,12 +3,7 @@ import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { useStore } from "store";
 import { AnimatedDiv, FlexBox, Div } from "styles";
 import { useTransition, config } from "react-spring";
-import {
-    getDrawingsMin,
-    getFinishedGamesByDrawing,
-    syncGamesByDrawing,
-    syncGamesMin,
-} from "queries/queries";
+import { getDrawingsMin, syncGamesByDrawing } from "queries/queries";
 import Authentication from "features/Authentication";
 import HomeScreen from "./HomeScreen";
 import LoadingScreen from "./LoadingScreen";
@@ -22,6 +17,7 @@ import NavBar from "components/navbar/NavBar";
 import Header from "components/header/header";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useGameSubscription from "hooks/useGameSubscription";
 
 /*
 const Authentication = React.lazy(() => import("features/Authentication"));
@@ -36,16 +32,10 @@ const Community = React.lazy(() => import("features/Community"))
 
 function App() {
     useAuth();
-    const userData = useStore((state) => state.userData);
+
     const pageIndex = useStore((state) => state.pageIndex);
     const setGames = useStore((state) => state.actions.setGames);
-    const setDrawings = useStore((state) => state.actions.setDrawings);
-    const drawings = useStore((state) => state.drawings);
-    const setPage = useStore((state) => state.actions.setPage);
-    const games = useStore((state) => state.games);
-
-    const [initGames, setInitGames] = useState(false);
-    const [initPage, setInitPage] = useState(false);
+    useGameSubscription(setGames);
 
     const transitions = useTransition(pageIndex, {
         from: { opacity: 0 },
@@ -60,32 +50,6 @@ function App() {
     );
 
     const showHeader = useMemo(() => pageIndex > 0, [pageIndex]);
-
-    useEffect(() => {
-        if (!userData?.username) return;
-
-        getDrawingsMin({
-            filter: {
-                artist: { eq: userData.username },
-            },
-        }).then(({ drawings }) => setDrawings(drawings));
-    }, [setDrawings, userData]);
-
-    useEffect(() => {
-        if (drawings.length === 0) setGames([]);
-        syncGamesByDrawing(drawings).then(({ games }) => {
-            setGames(games);
-            setInitGames(true);
-            console.log("syncing games", games);
-        });
-    }, [setGames, drawings, setPage]);
-
-    useEffect(() => {
-        if (initGames && !initPage) {
-            setPage(1);
-            setInitPage(true);
-        }
-    }, [games, initGames, initPage, setPage]);
 
     const containerStyles = {
         position: "absolute",

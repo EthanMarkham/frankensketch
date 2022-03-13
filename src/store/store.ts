@@ -1,5 +1,6 @@
 import { getGameById, getSuggestedDrawing } from "queries/queries";
 import { Store } from "types";
+import { sortGames } from "utils/functions";
 import create from "zustand";
 import { postGame } from "./actions/postGame";
 /*
@@ -29,7 +30,7 @@ const useStore = create<Store>((set, _get) => ({
         setGames(games) {
             set((store) => ({
                 ...store,
-                games: games,
+                games: sortGames(games),
             }));
         },
         addGame(game) {
@@ -63,7 +64,12 @@ const useStore = create<Store>((set, _get) => ({
             set((store) => ({
                 ...store,
                 userData: data,
-                pageIndex: data === null ? 0 : store.pageIndex,
+                pageIndex:
+                    data === null
+                        ? 0
+                        : store.pageIndex === 0
+                        ? 1
+                        : store.pageIndex,
             }));
         },
         subscribe: (key, callback) => {
