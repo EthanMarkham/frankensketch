@@ -100,6 +100,7 @@ const CommunityCard = ({ game }: { game: Game }) => {
                         padding="0.5rem"
                         ref={containerRef}
                         backgroundColor={COLORS.bgLight}
+                        onDoubleClick={updateLike}
                     >
                         <SketchCanvas
                             ref={canvasRef}
