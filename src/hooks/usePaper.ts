@@ -239,6 +239,7 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
                         insert: false,
                     });
 
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     mask = new paper.Group({
                         children: [path, group],
                         blendMode: "source-over",
