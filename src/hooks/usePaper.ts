@@ -333,7 +333,7 @@ function usePaper(canvas: React.RefObject<HTMLCanvasElement>) {
                 calculateScale(
                     paper.view.bounds,
                     element.parentElement!!.getBoundingClientRect()
-                ) * 0.8;
+                ) * 0.75;
 
             set({
                 scale: newScale,

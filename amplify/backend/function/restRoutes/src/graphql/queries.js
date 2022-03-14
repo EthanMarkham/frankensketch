@@ -54,67 +54,31 @@ module.exports.listDrawingTallies = async function () {
     return tallyData.data.data.listDrawingTallies.items;
 };
 
-module.exports.getOpenGames = async function (type) {
-    let queryString;
-
+const getOpenGames = async function (type, nextToken = null) {
+    let input;
     switch (type) {
         default:
             throw new Error("Cannot create game with no type");
         case "head":
-            queryString = `
-                query MyQuery {
-                    listGames(filter: { gameHeadId: { attributeExists: false } }){
-                        items {
-                            id
-                            gameTorsoId
-                            gameLegsId
-                            gameHeadId
-                            _version
-                        }
-                    }
-                }
-            `;
+            input = {
+                filter: { gameHeadId: { attributeExists: false } },
+            };
             break;
         case "torso":
-            queryString = `
-                query MyQuery {
-                    listGames(
-                        filter: { gameTorsoId: { attributeExists: false } }
-                    ) {
-                        items {
-                            id
-                            gameTorsoId
-                            gameLegsId
-                            gameHeadId
-                            _version
-                        }
-                    }
-                }
-            `;
+            input = {
+                filter: { gameTorsoId: { attributeExists: false } },
+            };
             break;
         case "legs":
-            queryString = `
-                query MyQuery {
-                    listGames(
-                        filter: { gameLegsId: { attributeExists: false } }
-                    ) {
-                        items {
-                            id
-                            gameTorsoId
-                            gameLegsId
-                            gameHeadId
-                            _version
-                        }
-                    }
-                }
-            `;
+            input = {
+                filter: { gameLegsId: { attributeExists: false } },
+            };
             break;
     }
-
-    console.log("Game Query", queryString);
-    const query = gql`
-        ${queryString}
-    `;
+    if (nextToken !== null) {
+        input.nextToken = nextToken;
+    }
+    console.log("using input", input);
 
     const gameList = await axios({
         url: process.env.API_GRAPHQL_GRAPHQLAPIENDPOINTOUTPUT,
@@ -124,18 +88,29 @@ module.exports.getOpenGames = async function (type) {
         },
         response: true,
         data: {
-            query: print(query),
+            query: print(listGames),
+            variables: input,
         },
     });
     if (gameList.data.errors || !gameList.data.data.listGames) {
         console.log("Error listing games", gameList.data.errors);
         throw new Error("Oops! Something went wrong!");
     }
-    console.log("Open Game Result", gameList.data.data.listGames.items);
-    return gameList.data.data.listGames.items;
-};
+    let games = gameList.data.data.listGames.items;
 
-module.exports.listGames = gql`
+    if (gameList.data.data.listGames.nextToken !== null) {
+        const nextSet = await getOpenGames(
+            type,
+            gameList.data.data.listGames.nextToken
+        );
+        games = [...games, ...nextSet];
+    }
+
+    return games;
+};
+module.exports.getOpenGames = getOpenGames;
+
+const listGames = gql`
     query ListGames(
         $filter: ModelGameFilterInput
         $limit: Int
@@ -154,6 +129,8 @@ module.exports.listGames = gql`
         }
     }
 `;
+
+module.exports.listGames = listGames;
 
 module.exports.getTally = async function (type) {
     const query = gql`

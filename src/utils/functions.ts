@@ -32,6 +32,7 @@ export function formatNumberWithMetricPrefix(number: number) {
     return number.toString();
 }
 export const sortGames = (games: Array<Game>) => {
+    let ids = new Map<string, boolean>();
     let test = games
         .filter(({ head, torso, legs }: any) => head && torso && legs)
         .map((game: any) => {
@@ -44,6 +45,14 @@ export const sortGames = (games: Array<Game>) => {
             });
             return { ...game, createdAt: createdDate };
         })
+        //Quick fix to get rid of double games
+        .reduce((acc, cur) => {
+            if (ids.get(cur.id) === undefined) {
+                acc.push(cur);
+                ids.set(cur.id, true);
+            }
+            return acc;
+        }, [])
         .sort((a: any, b: any) => {
             return b.createdAt < a.createdAt ? -1 : 1;
         });
