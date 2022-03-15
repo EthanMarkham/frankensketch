@@ -80,8 +80,8 @@ function Settings() {
                 <FlexBox
                     direction="column"
                     margin="1rem 0 0 0"
-                    height="140px"
                     justifyContent="center"
+                    height="15rem"
                 >
                     {/* NSFW: TO DO
 					<FlexBox
